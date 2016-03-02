@@ -4,7 +4,8 @@
   "description": "Front-end for KPM API",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "gulp serve --dir build --port $PORT",
+    "postinstall": "gulp build --dir build --config $CONFIG_FILE"
   },
   "repository": {
     "type": "git",
@@ -15,5 +16,16 @@
   "bugs": {
     "url": "https://gitlab.com/kubespray/kpm-website/issues"
   },
-  "homepage": "https://gitlab.com/kubespray/kpm-website#README"
+  "homepage": "https://gitlab.com/kubespray/kpm-website#README",
+  "dependencies": {
+    "express": "^4.13.4",
+    "gulp": "^3.9.1",
+    "gulp-angular-templatecache": "^1.8.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-processhtml": "^1.1.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-sass": "^2.2.0",
+    "gulp-uglify": "^1.5.3",
+    "yargs": "^4.2.0"
+  }
 }

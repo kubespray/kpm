@@ -1,0 +1,12 @@
+# nodejs
+build
+node_modules
+npm-debug.log
+.sass-cache
+
+# auto-generated
+src/style/style.min.css
+src/config/config.js
+
+# editors
+*.swp

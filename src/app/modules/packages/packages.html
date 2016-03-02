@@ -1,0 +1,8 @@
+<div>
+  <div class="package" ng-repeat="package in packages">
+    <h2>
+      <a ui-sref="package({id: package.id})">{{package.name}}</a>
+    </h2>
+    <span class="version">Version: <code>{{package.version}}</code></span>
+  </div>
+</div<
