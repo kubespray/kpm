@@ -1,12 +1,21 @@
 @import 'theme';
 
-
 .package-wrapper {
   padding: 20px;
 }
 
 .package {
+  h2 a {
+   color: $blue;
+   text-decoration: none;
+  }
   padding: 20px;
-  box-shadow: 0 0 5px #666;
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 15px 15px -15px #333;
   margin-bottom: 20px;
+  code {
+    background: #eee;
+    padding: 2px 4px;
+    border-radius: 5px;
+  }
 }

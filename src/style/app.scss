@@ -1,8 +1,66 @@
-$google_blue: #3879D9;
 @import 'theme';
 
+html, body {
+  height: 100%;
+}
 body {
   color: #333;
   font-family: Roboto, sans-serif;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background: #f0f0f0;
 }
 
+#header {
+  .inner {
+    background: white;
+    padding: 20px;
+    .search {
+      text-align: right;
+    }
+  }
+}
+
+#banner {
+  background: $kubegray;
+  color: white;
+  height: 160px;
+  padding: 10px 0;
+  img.logo {
+    float: left;
+    margin-right: 20px;
+  }
+  h1 {
+    font-size: 48px;
+    margin: 0;
+    padding: 20px;
+  }
+  p.description {
+    font-size: 26px;
+    margin: 0;
+  }
+}
+
+#main {
+  flex: 1 0 auto;
+  .inner {
+    padding: 20px;
+    background: white;
+  }
+}
+
+div.inner {
+  max-width: 900px;
+  margin: auto;
+}
+
+#footer {
+  background: #323a45;
+  color: #aaa;
+  padding: 20px;
+  text-align: center;
+  a {
+    color: white;
+  }
+}
