@@ -1,4 +1,5 @@
 # KPM
+
 KPM is a command line tool to deploy and manage applications stack on kubernetes.
 
 KPM provides the glue between kubernetes resources (ReplicatSet, DaemonSet, Secrets...). it defines a package has a composition of kubernetes resources and dependencies to other packages.
@@ -54,7 +55,6 @@ sudo make install
 ### Configuration
 
 kpm uses `kubectl` to communicate with the kubernetes cluster. 
-Make sure `kubectl` is working and reaching the cluster.
 
 ```bash
 $ kubectl version
@@ -68,7 +68,10 @@ Server Version: version.Info{Major:"1", Minor:"1", GitVersion:"v1.1.4", GitCommi
 ### Deploy application
 
 In this example we will deploy [rocket.chat](https://github.com/RocketChat/Rocket.Chat) an opensource webchat platform: 
-`kpm deploy ant31/rocketchat --namespace rktchat`
+
+```
+kpm deploy ant31/rocketchat --namespace rktchat
+```
 
  app       | version  |  type  | name | namespace | status |
 -----------|----------|--------|------|-----------|--------|
