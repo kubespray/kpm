@@ -4,6 +4,24 @@ KPM is a command line tool to deploy and manage applications stack on kubernetes
 
 KPM provides the glue between kubernetes resources (ReplicatSet, DaemonSet, Secrets...). it defines a package has a composition of kubernetes resources and dependencies to other packages.
  
+## Quick start
+
+### Deploy application
+
+In this example we will deploy [rocket.chat](https://github.com/RocketChat/Rocket.Chat) an opensource webchat platform: 
+
+```
+pip install kpm
+kpm deploy ant31/rocketchat --namespace rocket-chat
+```
+
+ app       | version  |  type  | name | namespace | status |
+-----------|----------|--------|------|-----------|--------|
+ant31/mongodb     | 1.0.0 | svc| mongodb |    rktchat |     changed|
+ant31/mongodb     | 1.0.0 | rc | mongodb  |   rktchat  |    changed|
+ant31/rocketchat  | 1.2.0 | svc| rocketchat | rktchat  |    changed|
+ant31/rocketchat  | 1.2.0 | rc | rocketchat |  rktchat |    changed|
+
 
 ## Key concepts 
 
@@ -35,6 +53,7 @@ Quickly compose an application by searching and pick existing components from a 
 
 
 # Documentation
+
 ## Install kpm
 
 ##### From Pypi
@@ -63,19 +82,40 @@ Server Version: version.Info{Major:"1", Minor:"1", GitVersion:"v1.1.4", GitCommi
 
 ```
 
-## Quick start
+### Customize an existing package 
+ 1. Create a new package
+ 2. Edit manifest
+ 3. Change variables
+ 4. Patch custom metric
+ 5. Upload package 
+ 6.  login
+ 7.  push
+ 8. Test
 
-### Deploy application
+## Account registration
+### Signup
+### Login/Logout
 
-In this example we will deploy [rocket.chat](https://github.com/RocketChat/Rocket.Chat) an opensource webchat platform: 
+## Search and deploy a package
+### List a user package
+#### Show/Pull
+### deploy
 
-```
-kpm deploy ant31/rocketchat --namespace rktchat
-```
+## Create a new package
+#### Directory structure
+#### Manifest
+#### Templates
+#### Publish
 
- app       | version  |  type  | name | namespace | status |
------------|----------|--------|------|-----------|--------|
-ant31/mongodb     | 1.0.0 | svc| mongodb |    rktchat |     changed|
-ant31/mongodb     | 1.0.0 | rc | mongodb  |   rktchat  |    changed|
-ant31/rocketchat  | 1.2.0 | svc| rocketchat | rktchat  |    changed|
-ant31/rocketchat  | 1.2.0 | rc | rocketchat |  rktchat |    changed|
+## Compose a package
+### Dependency
+#### Show manifest 
+#### variables
+#### Patch
+#### Shards
+
+## Clustered applications/Shards    
+### Introduction
+### Sharded: yes
+### Shard list
+
