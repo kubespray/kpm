@@ -3,25 +3,6 @@
 KPM is a command line tool to deploy and manage applications stack on kubernetes.
 
 KPM provides the glue between kubernetes resources (ReplicatSet, DaemonSet, Secrets...). it defines a package has a composition of kubernetes resources and dependencies to other packages.
- 
-## Quick start
-
-### Deploy application
-
-In this example we will deploy [rocket.chat](https://github.com/RocketChat/Rocket.Chat) an opensource webchat platform: 
-
-```
-pip install kpm
-kpm deploy ant31/rocketchat --namespace rocket-chat
-```
-
- app       | version  |  type  | name | namespace | status |
------------|----------|--------|------|-----------|--------|
-ant31/mongodb     | 1.0.0 | svc| mongodb |    rktchat |     changed|
-ant31/mongodb     | 1.0.0 | rc | mongodb  |   rktchat  |    changed|
-ant31/rocketchat  | 1.2.0 | svc| rocketchat | rktchat  |    changed|
-ant31/rocketchat  | 1.2.0 | rc | rocketchat |  rktchat |    changed|
-
 
 ## Key concepts 
 
@@ -51,8 +32,23 @@ KPM encourages to use and reuse directly the 'upstream' package of a component a
 ### Packages Hub
 Quickly compose an application by searching and pick existing components from a registry.
 
+## Quick start
 
-# Documentation
+### Deploy application
+
+In this example we will deploy [rocket.chat](https://github.com/RocketChat/Rocket.Chat) an opensource webchat platform: 
+
+```
+$ pip install kpm
+$ kpm deploy ant31/rocketchat --namespace rocket-chat
+-> Deploying ant31/rocketchat
+ app               version type  name         namespace   status 
+------------------ ------- ---- ------------ ----------- --------
+ant31/mongodb       1.0.0   svc  mongodb      rktchat     changed 
+ant31/mongodb       1.0.0   rc   mongodb      rktchat     changed 
+ant31/rocketchat    1.2.0   svc  rocketchat   rktchat     changed 
+ant31/rocketchat    1.2.0   rc   rocketchat   rktchat     changed
+```
 
 ## Install kpm
 
