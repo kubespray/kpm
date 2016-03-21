@@ -92,8 +92,8 @@ class Registry(object):
         return r.json()
 
     def login(self, username, password):
-        path = "/users/sign_in"
-        self.auth.delete_token()
+        path = "/users/login"
+        self.auth = KpmAuth()
         r = requests.post(self._url(path),
                           params={"user[username]": username,
                                   "user[password]": password},
@@ -105,14 +105,14 @@ class Registry(object):
 
     def signup(self, username, password, password_confirmation, email):
         path = "/users"
-        self.auth.delete_token()
+        self.auth = KpmAuth()
         r = requests.post(self._url(path),
                           params={"user[username]": username,
                                   "user[password]": password,
                                   "user[password_confirmation]": password_confirmation,
                                   "user[email]": email,
                                   },
-                          headers=self._headers)
+                          headers=self.headers)
         r.raise_for_status()
         result = r.json()
         self.auth.token = result['token']
