@@ -29,7 +29,7 @@ test_requirements = [
 
 setup(
     name='kpm',
-    version='0.10.2',
+    version='0.10.4',
     description="KPM cli",
     long_description=readme + '\n\n' + history,
     author="Antoine Legrand",
@@ -47,7 +47,7 @@ setup(
     install_requires=requirements,
     license="Apache License version 2",
     zip_safe=False,
-    keywords='kpm',
+    keywords=['kpm', 'kpmpy', 'kubernetes'],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
