@@ -86,7 +86,7 @@ Server Version: version.Info{Major:"1", Minor:"1", GitVersion:"v1.1.4", GitCommi
 5. Upload package
  6.  login
  7.  push
- 8. Test
+ 8.Test
 
 ## Account registration
 ### Signup
