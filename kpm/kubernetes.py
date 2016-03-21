@@ -160,11 +160,12 @@ class Kubernetes(object):
             return True
 
     def _call(self, cmd, dry=False):
-        if self.proxy is not None:
-            return self._request(cmd[0])
         command = ['kubectl'] + cmd + ["--namespace", self.namespace]
         if not dry:
-            return subprocess.check_output(command, stderr=subprocess.STDOUT)
+            if self.proxy is not None:
+                return self._request(cmd[0])
+            else:
+                return subprocess.check_output(command, stderr=subprocess.STDOUT)
         else:
             return True
 
