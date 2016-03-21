@@ -12,12 +12,13 @@ logger = logging.getLogger(__name__)
 
 
 resource_endpoints = {
-    "daemonsets": "/api/v1/namespaces/{namespace}/daemonsets",
-    "deployments": "/api/v1/namespaces/{namespace}/deployments",
-    "horizontalpodautoscalers": "/api/v1/namespaces/{namespace}/horizontalpodautoscalers",
-    "ingresses": "/api/v1/namespaces/{namespace}/ingresses",
-    "jobs": "/api/v1/namespaces/{namespace}/jobs",
+    "daemonsets": "/apis/extensions/v1beta1/namespaces/{namespace}/daemonsets",
+    "deployments": "/apis/extensions/v1beta1/namespaces/{namespace}/deployments",
+    "horizontalpodautoscalers": "/apis/extensions/v1beta1/namespaces/{namespace}/horizontalpodautoscalers",
+    "ingresses": "/apis/extensions/v1beta1/namespaces/{namespace}/ingresses",
+    "jobs": "/apis/extensions/v1beta1/namespaces/{namespace}/jobs",
     "namespaces": "/api/v1/namespaces",
+    "replicasets": "/apis/extensions/v1beta1/namespaces/{namespace}/replicasets",
     "persistentvolumes": "/api/v1/namespaces/{namespace}/persistentvolumes",
     "persistentvolumeclaims": "/api/v1/namespaces/{namespace}/persistentvolumeclaims",
     "services": "/api/v1/namespaces/{namespace}/services",
