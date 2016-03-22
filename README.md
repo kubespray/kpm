@@ -69,8 +69,8 @@ sudo make install
 
 ### Configuration
 
-kpm uses `kubectl` to communicate with the kubernetes cluster.
-
+KPM uses `kubectl` to communicate with the kubernetes cluster.
+Check if the cluster is accessible: 
 ```bash
 $ kubectl version
 Client Version: version.Info{Major:"1", Minor:"1", GitVersion:"v1.1.4", GitCommit:"a5949fea3a91d6a50f40a5684e05879080a4c61d", GitTreeState:"clean"}
@@ -98,9 +98,70 @@ Server Version: version.Info{Major:"1", Minor:"1", GitVersion:"v1.1.4", GitCommi
 ### deploy
 
 ## Create a new package
+The quickest way to get started is to use the command `new`: 
+
+```
+kpm new namespace/packagename [--with-comments]
+```
+It creates the directory namespace/packagename
+
 #### Directory structure
-#### Manifest
+A package is composed of a `templates` directory and a `manifest.yaml`.
+```
+.
+├── manifest.yaml
+└── templates
+    ├── heapster-rc.yaml
+    └── heapster-svc.yaml
+```
+Optionaly, it's possible to add a `README.md` and a `LICENSE`.
+
 #### Templates
+The `templates` directory contains the kubernetes resources to deploy.
+It accepts every kind of resources (rc,secrets,pods,svc...).
+
+Resources can be templated with Jinja2.
+
+>  We recommend to parametrize only values that should be overrided. 
+>  Having a very light templated resources improve readability and quickly point to users which values are 
+>  important to look at and change. User can use 'patch' to add their custom values. 
+
+You can declare the deploy order inside the `manifest.yaml`
+
+#### Manifest
+The `manifest.yaml` contains the following keys:
+
+- package: metadata around the package and the packager
+- variables: map jinja2 variables to default value
+- resources: the list of resources, `file` refers to a filename inside the 'template' directory
+- deploy: list the dependencies, a special keyword `$self` indicate to deploy current package.
+
+```yaml
+package:
+  name: ant31/heapster
+  author: "Antoine Legrand <2t.antoine@gmail.com>"
+  version: 0.18.2
+  description: Kubernetes data
+  license: MIT
+
+variables:
+  namespace: kube-system
+  replicas: 1
+  image: "gcr.io/google_containers/heapster:v0.18.2"
+  svc_type: "NodePort"
+
+resources:
+  - file: heapster-svc.yaml
+    name: heapster
+    type: svc
+
+  - file: heapster-rc.yaml
+    name: heapster
+    type: rc
+
+deploy:
+  - name: $self
+```
 #### Publish
 
 ## Compose a package
