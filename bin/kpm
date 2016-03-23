@@ -76,8 +76,15 @@ def list_packages(options):
 
 def login(options):
     r = Registry(options.registry_host)
-    user = raw_input("Username: ")
-    p1 = getpass.getpass()
+    if options.user is not None:
+        user = options.user
+    else:
+        user = raw_input("Username: ")
+    if options.password is not None:
+        p1 = options.password
+    else:
+        p1 = getpass.getpass()
+
     if options.signup:
         p2 = getpass.getpass('Password confirmation: ')
         email = raw_input("Email: ")
@@ -161,6 +168,11 @@ if __name__ == "__main__":
                               help=argparse.SUPPRESS)
     login_parser.add_argument("-s", "--signup", action='store_true', default=False,
                               help="Create a new account and login")
+    login_parser.add_argument("-u", "--user", nargs="?", default=None,
+                                help="username")
+    login_parser.add_argument("-p", "--password", nargs="?", default=None,
+                                help="password")
+
     login_parser.set_defaults(func=login)
 
     # Logout

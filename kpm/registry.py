@@ -1,8 +1,9 @@
 import json
 import logging
+import copy
 from urlparse import urlparse, urljoin
 import requests
-
+import kpm
 from kpm.auth import KpmAuth
 
 __all__ = ['Registry']
@@ -18,7 +19,8 @@ class Registry(object):
             endpoint = DEFAULT_REGISTRY
         self.endpoint = urlparse(endpoint)
         self.auth = KpmAuth()
-        self._headers = {'Content-Type': 'application/json'}
+        self._headers = {'Content-Type': 'application/json',
+                         'User-Agent': "kpmpy-cli: %s" % kpm.__version__}
 
     def _url(self, path):
         return urljoin(self.endpoint.geturl(), API_PREFIX + path)
@@ -26,7 +28,8 @@ class Registry(object):
     @property
     def headers(self):
         token = self.auth.token
-        headers = self._headers.copy()
+        headers = {}
+        headers.update(self._headers)
         if token is not None:
             headers['Authorization'] = token
         return headers
@@ -93,7 +96,7 @@ class Registry(object):
 
     def login(self, username, password):
         path = "/users/login"
-        self.auth = KpmAuth()
+        self.auth.delete_token()
         r = requests.post(self._url(path),
                           params={"user[username]": username,
                                   "user[password]": password},
@@ -105,7 +108,7 @@ class Registry(object):
 
     def signup(self, username, password, password_confirmation, email):
         path = "/users"
-        self.auth = KpmAuth()
+        self.auth.delete_token()
         r = requests.post(self._url(path),
                           params={"user[username]": username,
                                   "user[password]": password,
