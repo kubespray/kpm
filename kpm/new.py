@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 DIRECTORIES = ['templates']
 
 
-MANIFEST = """
+MANIFEST = """---
 package:
   name: {name}
   author: <author>
@@ -25,7 +25,7 @@ package:
 #   replicas: 1
 #   image: "gcr.io/google_containers/heapster:v0.18.2"
 #   svc_type: "NodePort"
-variables: {{}}
+variables: {}
 
 # List the resources
 # resources :
@@ -35,7 +35,14 @@ variables: {{}}
 #    sharded: no         # Optional: use the shards to generate this resource
 #    patch:              # Optional: array of 'json-patch'
 #      - {{op: replace, path: /metadata/labels/app-name, value: 'nginx'}}
-resources: []
+resources:
+  # - file: {app}-rc.yaml
+  #   name: {app}
+  #   type: rc
+
+  # - file: {app}-svc.yaml
+  #   name: {app}
+  #   type: svc
 
 # Shard list (optional)
 # shards:
@@ -60,12 +67,13 @@ README = """
 
 # Install
 
-kpm install {name}
+kpm deploy {name}
 
 """
 
 
 def new_package(name, dest=".", with_comments=False):
+    _, app = name.split("/")
     path = os.path.join(dest, name)
     utils.mkdir_p(path)
     readme = open(os.path.join(path, 'README.md'), 'w')
@@ -76,7 +84,7 @@ def new_package(name, dest=".", with_comments=False):
         m = MANIFEST
     else:
         m = re.sub(r'(?m)^#.*\n?', '', MANIFEST)
-    manifest.write(m.format(name=name))
+    manifest.write(m.format(name=name, app=app))
     manifest.close()
     for directory in DIRECTORIES:
         utils.mkdir_p(os.path.join(path, directory))

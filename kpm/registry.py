@@ -1,6 +1,5 @@
 import json
 import logging
-import copy
 from urlparse import urlparse, urljoin
 import requests
 import kpm
@@ -10,6 +9,7 @@ __all__ = ['Registry']
 
 logger = logging.getLogger(__name__)
 DEFAULT_REGISTRY = "https://api.kpm.sh"
+DEFAULT_STG_REGISTRY = "https://stg-api.kpm.sh"
 API_PREFIX = '/api/v1'
 
 
@@ -36,7 +36,7 @@ class Registry(object):
 
     def pull(self, name, version=None):
         organization, name = name.split("/")
-        path = "/organizations/%s/packages/%s/pull.json" % (organization, name)
+        path = "/packages/%s/%s/pull.json" % (organization, name)
         params = {}
         if version:
             params['version'] = version
@@ -55,10 +55,12 @@ class Registry(object):
         r.raise_for_status()
         return r.json()
 
-    def generate(self, name, namespace=None, variables=None, version=None):
+    def generate(self, name, namespace=None, variables=None, version=None, tarball=False):
         organization, name = name.split("/")
-        path = "/organizations/%s/packages/%s/generate.json" % (organization, name)
+        path = "/packages/%s/%s/generate.json" % (organization, name)
         params = {}
+        if tarball:
+            params['tarball'] = 'true'
         if version:
             params['version'] = version
         if namespace:
@@ -69,25 +71,10 @@ class Registry(object):
         r.raise_for_status()
         return r.json()
 
-    def generate_tar(self, name, namespace=None, variables=None, version=None):
-        organization, name = name.split("/")
-        path = "/organizations/%s/packages/%s/generate.json" % (organization, name)
-        params = {'tarball': 'true'}
-        if version:
-            params['version'] = version
-        if namespace:
-            params['namespace'] = namespace
-        if variables:
-            params['variables'] = variables
-
-        r = requests.get(self._url(path), params=params, headers=self.headers)
-        r.raise_for_status()
-        return r.content
-
     def push(self, name, body, force=False):
         organization, name = name.split("/")
         body['name'] = name
-        path = "/organizations/%s/packages.json" % organization
+        path = "/packages/%s/%s" % (organization, name)
         r = requests.post(self._url(path),
                           params={"force": str(force).lower()},
                           data=json.dumps(body), headers=self.headers)
@@ -123,7 +110,7 @@ class Registry(object):
 
     def delete_package(self, name, version=None):
         organization, name = name.split("/")
-        path = "/organizations/%s/packages/%s" % (organization, name)
+        path = "/packages/%s/%s" % (organization, name)
         params = {}
         if version:
             params['version'] = version

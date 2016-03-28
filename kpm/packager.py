@@ -66,6 +66,15 @@ class Package(object):
         f.write(self.blob)
         f.close()
 
+    def tree(self, directory=""):
+        files = self.files.keys()
+        files.sort()
+        filtered = [x for x in files if x.startswith(directory)]
+        return filtered
+
+    def file(self, filename):
+        return self.files[filename]
+
     @property
     def manifest(self):
         return self.files['manifest.yaml']
