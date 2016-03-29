@@ -1,0 +1,19 @@
+form.app-form {
+  div.row {
+    padding: 4px;
+    label {
+      display: block;
+    }
+    input[type=text],
+    input[type=password] {
+      padding: 4px;
+      width: 300px;
+    }
+  }
+  p.error {
+    border-radius: 4px;
+    padding: 1em;
+    background: #cb3837;
+    color: white;
+  }
+}
