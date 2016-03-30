@@ -4,7 +4,7 @@ app.controller('LoginController', function($scope, $state, KpmApi, Session) {
 
   $scope.$on('login_success', function(event, data) {
     // Redirect user
-    $state.go('packages');
+    $state.go('home');
   });
 
   $scope.$on('login_failure', function(event, data) {

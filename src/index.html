@@ -16,7 +16,7 @@
         <a ui-sref="signup">Sign-up</a>
       </nav>
       <nav ng-if="session.isAuthenticated()">
-        Connected as <a href>{{session.username}}</a> |
+        Connected as <a ui-sref="home">{{session.username}}</a> |
         <a href ng-click="session.logout()">Logout</a>
       </nav>
 

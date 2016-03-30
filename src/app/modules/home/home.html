@@ -1,1 +1,12 @@
-<h2>KPM</h2>
+<h2>Greetings, {{session.username}}!</h2>
+<div class="package-wrapper">
+  <h3>My packages | <a ui-sref="packages">All packages</a></h3>
+  <div
+     ng-if="packages.length > 0"
+     ng-include="'app/modules/packages/preview.html'"
+     ng-repeat="package in packages">
+  </div>
+  <p ng-if="packages.length == 0" class="info-notice">
+    You don't have any packages yet.
+  </p>
+<div>
