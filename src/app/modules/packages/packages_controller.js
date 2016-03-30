@@ -1,8 +1,8 @@
 app.controller('PackagesController', function($scope, $stateParams, KpmApi) {
 
-  var package_id = $stateParams.id;
-  if (package_id) {
-    KpmApi.get('packages/' + package_id)
+  var package_name = $stateParams.name;
+  if (package_name) {
+    KpmApi.get('packages/' + package_name)
     .success(function(data) {
       $scope.package = data;
     });
