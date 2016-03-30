@@ -4,6 +4,9 @@
   <!-- FontAwesome icons -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 
+  <!-- Angular Material CSS -->
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css" />
+
   <!-- Application CSS -->
   <link rel="stylesheet" href="style/style.min.css" />
   <link rel="icon" href="images/favico.png" />
@@ -20,10 +23,25 @@
         <a href ng-click="session.logout()">Logout</a>
       </nav>
 
-      <div class="search" ng-controller="SearchController">
-        <input type="text" name="search" placeholder="search..." />
+      <form ng-controller="SearchController as ctrl" class="search">
+        <md-autocomplete
+          md-search-text="ctrl.searchText"
+          md-items="item in ctrl.querySearch(ctrl.searchText)"
+          md-item-text="item.name"
+          md-selected-item-change="ctrl.itemSelected(item)"
+          placeholder="Search packages">
+          <md-item-template>
+            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">
+              {{item.name}}
+            </span>
+          </md-item-template>
+          <md-not-found>
+            No packages matching "{{ctrl.searchText}}" were found.
+          </md-not-found>
+        </md-autocomplete>
+
+      </form>
         <i class="fa fa-search"></i>
-      </div>
     </div>
   </header>
   <section id="banner">
@@ -43,8 +61,17 @@
     </div>
   </footer>
 
-  <!-- Angular.js Libraries -->
+  <!-- Angular.js Core libraries -->
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-cookies.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+
+  <!-- Angular Material -->
+  <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.js"></script>
+
+  <!-- Angular UI Router -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
 
   <!-- App configuration -->
