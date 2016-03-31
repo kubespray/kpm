@@ -12,7 +12,7 @@ MANIFEST_FILE = "manifest.yaml"
 class Manifest(dict):
     def __init__(self, package=None, path="."):
         if package is not None:
-            self.update(yaml.load(package.manifest))
+            self.update(yaml.safe_load(package.manifest))
             super(Manifest, self).__init__()
 
         elif path is not None:
@@ -21,7 +21,7 @@ class Manifest(dict):
 
     def _load_yaml(self, mfile):
         try:
-            y = yaml.load(open(mfile, 'r'))
+            y = yaml.safe_load(open(mfile, 'r'))
             self.update(y)
         except yaml.YAMLError, exc:
             print "Error in configuration file:"

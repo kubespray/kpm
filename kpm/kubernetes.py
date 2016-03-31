@@ -23,6 +23,7 @@ resource_endpoints = {
     "persistentvolumeclaims": "/api/v1/namespaces/{namespace}/persistentvolumeclaims",
     "services": "/api/v1/namespaces/{namespace}/services",
     "serviceaccounts": "/api/v1/namespaces/{namespace}/serviceaccounts",
+    "configmaps": "/api/v1/namespaces/{namespace}/configmaps",
     "replicationcontrollers": "/api/v1/namespaces/{namespace}/replicationcontrollers",
 }
 

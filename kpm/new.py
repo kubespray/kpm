@@ -15,7 +15,7 @@ package:
   name: {name}
   author: <author>
   version: 1.0.0
-  description: {name}
+  description: {app}
   license: MIT
 
 # Defaults variables
@@ -25,7 +25,7 @@ package:
 #   replicas: 1
 #   image: "gcr.io/google_containers/heapster:v0.18.2"
 #   svc_type: "NodePort"
-variables: {}
+variables: {{}}
 
 # List the resources
 # resources :
@@ -84,7 +84,7 @@ def new_package(name, dest=".", with_comments=False):
         m = MANIFEST
     else:
         m = re.sub(r'(?m)^#.*\n?', '', MANIFEST)
-    manifest.write(m.format(name=name, app=app))
+    manifest.write(m.format(app=app, name=name))
     manifest.close()
     for directory in DIRECTORIES:
         utils.mkdir_p(os.path.join(path, directory))
