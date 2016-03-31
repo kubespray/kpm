@@ -26,6 +26,9 @@
         <pre ng-if="resource.content" class="resource">{{resource.content}}</pre>
       </li>
     </ul>
+    <a ng-href="{{downloadUrl()}}" class="md-button md-raised">
+      Download
+    </a>
 </div>
 
 <p class="error-notice" ng-if="error">

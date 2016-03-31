@@ -11,7 +11,7 @@ app.config(function($stateProvider) {
     templateUrl: 'app/modules/home/home.html'
   })
   .state('packages', {
-    url: '/packages',
+    url: '/packages?search',
     title: 'Package list',
     controller: 'PackagesController',
     templateUrl: 'app/modules/packages/packages.html'
@@ -36,6 +36,7 @@ app.config(function($stateProvider) {
     templateUrl: 'app/modules/user/signup.html'
   })
   .state('error404', {
+    url: '/404',
     templateUrl: 'app/modules/errors/404.html'
   });
 });

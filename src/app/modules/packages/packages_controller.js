@@ -14,8 +14,10 @@ app.controller('PackagesController', function($scope, $stateParams, KpmApi) {
     });
   }
   else {
+    $scope.search = $stateParams.search;
+    var params = $scope.search ? {named_like: $scope.search} : null;
     $scope.loading = true;
-    KpmApi.get('packages')
+    KpmApi.get('packages', params)
     .success(function(data) {
       $scope.ui.loading = false;
       $scope.packages = data;
@@ -35,5 +37,9 @@ app.controller('PackagesController', function($scope, $stateParams, KpmApi) {
         resource.content = data;
       });
     }
+  };
+
+  $scope.downloadUrl = function() {
+    return Config.backend_url + 'packages/' + $scope.package.name + '/generate?tarball=true';
   };
 });
