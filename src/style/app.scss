@@ -22,9 +22,36 @@ a {
     display: flex;
     align-items: baseline;
     form.search {
-      width: 300px;
+      width: 360px;
       margin-left: auto; // pull right
       margin-right: 0.5em;
+    }
+  }
+}
+
+
+// Auto-complete widget
+
+.md-autocomplete-suggestions-container {
+  li {
+    border-bottom: 1px solid #ccc;
+    height: auto;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    white-space: normal;
+    span.highlight {
+      color: $highlight_color;
+    }
+  }
+  li:last-child {
+    border-bottom-width: 0;
+  }
+  .item-title,
+  .item-info {
+    line-height: 2;
+    span.item-meta {
+      font-size: 0.9em;
+      padding-right: 0.5em;
     }
   }
 }
@@ -66,6 +93,12 @@ div.inner {
   color: #aaa;
   padding: 20px;
   text-align: center;
+}
+
+code {
+  background: #eee;
+  padding: 2px 4px;
+  border-radius: 5px;
 }
 
 // Notices
