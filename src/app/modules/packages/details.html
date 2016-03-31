@@ -6,6 +6,11 @@
     <ul>
       <li>Author: <code>{{package.author}}</code></li>
       <li>Version: <code>{{package.version}}</code></li>
+      <li>Available versions:
+        <code ng-repeat="version in package.available_versions">
+          <a ui-sref="package({name: package.name + '/' + version})">{{version}}</a>
+        </code>
+      </li>
       <li>Downloads: <code>{{package.downloads}}</code></li>
     </ul>
     <h3>Dependencies</h3>
