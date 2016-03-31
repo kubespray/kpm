@@ -49,5 +49,10 @@ app.controller('AppController', function($rootScope, $sce, Session) {
   $rootScope.$on('$stateChangeSuccess', function(event, toState) {
     $rootScope.pageTitle = $sce.trustAsHtml('KPM | ' + toState.title);
   });
+
+  // Application-wide ui variables
+  $rootScope.ui = {
+    loading: false
+  };
 });
 

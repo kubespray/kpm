@@ -2,6 +2,7 @@ app.controller('SignupController', function($scope, $state, KpmApi, Session) {
 
   // Create user
   $scope.submit = function() {
+    $scope.ui.loading = true;
     KpmApi.post('users', {
       user: {
         'username': $scope.username,
@@ -11,6 +12,8 @@ app.controller('SignupController', function($scope, $state, KpmApi, Session) {
       }
     })
     .success(function(data) {
+      $scope.ui.loading = false;
+
       // Login user after sign-up
       Session.username = data.username;
       Session.email = data.email;
@@ -20,6 +23,8 @@ app.controller('SignupController', function($scope, $state, KpmApi, Session) {
       $state.go('packages');
     })
     .error(function(data) {
+      $scope.ui.loading = false;
+
       if (data.errors) {
         $scope.errors = [];
         for (key in data.errors) {
