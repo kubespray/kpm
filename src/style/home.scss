@@ -1,0 +1,9 @@
+div.home {
+  display: flex;
+  div.user-packages {
+    flex: 1;
+  }
+  div.user-profile {
+    margin-left: 2em;
+  }
+}
