@@ -84,8 +84,8 @@ class Kubernetes(object):
             self.obj = json.loads(self.body)
 
         if 'annotations' in self.obj['metadata']:
-            if ('kpm.protected' in self.obj['metadata']['annotations']
-                and self.obj['metadata']['annotations']['kpm.protected'] == 'true'):
+            if ('kpm.protected' in self.obj['metadata']['annotations'] and
+               self.obj['metadata']['annotations']['kpm.protected'] == 'true'):
                 self.protected = True
 
     def _namespace(self, namespace=None):
