@@ -29,6 +29,8 @@ class KpmAuth(object):
         f.close()
 
     def delete_token(self):
+        prev_token = self.token
         if os.path.exists(self.tokenfile):
             os.remove(self.tokenfile)
         self._token = None
+        return prev_token

@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: ReplicationController
+metadata:
+  name: kube-ui
+  labels: {'k8s-app': 'kube-ui', 'version': 'v3', 'kubernetes.io/cluster-service': 'true'}
+  namespace: {{namespace}}
+
+spec:
+  replicas: {{replicas}}
+  selector: {'k8s-app': 'kube-ui', 'version': 'v3', 'kubernetes.io/cluster-service': 'true'}
+  template:
+    metadata:
+      labels: {'k8s-app': 'kube-ui', 'version': 'v3', 'kubernetes.io/cluster-service': 'true'}
+    spec:
+      containers:
+      - name: "kube-ui-container"
+        image: {{image}}
+        resources:
+          limits:
+            cpu: 100m
+            memory: 50Mi
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 30
+          timeoutSeconds: 5
