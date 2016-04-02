@@ -28,48 +28,31 @@ class Manifest(dict):
             if hasattr(exc, 'problem_mark'):
                 mark = exc.problem_mark
                 print "Error position: (%s:%s)" % (mark.line+1, mark.column+1)
+            raise exc
 
     @property
     def resources(self):
-        if 'resources' in self.keys():
-            return self['resources']
-        else:
-            return []
+        return self.get("resources", [])
 
     @property
     def deploy(self):
-        if 'deploy' in self.keys():
-            return self['deploy']
-        else:
-            return []
+        return self.get("deploy", [])
 
     @property
     def variables(self):
-        if 'variables' in self.keys():
-            return self['variables']
-        else:
-            return {}
+        return self.get("variables", {})
 
     @property
     def package(self):
-        if 'package' in self.keys():
-            return self['package']
-        else:
-            return {}
+        return self.get("package", {})
 
     @property
     def shards(self):
-        if 'shards' in self.keys():
-            return self['shards']
-        else:
-            return []
+        return self.get("shards", [])
 
     def kubname(self):
         sp = self.package['name'].split('/')
-        if len(sp) > 1:
-            name = "%s_%s" % (sp[0], sp[1])
-        else:
-            name = self.package['name']
+        name = "%s_%s" % (sp[0], sp[1])
         return name
 
     def package_name(self):

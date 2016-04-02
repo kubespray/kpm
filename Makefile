@@ -82,3 +82,6 @@ dist: clean
 
 install: clean
 	python setup.py install
+
+flake8:
+	python setup.py flake8
