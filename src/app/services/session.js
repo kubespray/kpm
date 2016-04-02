@@ -17,6 +17,7 @@ app.service('Session', function($rootScope, KpmApi) {
     .success(function(data) {
       self.email = data.email;
       self.username = data.username;
+      self.setGravatarUrl();
       KpmApi.authorization_token = data.token;
 
       // Broadcast success event
@@ -53,5 +54,12 @@ app.service('Session', function($rootScope, KpmApi) {
    */
   this.isAuthenticated = function() {
     return KpmApi.authorization_token != null;
+  };
+
+  this.setGravatarUrl = function() {
+    if (this.email) {
+      var hash = Crypto.MD5(this.email.toLowerCase());
+      this.gravatar = 'http://www.gravatar.com/avatar/' + hash;
+    }
   };
 });

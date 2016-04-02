@@ -19,6 +19,7 @@
         <a ui-sref="signup">Sign-up</a>
       </nav>
       <nav ng-if="session.isAuthenticated()">
+        <img ng-src="{{session.gravatar}}?s=40" class="gravatar" />
         Connected as <a ui-sref="home">{{session.username}}</a> |
         <a href ng-click="session.logout()">Logout</a>
       </nav>
@@ -85,6 +86,9 @@
 
   <!-- Angular UI Router -->
   <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
+
+  <!-- Vendor -->
+  <script src="vendor/md5/md5.js"></script>
 
   <!-- App configuration -->
   <script src="config/config.js"></script>

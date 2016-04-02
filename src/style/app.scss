@@ -21,6 +21,12 @@ a {
     padding-top: 20px;
     display: flex;
     align-items: baseline;
+    nav {
+      img.gravatar {
+        border-radius: 100%;
+        vertical-align: middle;
+      }
+    }
     form.search {
       width: 360px;
       margin-left: auto; // pull right
