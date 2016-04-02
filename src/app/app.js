@@ -23,6 +23,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
     controller: 'PackagesController',
     templateUrl: 'app/modules/packages/details.html'
   })
+  .state('user', {
+    url: '/user/{username}',
+    title: 'User',
+    controller: 'UserController',
+    templateUrl: 'app/modules/user/user.html',
+  })
   .state('login', {
     url: '/login',
     title: 'Login',

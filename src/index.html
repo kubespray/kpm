@@ -19,8 +19,8 @@
         <a ui-sref="signup">Sign-up</a>
       </nav>
       <nav ng-if="session.isAuthenticated()">
-        <img ng-src="{{session.gravatar}}?s=40" class="gravatar" />
-        Connected as <a ui-sref="home">{{session.username}}</a> |
+        <img ng-src="{{session.user.gravatar}}?s=40" class="gravatar" />
+        Connected as <a ui-sref="home">{{session.user.username}}</a> |
         <a href ng-click="session.logout()">Logout</a>
       </nav>
 
@@ -98,10 +98,12 @@
   <script src="app/services/kpm_api.js"></script>
   <script src="app/services/session.js"></script>
   <script src="app/modules/home/home_controller.js"></script>
+  <script src="app/modules/user/user_controller.js"></script>
   <script src="app/modules/user/signup_controller.js"></script>
   <script src="app/modules/user/login_controller.js"></script>
   <script src="app/modules/packages/packages_controller.js"></script>
   <script src="app/modules/search/search_controller.js"></script>
+  <script src="app/models/user.js"></script>
   <!-- /build -->
 
   <!-- build:js js/templates.js -->

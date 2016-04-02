@@ -1,0 +1,24 @@
+<div class="user" ng-if="user">
+  <div class="user-profile">
+    <h2>{{user.username}}</h2>
+    <p>
+      <img ng-src="{{user.gravatar}}?s=200" />
+    </p>
+    <ul>
+      <li>{{user.email}}</li>
+      <li>Joined on {{user.created_at | date}}</li>
+    </li>
+  </div>
+  <div class="user-packages">
+    <div
+      ng-include="'app/modules/packages/preview.html'"
+      ng-repeat="package in user.packages">
+    </div>
+    <p ng-if="user.packages.length == 0" class="info-notice">
+      {{user.username}} hasn't published any packages yet.
+    </p>
+  </div>
+</div>
+<p class="error-notice" ng-if="error">
+  {{error}}
+</p>
