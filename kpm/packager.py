@@ -36,7 +36,6 @@ def pack_kub(kub):
 
 
 def unpack_kub(kub, dest="."):
-    print kub, dest
     tar = tarfile.open(kub, "r")
     tar.extractall(dest)
     tar.close()
@@ -84,12 +83,11 @@ class Package(object):
         return self.files['LICENSE']
 
     @property
-    def deps(self):
-        return {k: v for (k, v) in self.files.iteritems() if k.startswith("deps/")}
-
-    @property
     def templates(self):
-        return {k: v for (k, v) in self.files.iteritems() if k.startswith("templates/")}
+        return self._files_startwith.startwith("templates/")
+
+    def _files_startwith(self, begin):
+        return {k: v for (k, v) in self.files.iteritems() if k.startswith(begin)}
 
     @property
     def readme(self):
