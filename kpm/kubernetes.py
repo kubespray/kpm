@@ -25,6 +25,7 @@ resource_endpoints = {
     "serviceaccounts": "/api/v1/namespaces/{namespace}/serviceaccounts",
     "configmaps": "/api/v1/namespaces/{namespace}/configmaps",
     "replicationcontrollers": "/api/v1/namespaces/{namespace}/replicationcontrollers",
+    "pods": "/api/v1/namespaces/{namespace}/pods",
 }
 
 
@@ -48,7 +49,7 @@ def get_endpoint(kind):
     elif kind + "s" in resource_endpoints:
         name = kind + "s"
     else:
-        raise StandardError("Resource name %s not in [%s]" % (kind, resource_endpoints.keys()))
+        raise KeyError("Resource name %s not in [%s]" % (kind, resource_endpoints.keys()))
     return resource_endpoints[name]
 
 
