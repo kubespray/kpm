@@ -3,12 +3,12 @@ from kpm.manifest import Manifest
 
 
 @pytest.fixture(scope="module")
-def manifest(test_package):
-    return Manifest(test_package)
+def manifest(kubeui_package):
+    return Manifest(kubeui_package)
 
 
 @pytest.fixture(scope="module")
-def empty_manifest(test_package):
+def empty_manifest():
     return Manifest(None, None)
 
 
