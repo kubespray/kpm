@@ -9,11 +9,6 @@ def print_packages(packages):
     header = ['app', 'version', 'downloads']
     table = []
 
-    def _strprivate(val):
-        if val:
-            return "private"
-        else:
-            return "public"
     for p in packages:
         table.append([p['name'], p['version'],  str(p['downloads'])])
     print tabulate(table, header)
