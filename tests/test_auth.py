@@ -3,7 +3,7 @@ import os.path
 from kpm.auth import KpmAuth
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture()
 def fake_home(monkeypatch, tmpdir):
     home = tmpdir.mkdir('home')
     monkeypatch.setenv("HOME", home)

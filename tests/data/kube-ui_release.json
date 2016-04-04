@@ -1,0 +1,42 @@
+{
+  "deploy": [
+    {
+      "namespace": "testns",
+      "package": "ant31/kube-ui",
+      "resources": [
+        {
+          "body": "{\"apiVersion\": \"v1\", \"kind\": \"Namespace\", \"metadata\": {\"name\": \"testns\", \"annotations\": {\"kpm.protected\": \"true\", \"kpm.version\": \"1.0.1\", \"kpm.parent\": \"ant31/kube-ui\", \"kpm.package\": \"ant31/kube-ui\"}}}",
+          "endpoint": "/api/v1/namespaces",
+          "file": "testns-ns.yaml",
+          "hash": null,
+          "kind": "namespace",
+          "name": "testns",
+          "protected": true
+        },
+        {
+          "body": "{\"apiVersion\": \"v1\", \"kind\": \"ReplicationController\", \"metadata\": {\"labels\": {\"k8s-app\": \"kube-ui\", \"kubernetes.io/cluster-service\": \"true\", \"version\": \"v3\"}, \"name\": \"kube-ui\", \"namespace\": \"testns\", \"annotations\": {\"kpm.protected\": \"false\", \"kpm.version\": \"1.0.1\", \"kpm.hash\": \"c0298c75be9b15c79c14237d1605f884bd40c40c81098a29cce0bb4a9e048e3d\", \"kpm.parent\": \"ant31/kube-ui\", \"kpm.package\": \"ant31/kube-ui\"}}, \"spec\": {\"replicas\": 2, \"selector\": {\"k8s-app\": \"kube-ui\", \"kubernetes.io/cluster-service\": \"true\", \"version\": \"v3\"}, \"template\": {\"metadata\": {\"labels\": {\"k8s-app\": \"kube-ui\", \"kubernetes.io/cluster-service\": \"true\", \"version\": \"v3\"}}, \"spec\": {\"containers\": [{\"image\": \"gcr.io/google_containers/kube-ui:v5\", \"livenessProbe\": {\"httpGet\": {\"path\": \"/\", \"port\": 8080}, \"initialDelaySeconds\": 30, \"timeoutSeconds\": 5}, \"name\": \"kube-ui-container\", \"ports\": [{\"containerPort\": 8080}], \"resources\": {\"limits\": {\"cpu\": \"100m\", \"memory\": \"50Mi\"}}}]}}}}",
+          "endpoint": "/api/v1/namespaces/testns/replicationcontrollers",
+          "file": "kube-ui-rc.yaml",
+          "hash": "c0298c75be9b15c79c14237d1605f884bd40c40c81098a29cce0bb4a9e048e3d",
+          "kind": "replicationcontroller",
+          "name": "kube-ui",
+          "protected": false
+        },
+        {
+          "body": "{\"apiVersion\": \"v1\", \"kind\": \"Service\", \"metadata\": {\"labels\": {\"k8s-app\": \"kube-ui\", \"kubernetes.io/cluster-service\": \"true\", \"version\": \"v3\"}, \"name\": \"kube-ui\", \"namespace\": \"testns\", \"annotations\": {\"kpm.protected\": \"false\", \"kpm.version\": \"1.0.1\", \"kpm.hash\": \"5e8575cdd200989a8669760ce4d29b195e0244b5581cf7bd099a12663ce19b6c\", \"kpm.parent\": \"ant31/kube-ui\", \"kpm.package\": \"ant31/kube-ui\"}}, \"spec\": {\"ports\": [{\"port\": 80, \"targetPort\": 8080}], \"selector\": {\"k8s-app\": \"kube-ui\", \"kubernetes.io/cluster-service\": \"true\", \"version\": \"v3\"}, \"type\": \"NodePort\"}}",
+          "endpoint": "/api/v1/namespaces/testns/services",
+          "file": "kube-ui-svc.yaml",
+          "hash": "5e8575cdd200989a8669760ce4d29b195e0244b5581cf7bd099a12663ce19b6c",
+          "kind": "service",
+          "name": "kube-ui",
+          "protected": false
+        }
+      ],
+      "version": "1.0.1"
+    }
+  ],
+  "package": {
+    "name": "ant31/kube-ui",
+    "version": "1.0.1"
+  }
+}

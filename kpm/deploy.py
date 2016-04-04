@@ -52,7 +52,7 @@ def _process(package_name,
             with open(os.path.join(dest, resource['file']), 'wb') as f:
                 f.write(body)
 
-            kubresource = Kubernetes(f.name, namespace, body=body, endpoint=endpoint, proxy=proxy)
+            kubresource = Kubernetes(namespace=namespace, body=body, endpoint=endpoint, proxy=proxy)
             status = getattr(kubresource, action)(force=force, dry=dry)
             if fmt == "stdout":
                 output_progress(kubresource, status)
