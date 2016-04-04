@@ -1,5 +1,9 @@
 sudo: false
 
+addons:
+  code_climate:
+    repo_token: a6adb14185da38fc06b3df732a5b2a5cc06df0004f73b2a792c10b3d5fdbe3ff
+
 env:
   - TOXENV=coveralls
   - TOXENV=flake8

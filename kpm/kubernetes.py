@@ -1,9 +1,10 @@
+import tempfile
 import time
 import logging
 import json
 import subprocess
 import requests
-from urlparse import urlparse, urljoin
+from urlparse import urlparse
 
 __all__ = ['Kubernetes', "get_endpoint"]
 
@@ -55,14 +56,12 @@ def get_endpoint(kind):
 
 class Kubernetes(object):
     def __init__(self,
-                 filepath=None,
                  namespace=None,
                  endpoint=None,
                  body=None,
                  proxy=None):
 
         self.proxy = None
-        self.filepath = filepath
         self.endpoint = endpoint
         self.body = body
         self.obj = None
@@ -78,11 +77,7 @@ class Kubernetes(object):
             self.proxy = urlparse(proxy)
 
     def _resource_load(self):
-        if self.filepath:
-            with open(self.filepath, 'r') as f:
-                self.obj = json.load(f)
-        else:
-            self.obj = json.loads(self.body)
+        self.obj = json.loads(self.body)
 
         if 'annotations' in self.obj['metadata']:
             if ('kpm.protected' in self.obj['metadata']['annotations'] and
@@ -106,14 +101,19 @@ class Kubernetes(object):
           - if doesnt exists create it
         """
         r = self.get()
-        cmd = ['create', '-f', self.filepath]
+        f = tempfile.NamedTemporaryFile()
+        cmd = ['create', '-f', f.name]
+        f.write(self.body)
+        f.flush()
         if r is None:
             self._call(cmd, dry=dry)
+
             return 'created'
         elif (self.kpmhash is None or self._get_kpmhash(r) == self.kpmhash) and force is False:
             return 'ok'
         elif self._get_kpmhash(r) != self.kpmhash or force is True:
-            self.delete(dry=dry)
+            if self.delete(dry=dry) == 'protected':
+                return 'protected'
             self._call(cmd, dry=dry)
             return 'updated'
 
@@ -150,9 +150,12 @@ class Kubernetes(object):
     def wait(self, retries=3, seconds=1):
         r = 1
         time.sleep(seconds)
-        while (r < retries and self.get() is None):
+        obj = self.get()
+        while (r < retries and obj is None):
             r += 1
             time.sleep(seconds)
+            obj = self.get()
+        return obj
 
     def exists(self):
         r = self.get()
@@ -175,7 +178,7 @@ class Kubernetes(object):
         if method == 'create':
             headers = {'Content-Type': 'application/json'}
             method = 'post'
-            url = urljoin(self.proxy.geturl(), self.endpoint)
+            url = "%s/%s" % (self.proxy.geturl(), self.endpoint)
             return requests.post(url, data=self.body, headers=headers)
         else:
             url = "%s/%s/%s" % (self.proxy.geturl(), self.endpoint, self.name)

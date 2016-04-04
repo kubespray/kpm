@@ -26,6 +26,7 @@ requirements = [
 test_requirements = [
     "pytest",
     "pytest-cov"
+    "requests-mock"
 ]
 
 setup(
