@@ -10,8 +10,6 @@ Tests for `kpm` module.
 
 import unittest
 
-import kpm
-
 
 class TestKpm(unittest.TestCase):
 

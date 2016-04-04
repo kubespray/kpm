@@ -1,7 +1,7 @@
 import pytest
 import os.path
 
-from kpm.packager import pack_kub, unpack_kub, Package
+from kpm.packager import pack_kub, unpack_kub
 import hashlib
 
 
@@ -10,6 +10,7 @@ KUBEUI_FILES = ["manifest.yaml",
                 "README.md",
                 "templates/kube-ui-rc.yaml",
                 "templates/kube-ui-svc.yaml"]
+
 
 @pytest.fixture()
 def package_dir(monkeypatch):
@@ -23,23 +24,18 @@ def pack_tar(package_dir, tmpdir):
     return kub
 
 
-def test_pack_kub(pack_tar):
-    assert hashlib.md5(open(pack_tar, "r").read()).hexdigest() == TAR_MD5SUM
+def _check_kub(path):
+    for f in KUBEUI_FILES:
+        assert os.path.exists(os.path.join(str(path), f))
+    assert os.path.exists(os.path.join(str(path), "templates/another_file_to_ignore.cfg")) is False
+    assert os.path.exists(os.path.join(str(path), "file_to_ignore.yaml")) is False
 
 
 def test_pack_kub_with_authorized_only(pack_tar, tmpdir):
     import tarfile
     tar = tarfile.open(pack_tar, "r")
     tar.extractall(str(tmpdir))
-    assert os.path.exists(os.path.join(str(tmpdir), "file_to_ignore.yaml")) is False
-    assert os.path.exists(os.path.join(str(tmpdir), "manifest.yaml")) is True
-
-
-def _check_kub(path):
-    for f in KUBEUI_FILES:
-        assert os.path.exists(os.path.join(str(path), f))
-    assert os.path.exists(os.path.join(str(path), "templates/another_file_to_ignore.cfg")) is False
-    assert os.path.exists(os.path.join(str(path), "file_to_ignore.yaml")) is False
+    _check_kub(str(tmpdir))
 
 
 def test_unpack_kub(pack_tar, tmpdir):
