@@ -1,4 +1,13 @@
+import json
+import subprocess
 import pytest
+
+
+def get_response(name, kind):
+    f = open("tests/data/responses/%s-%s.json" % (name, kind))
+    r = f.read()
+    f.close()
+    return r
 
 
 @pytest.fixture(scope="module")
@@ -7,3 +16,82 @@ def kubeui_package():
     with open("./tests/data/kube-ui.tar", "rb") as f:
         package = kpm.packager.Package(f.read())
     return package
+
+
+@pytest.fixture(scope="module")
+def deploy_json():
+    f = open("tests/data/kube-ui_release.json", 'r')
+    r = f.read()
+    f.close()
+    return r
+
+
+@pytest.fixture(scope="module")
+def deploy(deploy_json):
+    return json.loads(deploy_json)
+
+
+@pytest.fixture(scope="module")
+def ns_resource(deploy):
+    kubeui = deploy["deploy"][0]
+    return kubeui['resources'][0]
+
+
+@pytest.fixture(scope="module")
+def rc_resource(deploy):
+    kubeui = deploy["deploy"][0]
+    return kubeui['resources'][1]
+
+
+@pytest.fixture(scope="module")
+def svc_resource(deploy):
+    kubeui = deploy["deploy"][0]
+    return kubeui['resources'][2]
+
+
+@pytest.fixture()
+def subcall_cmd(monkeypatch):
+    def get_cmd(cmd, stderr="err"):
+        return " ".join(cmd)
+    monkeypatch.setattr("subprocess.check_output", get_cmd)
+
+
+@pytest.fixture()
+def subcall_cmd_error(monkeypatch):
+    def get_cmd(cmd, stderr="err"):
+        raise subprocess.CalledProcessError("a", "b", "c")
+    monkeypatch.setattr("subprocess.check_output", get_cmd)
+
+
+
+@pytest.fixture()
+def subcall_get_assert(monkeypatch):
+    def get_cmd(cmd, stderr="err"):
+        kind, name = cmd[2], cmd[3]
+        assert " ".join(cmd) == "kubectl get %s %s -o json --namespace testns" % (kind, name)
+        return get_response(name, kind)
+    monkeypatch.setattr("subprocess.check_output", get_cmd)
+
+
+@pytest.fixture()
+def subcall_all(monkeypatch):
+    def get_cmd(cmd, stderr="err"):
+        action, kind, name = cmd[1], cmd[2], cmd[3]
+        if action != "create":
+            return get_response(name, kind)
+        else:
+            with open(name, 'r') as f:
+                return f.read()
+    monkeypatch.setattr("subprocess.check_output", get_cmd)
+
+
+@pytest.fixture()
+def subcall_delete(monkeypatch):
+    def get_cmd(cmd, stderr="err"):
+        action, kind, name = cmd[1], cmd[2], cmd[3]
+        if action == "get":
+            assert " ".join(cmd) == "kubectl get %s %s -o json --namespace testns" % (kind, name)
+        elif action == "delete":
+            assert " ".join(cmd) == "kubectl delete %s %s --namespace testns" % (kind, name)
+        return get_response(name, kind)
+    monkeypatch.setattr("subprocess.check_output", get_cmd)
