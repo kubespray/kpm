@@ -8,7 +8,9 @@ env:
   - TOXENV=coveralls
   - TOXENV=flake8
 
-install: pip install -U tox
+install:
+  - pip install -U tox
+  - pip install -U coveralls
 language: python
 script: tox
 

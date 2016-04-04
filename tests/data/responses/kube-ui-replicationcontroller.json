@@ -15,7 +15,7 @@
             "version": "v3"
         },
         "annotations": {
-            "kpm.hash": "1f199947c84c81cca83d1592fde21fb82bf455c05e955c54bdb7962373fcb962",
+            "kpm.hash": "c0298c75be9b15c79c14237d1605f884bd40c40c81098a29cce0bb4a9e048e3d",
             "kpm.package": "ant31/kube-ui",
             "kpm.parent": "ant31/kube-ui",
             "kpm.protected": "false",

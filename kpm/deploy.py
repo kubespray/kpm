@@ -57,13 +57,13 @@ def _process(package_name,
             if fmt == "stdout":
                 output_progress(kubresource, status)
             result_line = OrderedDict([("package", "%s/%s" % (organization, name)),
-                                      ("version", version),
-                                      ("kind", kubresource.kind),
-                                      ("name", kubresource.name),
-                                      ("namespace", kubresource.namespace),
-                                      ("status", status)])
-            if dry:
-                result_line['dry-run'] = True
+                                       ("version", version),
+                                       ("kind", kubresource.kind),
+                                       ("dry", dry),
+                                       ("name", kubresource.name),
+                                       ("namespace", kubresource.namespace),
+                                       ("status", status)])
+
             if status != 'ok' and action == 'create':
                 kubresource.wait(3)
             table.append(result_line.values())
