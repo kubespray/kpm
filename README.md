@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/kubespray/kpm.svg?branch=master)](https://travis-ci.org/kubespray/kpm) [![Code Climate](https://codeclimate.com/github/kubespray/kpm/badges/gpa.svg)](https://codeclimate.com/github/kubespray/kpm) [![Coverage Status](https://coveralls.io/repos/github/kubespray/kpm/badge.svg?branch=master)](https://coveralls.io/github/kubespray/kpm?branch=master)
+
+
 # KPM
 
 KPM is a tool to deploy and manage applications stack on kubernetes.
@@ -70,7 +73,7 @@ sudo make install
 ### Configuration
 
 KPM uses `kubectl` to communicate with the kubernetes cluster.
-Check if the cluster is accessible: 
+Check if the cluster is accessible:
 ```bash
 $ kubectl version
 Client Version: version.Info{Major:"1", Minor:"1", GitVersion:"v1.1.4", GitCommit:"a5949fea3a91d6a50f40a5684e05879080a4c61d", GitTreeState:"clean"}
@@ -98,7 +101,7 @@ Server Version: version.Info{Major:"1", Minor:"1", GitVersion:"v1.1.4", GitCommi
 ### deploy
 
 ## Create a new package
-The quickest way to get started is to use the command `new`: 
+The quickest way to get started is to use the command `new`:
 
 ```
 kpm new namespace/packagename [--with-comments]
@@ -122,9 +125,9 @@ It accepts every kind of resources (rc,secrets,pods,svc...).
 
 Resources can be templated with Jinja2.
 
->  We recommend to parametrize only values that should be overrided. 
->  Having a very light templated resources improve readability and quickly point to users which values are 
->  important to look at and change. User can use 'patch' to add their custom values. 
+>  We recommend to parametrize only values that should be overrided.
+>  Having a very light templated resources improve readability and quickly point to users which values are
+>  important to look at and change. User can use 'patch' to add their custom values.
 
 You can declare the deploy order inside the `manifest.yaml`
 
