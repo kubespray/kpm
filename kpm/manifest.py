@@ -12,7 +12,7 @@ MANIFEST_FILE = "manifest.yaml"
 class Manifest(dict):
     def __init__(self, package=None, path="."):
         if package is not None:
-            self.update(yaml.load(package.manifest))
+            self.update(yaml.safe_load(package.manifest))
             super(Manifest, self).__init__()
 
         elif path is not None:
@@ -21,55 +21,38 @@ class Manifest(dict):
 
     def _load_yaml(self, mfile):
         try:
-            y = yaml.load(open(mfile, 'r'))
+            y = yaml.safe_load(open(mfile, 'r'))
             self.update(y)
         except yaml.YAMLError, exc:
             print "Error in configuration file:"
             if hasattr(exc, 'problem_mark'):
                 mark = exc.problem_mark
                 print "Error position: (%s:%s)" % (mark.line+1, mark.column+1)
+            raise exc
 
     @property
     def resources(self):
-        if 'resources' in self.keys():
-            return self['resources']
-        else:
-            return []
+        return self.get("resources", [])
 
     @property
     def deploy(self):
-        if 'deploy' in self.keys():
-            return self['deploy']
-        else:
-            return []
+        return self.get("deploy", [])
 
     @property
     def variables(self):
-        if 'variables' in self.keys():
-            return self['variables']
-        else:
-            return {}
+        return self.get("variables", {})
 
     @property
     def package(self):
-        if 'package' in self.keys():
-            return self['package']
-        else:
-            return {}
+        return self.get("package", {})
 
     @property
     def shards(self):
-        if 'shards' in self.keys():
-            return self['shards']
-        else:
-            return []
+        return self.get("shards", [])
 
     def kubname(self):
         sp = self.package['name'].split('/')
-        if len(sp) > 1:
-            name = "%s_%s" % (sp[0], sp[1])
-        else:
-            name = self.package['name']
+        name = "%s_%s" % (sp[0], sp[1])
         return name
 
     def package_name(self):

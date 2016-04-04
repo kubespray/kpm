@@ -24,12 +24,13 @@ requirements = [
 ]
 
 test_requirements = [
-    # TODO: put package test requirements here
+    "pytest",
+    "pytest-cov"
 ]
 
 setup(
     name='kpm',
-    version='0.10.5',
+    version='0.11.0',
     description="KPM cli",
     long_description=readme + '\n\n' + history,
     author="Antoine Legrand",

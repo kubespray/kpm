@@ -1,0 +1,4 @@
+---
+bad_indent_yaml:
+ - test: 3
+   - error: 4

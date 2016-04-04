@@ -49,7 +49,7 @@ lint:
 	flake8 kpm tests
 
 test:
-	python setup.py test
+	py.test --cov=kpm --cov-report=html --cov-report=term-missing  --verbose
 
 test-all:
 	tox
@@ -82,3 +82,9 @@ dist: clean
 
 install: clean
 	python setup.py install
+
+flake8:
+	python setup.py flake8
+
+coveralls: test
+	coveralls

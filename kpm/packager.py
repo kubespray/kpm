@@ -21,6 +21,8 @@ logger = logging.getLogger(__name__)
 AUTHORIZED_FILES = ["templates/*.yaml",
                     "templates/*.yml",
                     "templates/*.j2",
+                    "templates/*.yaml.j2",
+                    "templates/*.yml.j2",
                     "README.md",
                     "manifest.yaml",
                     "LICENSE",
@@ -36,7 +38,6 @@ def pack_kub(kub):
 
 
 def unpack_kub(kub, dest="."):
-    print kub, dest
     tar = tarfile.open(kub, "r")
     tar.extractall(dest)
     tar.close()
@@ -66,22 +67,15 @@ class Package(object):
         f.write(self.blob)
         f.close()
 
+    def tree(self, directory=""):
+        files = self.files.keys()
+        files.sort()
+        filtered = [x for x in files if x.startswith(directory)]
+        return filtered
+
+    def file(self, filename):
+        return self.files[filename]
+
     @property
     def manifest(self):
         return self.files['manifest.yaml']
-
-    @property
-    def license(self):
-        return self.files['LICENSE']
-
-    @property
-    def deps(self):
-        return {k: v for (k, v) in self.files.iteritems() if k.startswith("deps/")}
-
-    @property
-    def templates(self):
-        return {k: v for (k, v) in self.files.iteritems() if k.startswith("templates/")}
-
-    @property
-    def readme(self):
-        return self.files['README.md']

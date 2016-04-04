@@ -22,9 +22,13 @@ def new(options):
 def show(options):
     r = Registry(options.registry_host)
     result = r.pull(options.package[0])
-    p = Package(result['blob'])
-    print p.manifest
-
+    p = Package(result['kub'])
+    if options.tree:
+        print "\n".join(p.tree())
+    elif options.file:
+        print p.file(options.file)
+    else:
+        print p.manifest
 
 def install(options):
     kpm.deploy.deploy(options.package[0],
@@ -49,7 +53,7 @@ def remove(options):
 def pull(options):
     r = Registry(options.registry_host)
     result = r.pull(options.package[0])
-    p = Package(result['blob'])
+    p = Package(result['kub'])
     path = os.path.join(options.directory, kpm.manifest.Manifest(p).package_name())
     p.extract(path)
 
@@ -76,8 +80,15 @@ def list_packages(options):
 
 def login(options):
     r = Registry(options.registry_host)
-    user = raw_input("Username: ")
-    p1 = getpass.getpass()
+    if options.user is not None:
+        user = options.user
+    else:
+        user = raw_input("Username: ")
+    if options.password is not None:
+        p1 = options.password
+    else:
+        p1 = getpass.getpass()
+
     if options.signup:
         p2 = getpass.getpass('Password confirmation: ')
         email = raw_input("Email: ")
@@ -140,6 +151,8 @@ if __name__ == "__main__":
     # Show
     show_parser = subparsers.add_parser('show', help='print the package manifest')
     show_parser.add_argument('package', nargs=1, help="package-name")
+    show_parser.add_argument('--tree', nargs="?", help="List files inside the package", const=".", default=None)
+    show_parser.add_argument('-f', '--file', nargs="?", help="Display a file", default=None)
     show_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
                                 help=argparse.SUPPRESS)
 
@@ -161,6 +174,11 @@ if __name__ == "__main__":
                               help=argparse.SUPPRESS)
     login_parser.add_argument("-s", "--signup", action='store_true', default=False,
                               help="Create a new account and login")
+    login_parser.add_argument("-u", "--user", nargs="?", default=None,
+                                help="username")
+    login_parser.add_argument("-p", "--password", nargs="?", default=None,
+                                help="password")
+
     login_parser.set_defaults(func=login)
 
     # Logout

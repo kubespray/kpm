@@ -1,16 +1,12 @@
 sudo: false
 
-deploy:
-  true:
-    condition: $TOXENV == py27
-    repo: kubespray/kpm
-    tags: true
-  distributions: sdist bdist_wheel
-  password: $PYPI_PASSWORD
-  provider: pypi
-  user: ant31
 env:
-- TOXENV=py27
+  - TOXENV=coveralls
+  - TOXENV=flake8
+
 install: pip install -U tox
 language: python
 script: tox
+
+after_success:
+  - coveralls
