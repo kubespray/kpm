@@ -4,10 +4,9 @@ from kpm.new import new_package
 
 
 @pytest.fixture()
-def home_dir(monkeypatch, tmpdir):
-    home = str(tmpdir.mkdir("home"))
-    monkeypatch.chdir(home)
-    return home
+def home_dir(monkeypatch, fake_home):
+    monkeypatch.chdir(str(fake_home))
+    return str(fake_home)
 
 
 @pytest.fixture()

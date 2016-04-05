@@ -50,7 +50,7 @@ class Registry(object):
         if user:
             params['username'] = user
         if organization:
-            params["organizations"] = organization
+            params["organization"] = organization
         r = requests.get(self._url(path), params=params, headers=self.headers)
         r.raise_for_status()
         return r.json()

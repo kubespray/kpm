@@ -1,7 +1,7 @@
 import pytest
 import os.path
 
-from kpm.packager import pack_kub, unpack_kub
+from kpm.packager import unpack_kub
 import hashlib
 
 
@@ -10,18 +10,6 @@ KUBEUI_FILES = ["manifest.yaml",
                 "README.md",
                 "templates/kube-ui-rc.yaml",
                 "templates/kube-ui-svc.yaml"]
-
-
-@pytest.fixture()
-def package_dir(monkeypatch):
-    monkeypatch.chdir("tests/data/kube-ui")
-
-
-@pytest.fixture()
-def pack_tar(package_dir, tmpdir):
-    kub = os.path.join(str(tmpdir.mkdir("tars")), "kube-ui.tar")
-    pack_kub(kub)
-    return kub
 
 
 def _check_kub(path):

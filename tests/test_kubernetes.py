@@ -9,8 +9,6 @@ from kpm.kubernetes import get_endpoint, Kubernetes
 NAMESPACE="testns"
 
 
-
-
 def test_endpoints():
     a = get_endpoint("po")
     b = get_endpoint("pods")
@@ -138,8 +136,7 @@ def test_get_proxy(svc_resource):
     assert url == url2
     with requests_mock.mock() as m:
         response = get_response(svc_resource["name"], svc_resource["kind"])
-        m.get(url,
-              text=response)
+        m.get(url, text=response)
         assert json.dumps(k.get()) == json.dumps(json.loads(response))
 
 
