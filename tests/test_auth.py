@@ -3,13 +3,6 @@ import os.path
 from kpm.auth import KpmAuth
 
 
-@pytest.fixture()
-def fake_home(monkeypatch, tmpdir):
-    home = tmpdir.mkdir('home')
-    monkeypatch.setenv("HOME", home)
-    return home
-
-
 def test_fake_home(fake_home):
     assert os.path.expanduser("~") == fake_home
 

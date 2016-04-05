@@ -1,7 +1,13 @@
 import json
 import subprocess
 import pytest
+import os
 
+@pytest.fixture(autouse=True)
+def fake_home(monkeypatch, tmpdir):
+    home = tmpdir.mkdir('home')
+    monkeypatch.setenv("HOME", home)
+    return home
 
 def get_response(name, kind):
     f = open("tests/data/responses/%s-%s.json" % (name, kind))
@@ -19,11 +25,32 @@ def kubeui_package():
 
 
 @pytest.fixture(scope="module")
+def kubeui_blob():
+    import kpm.packager
+    with open("./tests/data/kube-ui.tar", "rb") as f:
+        package = f.read()
+    return package
+
+
+@pytest.fixture(scope="module")
 def deploy_json():
     f = open("tests/data/kube-ui_release.json", 'r')
     r = f.read()
     f.close()
     return r
+
+
+@pytest.fixture()
+def package_dir(monkeypatch):
+    monkeypatch.chdir("tests/data/kube-ui")
+
+
+@pytest.fixture()
+def pack_tar(package_dir, tmpdir):
+    from kpm.packager import pack_kub
+    kub = os.path.join(str(tmpdir.mkdir("tars")), "kube-ui.tar")
+    pack_kub(kub)
+    return kub
 
 
 @pytest.fixture(scope="module")
