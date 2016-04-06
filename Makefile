@@ -48,10 +48,16 @@ clean-test:
 lint:
 	flake8 kpm tests
 
+test-cli:
+	py.test --cov=kpm --cov=bin/kpm --cov-report=html --cov-report=term-missing  --verbose tests -m "cli" --cov-config=.coverage-cli.ini
+
 test:
-	py.test --cov=kpm --cov-report=html --cov-report=term-missing  --verbose
+	py.test --cov=kpm --cov-report=html --cov-report=term-missing  --verbose tests -m "not cli" --cov-config=.coverage-unit.ini
 
 test-all:
+	py.test --cov=kpm --cov-report=html --cov-report=term-missing  --verbose tests
+
+tox:
 	tox
 
 coverage:

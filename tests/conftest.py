@@ -3,11 +3,13 @@ import subprocess
 import pytest
 import os
 
-@pytest.fixture(autouse=True)
+
+@pytest.fixture()
 def fake_home(monkeypatch, tmpdir):
     home = tmpdir.mkdir('home')
     monkeypatch.setenv("HOME", home)
     return home
+
 
 def get_response(name, kind):
     f = open("tests/data/responses/%s-%s.json" % (name, kind))

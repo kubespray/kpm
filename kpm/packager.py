@@ -67,10 +67,13 @@ class Package(object):
         f.write(self.blob)
         f.close()
 
-    def tree(self, directory=""):
+    def tree(self, directory=None):
         files = self.files.keys()
         files.sort()
-        filtered = [x for x in files if x.startswith(directory)]
+        if directory is not None:
+            filtered = [x for x in files if x.startswith(directory)]
+        else:
+            filtered = files
         return filtered
 
     def file(self, filename):
