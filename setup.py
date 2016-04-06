@@ -25,7 +25,8 @@ requirements = [
 
 test_requirements = [
     "pytest",
-    "pytest-cov"
+    "pytest-cov",
+    "pytest-ordering",
     "requests-mock"
 ]
 

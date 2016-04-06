@@ -66,8 +66,13 @@ def _process(package_name,
 
             if status != 'ok' and action == 'create':
                 kubresource.wait(3)
-            table.append(result_line.values())
             results.append(result_line)
+            if fmt == "stdout":
+                header = ["package", "version", "kind", "name",  "namespace", "status"]
+                display_line = []
+                for k in header:
+                    display_line.append(result_line[k])
+                table.append(display_line)
     if fmt == "stdout":
         print_deploy_result(table)
     return results

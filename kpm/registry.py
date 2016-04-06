@@ -9,7 +9,7 @@ __all__ = ['Registry']
 
 logger = logging.getLogger(__name__)
 DEFAULT_REGISTRY = "https://api.kpm.sh"
-DEFAULT_STG_REGISTRY = "https://stg-api.kpm.sh"
+DEFAULT_STG_REGISTRY = "https://api-stg.kpm.sh"
 API_PREFIX = '/api/v1'
 
 
