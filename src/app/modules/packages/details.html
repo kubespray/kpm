@@ -26,7 +26,7 @@
     <ul>
       <li ng-repeat="resource in package.manifest.resources">
         <a href ng-click="toggleResource(resource)">{{resource.file}}</a>
-        <pre ng-if="resource.content" class="resource">{{resource.content}}</pre>
+        <pre ng-if="resource.content"><code prism="yaml">{{resource.content}}</code></pre>
       </li>
     </ul>
     <a ng-href="{{downloadUrl()}}" class="md-button md-raised">
