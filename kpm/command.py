@@ -11,6 +11,7 @@ import kpm.manifest
 import kpm.deploy
 from kpm.display import print_packages
 from kpm.new import new_package
+from kpm.console import KubernetesExec
 
 
 def new(options):
@@ -56,6 +57,13 @@ def pull(options):
     p = Package(result['kub'])
     path = os.path.join(options.directory, kpm.manifest.Manifest(p).package_name())
     p.extract(path)
+
+
+def exec_cmd(options):
+    c = KubernetesExec(options.name, kind=options.kind,
+                       namespace=options.namespace,
+                       cmd=" ".join(options.cmd))
+    c.call()
 
 
 def push(options):
@@ -253,5 +261,18 @@ def get_parser():
                                help="package version")
 
     delete_parser.set_defaults(func=delete_package)
+
+
+    #  EXEC
+    exec_parser = subparsers.add_parser('exec', help='exec a command in pod from the RC or RS name.\
+    It executes the command on the first matching pod')
+    exec_parser.add_argument('cmd', nargs='+', help="command to execute")
+    exec_parser.add_argument("--namespace", nargs="?",
+                             help="kubernetes namespace", default='default')
+
+    exec_parser.add_argument('--kind', choices=['rs', 'rc'], nargs="?", help="RC or RS", default='rc')
+    exec_parser.add_argument('-n', '--name', help="resource name", default='rs')
+
+    exec_parser.set_defaults(func=exec_cmd)
 
     return parser
