@@ -1,23 +1,31 @@
 import json
 import subprocess
 import random
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 class KubernetesExec(object):
-    def __init__(self, rcname, kind="rc", namespace="default", cmd="sh"):
+    def __init__(self, rcname, cmd='sh', namespace="default", container=None, kind="rc"):
         self.rcname = rcname
         self.namespace = namespace
         self.command = cmd
         self.kind = kind
+        self.container = container
 
     def call(self, tty=True):
         rc = self._getrc()
         selector = self._getselector(rc)
+        logger.info("selector: %s", selector)
         pods = self._getpods(selector)
         podname = random.choice(pods)['metadata']['name']
         cmd = ['exec', '--namespace', self.namespace, podname]
         if tty:
             cmd.append("-ti")
+        if self.container is not None:
+            cmd += ['-c', self.container]
         command = ['kubectl'] + cmd + ["--"] + self.command.split(" ")
         return subprocess.call(command)
 
@@ -29,7 +37,10 @@ class KubernetesExec(object):
 
     def _getselector(self, rc):
         s = None
-        for k, v in rc['spec']['selector'].iteritems():
+        items = rc['spec']['selector']
+        if 'matchLabels' in items:
+            items = items['matchLabels']
+        for k, v in items.iteritems():
             if s is None:
                 s = "%s=%s" % (k, v)
             else:

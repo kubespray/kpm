@@ -60,9 +60,11 @@ def pull(options):
 
 
 def exec_cmd(options):
-    c = KubernetesExec(options.name, kind=options.kind,
+    c = KubernetesExec(options.name,
+                       cmd=" ".join(options.cmd),
                        namespace=options.namespace,
-                       cmd=" ".join(options.cmd))
+                       container=options.container,
+                       kind=options.kind)
     c.call()
 
 
@@ -270,8 +272,10 @@ def get_parser():
     exec_parser.add_argument("--namespace", nargs="?",
                              help="kubernetes namespace", default='default')
 
-    exec_parser.add_argument('--kind', choices=['rs', 'rc'], nargs="?", help="RC or RS", default='rc')
+    exec_parser.add_argument('-k', '--kind', choices=['deployment', 'rs', 'rc'], nargs="?",
+                             help="deployment, rc or rs", default='rc')
     exec_parser.add_argument('-n', '--name', help="resource name", default='rs')
+    exec_parser.add_argument('-c', '--container', nargs='?', help="container name", default=None)
 
     exec_parser.set_defaults(func=exec_cmd)
 
