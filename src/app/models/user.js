@@ -1,3 +1,5 @@
+'use strict';
+
 app.factory('User', function(KpmApi) {
   /**
    * Ctor

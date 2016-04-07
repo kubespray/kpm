@@ -1,3 +1,5 @@
+'use strict';
+
 var app = angular.module('kpm-ui', ['ngMaterial', 'ui.router']);
 
 app.config(function($stateProvider, $urlRouterProvider) {

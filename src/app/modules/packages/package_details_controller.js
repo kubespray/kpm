@@ -1,3 +1,5 @@
+'use strict';
+
 app.controller('PackageDetailsController', function($scope, $stateParams,
   KpmApi) {
 

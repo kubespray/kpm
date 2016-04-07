@@ -1,13 +1,13 @@
-'se strict';
+'use strict';
 
-var gulp = require('gulp');
-var concat = require('gulp-concat');
-var sass = require('gulp-sass');
-var uglify = require('gulp-uglify');
-var processhtml = require('gulp-processhtml');
-var templateCache = require('gulp-angular-templatecache');
-var rename = require('gulp-rename');
-var express = require('express');
+const gulp = require('gulp');
+const concat = require('gulp-concat');
+const sass = require('gulp-sass');
+const uglify = require('gulp-uglify');
+const processhtml = require('gulp-processhtml');
+const templateCache = require('gulp-angular-templatecache');
+const rename = require('gulp-rename');
+const express = require('express');
 
 const default_setup = {
   config: 'local',
@@ -15,10 +15,28 @@ const default_setup = {
   dir: 'src'
 };
 
-var setup = require('yargs').default(default_setup).argv;
+let setup = require('yargs').default(default_setup).argv;
+
+/**
+ * Increase the version number in package.json
+ */
+['major', 'minor', 'patch'].forEach((arg, index) => {
+  gulp.task('version:bump:' + arg, () => {
+    // Open package.json and bump the number
+    let pkg = require('./package.json');
+    let numbers = pkg.version.split('.');
+    numbers[index] = parseInt(numbers[index]) + 1;
+    pkg.version = numbers.join('.');
+
+    // Write to file
+    let fs = require('fs');
+    fs.writeFile('./package.json', JSON.stringify(pkg, null, 2));
+    console.log("Bumped to version " + pkg.version);
+  });
+});
 
 // Start express server
-gulp.task('serve', function() {
+gulp.task('serve', () => {
   var server = express();
   var path = __dirname + '/' + setup.dir;
   console.log('* Serving ' + path + ' on port ' + setup.port);
@@ -27,7 +45,7 @@ gulp.task('serve', function() {
 });
 
 // Select configuration file from --config option
-gulp.task('config', function() {
+gulp.task('config', () => {
   var fs = require('fs');
   var config_path = 'src/config/' + setup.config + '.js';
   if (fs.existsSync(config_path)) {
@@ -43,7 +61,7 @@ gulp.task('config', function() {
 });
 
 // Compile all .scss files to app/build/style.min.css
-gulp.task('sass', function () {
+gulp.task('sass', () => {
   gulp.src('src/style/**/*.scss')
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
     .pipe(concat('style.min.css'))
@@ -51,7 +69,7 @@ gulp.task('sass', function () {
 });
 
 // Build the application to --dir directory
-gulp.task('build', ['config', 'sass'], function() {
+gulp.task('build', ['config', 'sass'], () => {
   // Concat and minify application javascripts
   gulp.src('src/app/**/*.js')
     .pipe(concat('app.min.js'))
@@ -81,7 +99,7 @@ gulp.task('build', ['config', 'sass'], function() {
 });
 
 // Sass with watcher + server. For development only!
-gulp.task('default', ['config', 'sass', 'serve'], function() {
+gulp.task('default', ['config', 'sass', 'serve'], () => {
   gulp.watch('src/style/**/*.scss', ['sass']);
 });
 
