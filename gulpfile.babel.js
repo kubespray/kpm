@@ -60,21 +60,32 @@ gulp.task('config', () => {
   }
 });
 
-// Compile all .scss files to app/build/style.min.css
+// Compile all .scss files to style/app.min.css
 gulp.task('sass', () => {
-  gulp.src('src/style/**/*.scss')
+  gulp.src('src/style/sass/*.scss')
     .pipe(sass({outputStyle: 'compressed'}).on('error', sass.logError))
-    .pipe(concat('style.min.css'))
+    .pipe(concat('app.min.css'))
     .pipe(gulp.dest(setup.dir + '/style'));
 });
 
 // Build the application to --dir directory
 gulp.task('build', ['config', 'sass'], () => {
+  // Concat and minify all vendor javascripts
+  gulp.src('src/vendor/**/*.js')
+    .pipe(concat('vendor.min.js'))
+    .pipe(uglify({mangle: false, compress: true}))
+    .pipe(gulp.dest(setup.dir + '/js'));
+
   // Concat and minify application javascripts
   gulp.src('src/app/**/*.js')
     .pipe(concat('app.min.js'))
     .pipe(uglify({mangle: false, compress: true}))
-    .pipe(gulp.dest(setup.dir + '/js'))
+    .pipe(gulp.dest(setup.dir + '/js'));
+
+  // Concat vendor CSS
+  gulp.src('src/vendor/**/*.css')
+    .pipe(concat('vendor.min.css'))
+    .pipe(gulp.dest(setup.dir + '/style'));
 
   // Process index.html to replace links with minified files
   gulp.src('src/index.html')
@@ -83,10 +94,7 @@ gulp.task('build', ['config', 'sass'], () => {
 
   // Concat angular templates
   gulp.src('src/app/**/*.html')
-    .pipe(templateCache({
-      root: 'app',
-      module: 'kpm-ui'
-    }))
+    .pipe(templateCache({root: 'app', module: 'kpm-ui'}))
     .pipe(gulp.dest(setup.dir + '/js'));
 
   // Copy images
@@ -100,6 +108,6 @@ gulp.task('build', ['config', 'sass'], () => {
 
 // Sass with watcher + server. For development only!
 gulp.task('default', ['config', 'sass', 'serve'], () => {
-  gulp.watch('src/style/**/*.scss', ['sass']);
+  gulp.watch('src/style/sass/*.scss', ['sass']);
 });
 
