@@ -1,0 +1,26 @@
+@import 'theme';
+
+div.settings {
+  display: flex;
+  .sidebar {
+    width: 25%;
+    border-top: 1px solid #eee;
+    a {
+      display: block;
+      line-height: 2em;
+      padding: 0 1em;
+      border-bottom: 1px solid #eee;
+      border-left: 3px solid transparent;
+      &:hover {
+        background: #f0f0f0;
+      }
+      &.active {
+        border-left-color: $link_color;
+        cursor: default;
+      }
+    }
+  }
+  div.settings-content {
+    margin-left: 2em;
+  }
+}

@@ -4,8 +4,8 @@ app.controller('LoginController', function($scope, $state, KpmApi, Session) {
 
   $scope.$on('login_success', function(event, data) {
     $scope.ui.loading = false;
-    // Redirect user
-    $state.go('home');
+    // Redirect user to his profile page
+    $state.go('user', {username: Session.user.username});
   });
 
   $scope.$on('login_failure', function(event, data) {
