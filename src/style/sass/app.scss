@@ -40,22 +40,32 @@ pre > code {
     display: flex;
     align-items: center;
     .navigation {
-      img.gravatar {
-        border-radius: 100%;
-        vertical-align: middle;
-        margin: 0 0.5em;
-      }
       margin-left: auto; // pull right
       a.menu-trigger {
         color: inherit;
         display: block;
         padding: 6px;
         border-radius: 6px 6px 0 0;
-        transition: all 0.2;
+        transition: background 0.4s;
         text-shadow: 0 1px 0 white;
       }
       &.md-open a.menu-trigger {
         background: #eee;
+      }
+      i.fa {
+        transition: transform 0.4s;
+      }
+      &.md-open i.fa {
+        transform: rotate(180deg);
+      }
+      img.gravatar {
+        border-radius: 100%;
+        vertical-align: middle;
+        margin: 0 0.5em;
+        transition: box-shadow 0.4s;
+      }
+      &.md-open img.gravatar {
+        box-shadow: 0 0 0 4px $kubegray;
       }
     }
     form.search {
