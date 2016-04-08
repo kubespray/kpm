@@ -25,6 +25,12 @@ app.config(function($stateProvider, $urlRouterProvider) {
     controller: 'PackageDetailsController',
     templateUrl: 'app/modules/packages/details.html'
   })
+  .state('organization', {
+    url: '/organization/{name}',
+    title: 'Organiaztion detail',
+    controller: 'OrganiaztionController',
+    templateUrl: 'app/modules/organization/organization.html'
+  })
   .state('user', {
     url: '/user/{username}',
     title: 'User',
