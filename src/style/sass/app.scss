@@ -39,12 +39,24 @@ pre > code {
   .inner {
     display: flex;
     align-items: center;
-    nav {
+    .navigation {
       img.gravatar {
         border-radius: 100%;
         vertical-align: middle;
+        margin: 0 0.5em;
       }
       margin-left: auto; // pull right
+      a.menu-trigger {
+        color: inherit;
+        display: block;
+        padding: 6px;
+        border-radius: 6px 6px 0 0;
+        transition: all 0.2;
+        text-shadow: 0 1px 0 white;
+      }
+      &.md-open a.menu-trigger {
+        background: #eee;
+      }
     }
     form.search {
       width: 360px;

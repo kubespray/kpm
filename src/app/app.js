@@ -103,5 +103,12 @@ app.controller('AppController', function($rootScope, $sce, Session) {
       'Someting went wrong';
     return string + ' (╯°□°）╯︵ ┻━┻)';
   };
+
+  $rootScope.$on('$mdMenuOpen', function() {
+    $rootScope.menuIsOpen = true;
+  });
+  $rootScope.$on('$mdMenuClose', function() {
+    $rootScope.menuIsOpen = false;
+  });
 });
 
