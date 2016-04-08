@@ -33,7 +33,7 @@ app.controller('PackageDetailsController', function($scope, $stateParams,
     })
     .error(function(data) {
       $scope.ui.loading = false;
-      $scope.error = 'Package ' + package_name + ' not found';
+      $scope.error = $scope.build_error(data);
     });
   }
 });

@@ -95,5 +95,13 @@ app.controller('AppController', function($rootScope, $sce, Session) {
   $rootScope.ui = {
     loading: false
   };
+
+  $rootScope.build_error = function(data) {
+    console.log(data);
+    var string = data.hasOwnProperty('error') ?
+      data.error.message + ': ' + data.error.details :
+      'Someting went wrong';
+    return string + ' (╯°□°）╯︵ ┻━┻)';
+  };
 });
 

@@ -10,12 +10,14 @@ div.settings {
       line-height: 2em;
       padding: 0 1em;
       border-bottom: 1px solid #eee;
-      border-left: 3px solid transparent;
+      border-left: 4px solid transparent;
+      transition: all 0.2s;
       &:hover {
         background: #f0f0f0;
       }
       &.active {
         border-left-color: $link_color;
+        text-indent: 2em;
         cursor: default;
       }
     }
