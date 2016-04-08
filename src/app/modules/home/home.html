@@ -1,24 +1,27 @@
-<h2>Greetings, {{session.user.username}}!</h2>
 <div class="home">
-  <div class="user-packages">
-    <h3>My packages</h3>
-    <div
-      ng-if="packages.length > 0"
-      ng-include="'app/modules/packages/preview.html'"
-      ng-repeat="package in packages">
-    </div>
-    <p ng-if="packages.length == 0" class="info-notice">
-      You don't have any packages yet.
-      Check out the <a ui-sref="packages">available packages</a>!
-    </p>
-  </div>
-  <div class="user-profile">
-    <h3>My profile</h3>
-    <p>
-      <img ng-src="{{session.user.gravatar}}?s=200" alt="gravatar" />
-    </p>
-    <p>
-      {{session.user.email}}
-    </p>
-  </div>
+  <p>
+    KPM is a tool to deploy and manage applications stack on Kubernetes.
+  </p>
+  <p>
+    KPM provides the glue between Kubernetes resources (ReplicatSet, DaemonSet, Secrets...). it defines a package as a composition of Kubernetes resources and dependencies to other packages.
+  </p>
+  <ul class="columns">
+    <li>
+      <h2>Simplicity</h2>
+      <p> Keep it simple for both users and packagers.  </p>
+    </li>
+    <li>
+      <h2>Declarative and idempotent</h2>
+      <p> Declare what should be deployed and let the system apply only required changes.  </p>
+    </li>
+    <li>
+      <h2>Reproducible deployment</h2>
+      <p> For production and QA, control of each components is fundamental. Both, dependency declaration and version control in KPM allows to have a predictable application stack deployment.  </p>
+    </li>
+  </ul>
+  <p class="explore">
+    <md-button class="md-raised md-primary" ui-sref="packages">
+      Explore {{count}} packages
+    </md-button>
+  </p>
 <div>

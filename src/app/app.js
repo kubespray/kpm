@@ -88,6 +88,7 @@ app.controller('AppController', function($rootScope, $sce, Session) {
 
   // Update page title on state change
   $rootScope.$on('$stateChangeSuccess', function(event, toState) {
+    $rootScope.stateName = toState.name;
     $rootScope.pageTitle = $sce.trustAsHtml('KPM | ' + toState.title);
   });
 
@@ -97,8 +98,7 @@ app.controller('AppController', function($rootScope, $sce, Session) {
   };
 
   $rootScope.build_error = function(data) {
-    console.log(data);
-    var string = data.hasOwnProperty('error') ?
+    var string = data && data.hasOwnProperty('error') ?
       data.error.message + ': ' + data.error.details :
       'Someting went wrong';
     return string + ' (╯°□°）╯︵ ┻━┻)';

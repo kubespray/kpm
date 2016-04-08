@@ -5,6 +5,9 @@
   <p class="info-notice" ng-if="search && packages.length == 0">
     Sorry, no results for <em>"{{queryParams.named_like}}"</em>
   </p>
+  <p class="error-notice" ng-if="error">
+    {{error}}
+  </p>
   <p>
     <md-select
       placeholder="sort package list"

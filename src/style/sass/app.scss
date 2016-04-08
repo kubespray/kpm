@@ -3,6 +3,7 @@
 html, body {
   height: 100%;
 }
+
 body {
   color: #333;
   font-family: Roboto, sans-serif;
@@ -20,57 +21,52 @@ a {
   text-decoration: none;
 }
 
+code {
+  background: #eee;
+  padding: 2px 4px;
+  border-radius: 5px;
+}
+
+pre > code {
+  background: inherit;
+  padding: 0;
+  border-radius: 0;
+}
+
+// Layout
+
 #header {
   .inner {
-    padding-top: 20px;
     display: flex;
-    align-items: baseline;
+    align-items: center;
     nav {
       img.gravatar {
         border-radius: 100%;
         vertical-align: middle;
       }
+      margin-left: auto; // pull right
     }
     form.search {
       width: 360px;
-      margin-left: auto; // pull right
-      margin-right: 0.5em;
+      margin: 0 1em;
     }
   }
 }
 
-
-// Auto-complete widget
-
-.md-autocomplete-suggestions-container {
-  li {
-    border-bottom: 1px solid #ccc;
-    height: auto;
-    padding-top: 8px;
-    padding-bottom: 8px;
-    white-space: normal;
-    span.highlight {
-      color: $highlight_color;
-    }
-  }
-  li:last-child {
-    border-bottom-width: 0;
-  }
-  .item-title,
-  .item-info {
-    line-height: 2;
-    span.item-meta {
-      font-size: 0.9em;
-      padding-right: 0.5em;
-    }
-  }
-}
-
-#banner {
+#banner-home,
+#banner-small {
   background: $kubegray;
   color: white;
-  height: 160px;
   padding: 20px 0;
+  .inner {
+    a {
+      color: white;
+    }
+  }
+}
+
+#banner-home {
+  height: 160px;
   img.logo {
     float: left;
     margin-right: 20px;
@@ -89,18 +85,15 @@ a {
 #main {
   flex: 1 0 auto;
   margin: 2em 0;
-  div.inner {
-    position: relative;
-    min-height: 200px;
-    .loader {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      background: rgba(255, 255, 255, 0.5);
-      width: 100%;
-      align-items: center;
-      justify-content: space-around;
-    }
+  position: relative;
+  .loader {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.5);
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
   }
 }
 
@@ -115,17 +108,6 @@ div.inner {
     padding: 2em 0;
     border-top: 1px solid #ccc;
   }
-}
-
-code {
-  background: #eee;
-  padding: 2px 4px;
-  border-radius: 5px;
-}
-pre > code {
-  background: inherit;
-  padding: 0;
-  border-radius: 0;
 }
 
 // Notices
@@ -155,3 +137,30 @@ p.info-notice {
   font-size: 40px;
   text-align: center;
 }
+
+// Auto-complete widget
+
+.md-autocomplete-suggestions-container {
+  li {
+    border-bottom: 1px solid #ccc;
+    height: auto;
+    padding-top: 8px;
+    padding-bottom: 8px;
+    white-space: normal;
+    span.highlight {
+      color: $highlight_color;
+    }
+  }
+  li:last-child {
+    border-bottom-width: 0;
+  }
+  .item-title,
+  .item-info {
+    line-height: 2;
+    span.item-meta {
+      font-size: 0.9em;
+      padding-right: 0.5em;
+    }
+  }
+}
+

@@ -25,7 +25,7 @@ app.controller('SignupController', function($scope, $state, KpmApi, Session,
     .error(function(data) {
       $scope.ui.loading = false;
 
-      if (data.errors) {
+      if (data && data.errors) {
         $scope.errors = [];
         for (key in data.errors) {
           // Build error message from API error reporting
