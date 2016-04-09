@@ -2,7 +2,7 @@
 
 var app = angular.module('kpm-ui', ['ngMaterial', 'ui.router']);
 
-app.config(function($stateProvider, $urlRouterProvider) {
+app.config(function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
 
   // Bind routes to controllers
   $stateProvider
@@ -85,6 +85,11 @@ app.config(function($stateProvider, $urlRouterProvider) {
   $urlRouterProvider
     .when('', '/home')
     .otherwise('404');
+
+  // Anuglar Material colors
+  $mdThemingProvider.theme('default')
+    .primaryPalette('blue-grey')
+    .accentPalette('pink');
 });
 
 app.controller('AppController', function($rootScope, $sce, Session) {
