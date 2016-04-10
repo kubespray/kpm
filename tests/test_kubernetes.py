@@ -131,7 +131,7 @@ def test_exists_false(subcall_cmd_error, svc_resource):
 def test_get_proxy(svc_resource):
     proxy = "http://localhost:8001"
     k = Kubernetes(body=svc_resource['body'], proxy=proxy, endpoint=svc_resource['endpoint'])
-    url = "%s/%s/%s" % (proxy, svc_resource['endpoint'], svc_resource['name'])
+    url = "%s/%s/%s" % (proxy, svc_resource['endpoint'][1:-1], svc_resource['name'])
     url2 = "%s/%s/%s" % (k.proxy.geturl(), k.endpoint, k.name)
     assert url == url2
     with requests_mock.mock() as m:
@@ -143,7 +143,7 @@ def test_get_proxy(svc_resource):
 def test_get_proxy_404(svc_resource):
     proxy = "http://localhost:8001"
     k = Kubernetes(body=svc_resource['body'], proxy=proxy, endpoint=svc_resource['endpoint'])
-    url = "%s/%s/%s" % (proxy, svc_resource['endpoint'], svc_resource['name'])
+    url = "%s/%s/%s" % (proxy, svc_resource['endpoint'][1:-1], svc_resource['name'])
     with requests_mock.mock() as m:
         response = get_response(svc_resource["name"], svc_resource["kind"])
         m.get(url, text=response, status_code=404)
@@ -153,7 +153,7 @@ def test_get_proxy_404(svc_resource):
 def test_get_proxy_500_raise(svc_resource):
     proxy = "http://localhost:8001"
     k = Kubernetes(body=svc_resource['body'], proxy=proxy, endpoint=svc_resource['endpoint'])
-    url = "%s/%s/%s" % (proxy, svc_resource['endpoint'], svc_resource['name'])
+    url = "%s/%s/%s" % (proxy, svc_resource['endpoint'][1:-1], svc_resource['name'])
     with requests_mock.mock() as m:
         response = get_response(svc_resource["name"], svc_resource["kind"])
         m.get(url, text=response, status_code=500)
@@ -236,7 +236,7 @@ def test_create_force_protected(ns_resource, subcall_cmd, monkeypatch):
 def test_create_proxy(svc_resource):
     proxy = "http://localhost:8001"
     k = Kubernetes(body=svc_resource['body'], proxy=proxy, endpoint=svc_resource['endpoint'])
-    url = "%s/%s" % (proxy, svc_resource['endpoint'])
+    url = "%s/%s" % (proxy, svc_resource['endpoint'][1:-1])
     url2 = "%s/%s" % (k.proxy.geturl(), k.endpoint)
     assert url == url2
     with requests_mock.mock() as m:
@@ -251,7 +251,7 @@ def test_wait(svc_resource, monkeypatch):
     monkeypatch.setattr(time, 'sleep', lambda s: None)
     proxy = "http://localhost:8001"
     k = Kubernetes(body=svc_resource['body'], proxy=proxy, endpoint=svc_resource['endpoint'])
-    url = "%s/%s/%s" % (proxy, svc_resource['endpoint'], svc_resource['name'])
+    url = "%s/%s/%s" % (proxy, svc_resource['endpoint'][1:-1], svc_resource['name'])
     url2 = "%s/%s/%s" % (k.proxy.geturl(), k.endpoint, k.name)
     assert url == url2
     with requests_mock.mock() as m:

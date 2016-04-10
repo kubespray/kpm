@@ -264,7 +264,6 @@ def get_parser():
 
     delete_parser.set_defaults(func=delete_package)
 
-
     #  EXEC
     exec_parser = subparsers.add_parser('exec', help='exec a command in pod from the RC or RS name.\
     It executes the command on the first matching pod')

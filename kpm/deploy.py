@@ -51,7 +51,6 @@ def _process(package_name,
             # Use API instead of kubectl
             with open(os.path.join(dest, resource['file']), 'wb') as f:
                 f.write(body)
-
             kubresource = Kubernetes(namespace=namespace, body=body, endpoint=endpoint, proxy=proxy)
             status = getattr(kubresource, action)(force=force, dry=dry)
             if fmt == "stdout":
