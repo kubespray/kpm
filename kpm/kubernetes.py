@@ -13,20 +13,20 @@ logger = logging.getLogger(__name__)
 
 
 resource_endpoints = {
-    "daemonsets": "/apis/extensions/v1beta1/namespaces/{namespace}/daemonsets",
-    "deployments": "/apis/extensions/v1beta1/namespaces/{namespace}/deployments",
-    "horizontalpodautoscalers": "/apis/extensions/v1beta1/namespaces/{namespace}/horizontalpodautoscalers",
-    "ingresses": "/apis/extensions/v1beta1/namespaces/{namespace}/ingresses",
-    "jobs": "/apis/extensions/v1beta1/namespaces/{namespace}/jobs",
-    "namespaces": "/api/v1/namespaces",
-    "replicasets": "/apis/extensions/v1beta1/namespaces/{namespace}/replicasets",
-    "persistentvolumes": "/api/v1/namespaces/{namespace}/persistentvolumes",
-    "persistentvolumeclaims": "/api/v1/namespaces/{namespace}/persistentvolumeclaims",
-    "services": "/api/v1/namespaces/{namespace}/services",
-    "serviceaccounts": "/api/v1/namespaces/{namespace}/serviceaccounts",
-    "configmaps": "/api/v1/namespaces/{namespace}/configmaps",
-    "replicationcontrollers": "/api/v1/namespaces/{namespace}/replicationcontrollers",
-    "pods": "/api/v1/namespaces/{namespace}/pods",
+    "daemonsets": "apis/extensions/v1beta1/namespaces/{namespace}/daemonsets",
+    "deployments": "apis/extensions/v1beta1/namespaces/{namespace}/deployments",
+    "horizontalpodautoscalers": "apis/extensions/v1beta1/namespaces/{namespace}/horizontalpodautoscalers",
+    "ingresses": "apis/extensions/v1beta1/namespaces/{namespace}/ingresses",
+    "jobs": "apis/extensions/v1beta1/namespaces/{namespace}/jobs",
+    "namespaces": "api/v1/namespaces",
+    "replicasets": "apis/extensions/v1beta1/namespaces/{namespace}/replicasets",
+    "persistentvolumes": "api/v1/namespaces/{namespace}/persistentvolumes",
+    "persistentvolumeclaims": "api/v1/namespaces/{namespace}/persistentvolumeclaims",
+    "services": "api/v1/namespaces/{namespace}/services",
+    "serviceaccounts": "api/v1/namespaces/{namespace}/serviceaccounts",
+    "configmaps": "api/v1/namespaces/{namespace}/configmaps",
+    "replicationcontrollers": "api/v1/namespaces/{namespace}/replicationcontrollers",
+    "pods": "api/v1/namespaces/{namespace}/pods",
 }
 
 
@@ -62,6 +62,8 @@ class Kubernetes(object):
                  proxy=None):
 
         self.proxy = None
+        if endpoint is not None and endpoint[0] == "/":
+            endpoint = endpoint[1:-1]
         self.endpoint = endpoint
         self.body = body
         self.obj = None
