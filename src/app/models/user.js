@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('User', function(KpmApi) {
+app.factory('User', function(KpmApi, Package) {
   /**
    * Ctor
    */
@@ -29,7 +29,9 @@ app.factory('User', function(KpmApi) {
     var self = this;
     KpmApi.get('packages/' + this.username)
     .success(function(data) {
-      self.packages = data;
+      self.packages = data.map(function(hash) {
+        return new Package(hash);
+      });
     })
     .error(function(data) {
       console.log('[User] cannot get packages');
