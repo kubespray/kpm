@@ -24,5 +24,21 @@ div.settings {
   }
   div.settings-content {
     margin-left: 2em;
+    flex: 1;
+  }
+
+  table.tokens {
+    border-collapse: collapse;
+    width: 100%;
+    th, td {
+      text-align: left;
+      padding: 4px;
+    }
+    td {
+      code.current {
+        background: $link_color;
+        color: white;
+      }
+    }
   }
 }
