@@ -88,8 +88,7 @@ app.config(function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
 
   // Anuglar Material colors
   $mdThemingProvider.theme('default')
-    .primaryPalette('blue-grey')
-    .accentPalette('pink');
+    .primaryPalette('blue-grey');
 });
 
 app.controller('AppController', function($rootScope, $sce, Session) {

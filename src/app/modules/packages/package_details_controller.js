@@ -1,7 +1,7 @@
 'use strict';
 
 app.controller('PackageDetailsController', function($scope, $stateParams,
-      KpmApi, Package) {
+      $mdDialog, KpmApi, Package) {
 
   // Methods
 
@@ -17,9 +17,23 @@ app.controller('PackageDetailsController', function($scope, $stateParams,
     }
   };
 
-  $scope.downloadUrl = function() {
-    return Config.backend_url + 'packages/' + $scope.package.name + '/generate?tarball=true';
-  };
+  $scope.downloadTarball = function(ev) {
+    var confirm = $mdDialog.prompt()
+      .title('Select namespace')
+      .textContent('The name of your Kubernetes namespace.')
+      .placeholder('namespace')
+      .targetEvent(ev)
+      .ok('Download')
+      .cancel('Cancel');
+
+    $mdDialog.show(confirm).then(function(result) {
+      // Trigger download from URL with FileSaver library
+      var url = Config.backend_url + 'packages/' + $scope.package.name +
+        '/generate?tarball=true&namespace=' + result;
+      window.location = url;
+    }, function() {
+    });
+  }
 
   // Init
 

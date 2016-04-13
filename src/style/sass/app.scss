@@ -192,3 +192,8 @@ p.info-notice {
 md-tooltip {
   font-size: 14px;
 }
+
+a:not(.md-button),
+a:not(.md-button):hover {
+  color: $link_color;
+}
