@@ -7,7 +7,7 @@ KPM is a tool to deploy and manage applications stack on kubernetes.
 
 KPM provides the glue between kubernetes resources (ReplicatSet, DaemonSet, Secrets...). it defines a package has a composition of kubernetes resources and dependencies to other packages.
 
-### Why not Helm ?
+### Why we built KPM (instead of using Helm) ?
 
 We started the project to manage our production cluster and applications deployments. 
 We wanted a simple way to deploy and upgrade a complete applications stack, including databases. Helm was not ready for our usecases.
