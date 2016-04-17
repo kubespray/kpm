@@ -29,7 +29,7 @@ def remove_result():
 
 
 def test_deploy(deploy_json, deploy_result, subcall_all):
-    url = "https://api.kpm.sh/api/v1/packages/%s/%s/generate.json" % ("ant31", "kube-ui")
+    url = "https://api.kpm.sh/api/v1/packages/%s/%s/generate" % ("ant31", "kube-ui")
     with requests_mock.mock() as m:
         m.get(url, text=deploy_json)
         r = deploy("ant31/kube-ui",
@@ -42,7 +42,7 @@ def test_deploy(deploy_json, deploy_result, subcall_all):
 
 
 def test_remove(deploy_json, remove_result, subcall_all):
-    url = "https://api.kpm.sh/api/v1/packages/%s/%s/generate.json" % ("ant31", "kube-ui")
+    url = "https://api.kpm.sh/api/v1/packages/%s/%s/generate" % ("ant31", "kube-ui")
     with requests_mock.mock() as m:
         m.get(url, text=deploy_json)
         r = delete("ant31/kube-ui",
@@ -56,7 +56,7 @@ def test_remove(deploy_json, remove_result, subcall_all):
 
 
 def test_deploy_dry(deploy_json, deploy_dry_result, subcall_all):
-    url = "https://api.kpm.sh/api/v1/packages/%s/%s/generate.json" % ("ant31", "kube-ui")
+    url = "https://api.kpm.sh/api/v1/packages/%s/%s/generate" % ("ant31", "kube-ui")
     with requests_mock.mock() as m:
         m.get(url, text=deploy_json)
         r = deploy("ant31/kube-ui",

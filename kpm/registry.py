@@ -36,13 +36,11 @@ class Registry(object):
 
     def pull(self, name, version=None):
         organization, name = name.split("/")
-        path = "/packages/%s/%s/pull.json" % (organization, name)
-        params = {}
-        if version:
-            params['version'] = version
+        path = "/packages/%s/%s/pull" % (organization, name)
+        params = {"version": version}
         r = requests.get(self._url(path), params=params, headers=self.headers)
         r.raise_for_status()
-        return r.json()
+        return r.content
 
     def list_packages(self, user=None, organization=None):
         path = "/packages"
@@ -57,7 +55,7 @@ class Registry(object):
 
     def generate(self, name, namespace=None, variables=None, version=None, tarball=False):
         organization, name = name.split("/")
-        path = "/packages/%s/%s/generate.json" % (organization, name)
+        path = "/packages/%s/%s/generate" % (organization, name)
         params = {}
         if tarball:
             params['tarball'] = 'true'
@@ -72,9 +70,11 @@ class Registry(object):
         return r.json()
 
     def push(self, name, body, force=False):
-        organization, name = name.split("/")
-        body['name'] = name
-        path = "/packages/%s/%s" % (organization, name)
+        organization, pname = name.split("/")
+        body['name'] = pname
+        body['organization'] = organization
+        body['package'] = name
+        path = "/packages/%s/%s" % (organization, pname)
         r = requests.post(self._url(path),
                           params={"force": str(force).lower()},
                           data=json.dumps(body), headers=self.headers)

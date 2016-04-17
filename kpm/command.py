@@ -20,8 +20,8 @@ def new(options):
 
 def show(options):
     r = Registry(options.registry_host)
-    result = r.pull(options.package[0])
-    p = Package(result['kub'])
+    result = r.pull(options.package[0], version=options.version)
+    p = Package(result)
     if options.tree:
         print "\n".join(p.tree())
     elif options.file:
@@ -53,8 +53,8 @@ def remove(options):
 
 def pull(options):
     r = Registry(options.registry_host)
-    result = r.pull(options.package[0])
-    p = Package(result['kub'])
+    result = r.pull(options.package[0], version=options.version)
+    p = Package(result)
     path = os.path.join(options.directory, kpm.manifest.Manifest(p).package_name())
     p.extract(path)
 
@@ -87,7 +87,7 @@ def push(options):
 
 def list_packages(options):
     r = Registry(options.registry_host)
-    response = r.list_packages(user=options.user)
+    response = r.list_packages(user=options.user, organization=options.organization)
     print_packages(response)
 
 
@@ -168,6 +168,9 @@ def get_parser():
     show_parser.add_argument('package', nargs=1, help="package-name")
     show_parser.add_argument('--tree', help="List files inside the package", action='store_true', default=False)
     show_parser.add_argument('-f', '--file', nargs="?", help="Display a file", default=None)
+    show_parser.add_argument("-v", "--version", nargs="?", default=None,
+                             help="package version")
+
     show_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
                              help=argparse.SUPPRESS)
 
@@ -247,8 +250,8 @@ def get_parser():
     list_parser = subparsers.add_parser('list', help='list packages')
     list_parser.add_argument("-u", "--user", nargs="?", default=None,
                              help="list packages owned by USER")
-    # list_parser.add_argument("-o", "--organization", nargs="?", default=None,
-    #                             help="list ORGANIZATION packages")
+    list_parser.add_argument("-o", "--organization", nargs="?", default=None,
+                             help="list ORGANIZATION packages")
     list_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
                              help=argparse.SUPPRESS)
 

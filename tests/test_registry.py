@@ -36,17 +36,17 @@ def test_url():
 def test_pull():
     r = Registry()
     with requests_mock.mock() as m:
-        response = '{"pull": "true"}'
-        m.get("https://api.kpm.sh/api/v1/packages/orga/p1/pull.json", text=response)
-        assert json.dumps(r.pull("orga/p1")) == response
+        response = 'package_data'
+        m.get("https://api.kpm.sh/api/v1/packages/orga/p1/pull", text=response)
+        assert r.pull("orga/p1") == response
 
 
 def test_pull_with_version():
     r = Registry()
     with requests_mock.mock() as m:
-        response = '{"pull": "true"}'
-        m.get("https://api.kpm.sh/api/v1/packages/orga/p1/pull.json?version=1.0.1", complete_qs=True, text=response)
-        assert json.dumps(r.pull("orga/p1", version="1.0.1")) == response
+        response = 'package_data'
+        m.get("https://api.kpm.sh/api/v1/packages/orga/p1/pull?version=1.0.1", complete_qs=True, text=response)
+        assert r.pull("orga/p1", version="1.0.1") == response
 
 
 def test_list_packages():
@@ -85,7 +85,7 @@ def test_generate():
     r = Registry()
     with requests_mock.mock() as m:
         response = '{"packages": "true"}'
-        m.get("https://api.kpm.sh/api/v1/packages/ant31/kube-ui/generate.json", complete_qs=True, text=response)
+        m.get("https://api.kpm.sh/api/v1/packages/ant31/kube-ui/generate", complete_qs=True, text=response)
         assert json.dumps(r.generate(name="ant31/kube-ui")) == response
 
 
@@ -93,7 +93,7 @@ def test_generate_with_params():
     r = Registry()
     with requests_mock.mock() as m:
         response = '{"packages": "true"}'
-        m.get("https://api.kpm.sh/api/v1/packages/ant31/kube-ui/generate.json?tarball=true&variables=a&variables=c&version=1.3.4&namespace=testns", complete_qs=True, text=response)
+        m.get("https://api.kpm.sh/api/v1/packages/ant31/kube-ui/generate?tarball=true&variables=a&variables=c&version=1.3.4&namespace=testns", complete_qs=True, text=response)
         assert json.dumps(r.generate(name="ant31/kube-ui", namespace="testns", variables={"a": "b", "c": "d"}, version="1.3.4", tarball=True)) == response
 
 
