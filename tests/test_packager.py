@@ -5,7 +5,7 @@ from kpm.packager import unpack_kub
 import hashlib
 
 
-TAR_MD5SUM = "0031d193dcb4782bcce087810c2498b2"
+TAR_MD5SUM = "8ccd8af6ef21af7309839f1c521b6354"
 KUBEUI_FILES = ["manifest.yaml",
                 "README.md",
                 "templates/kube-ui-rc.yaml",

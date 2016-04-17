@@ -21,15 +21,16 @@ def get_response(name, kind):
 @pytest.fixture(scope="module")
 def kubeui_package():
     import kpm.packager
-    with open("./tests/data/kube-ui.tar", "rb") as f:
+    with open("./tests/data/kube-ui.tar.gz", "rb") as f:
         package = kpm.packager.Package(f.read())
+    print package.files
     return package
 
 
 @pytest.fixture(scope="module")
 def kubeui_blob():
     import kpm.packager
-    with open("./tests/data/kube-ui.tar", "rb") as f:
+    with open("./tests/data/kube-ui.tar.gz", "rb") as f:
         package = f.read()
     return package
 
@@ -50,7 +51,7 @@ def package_dir(monkeypatch):
 @pytest.fixture()
 def pack_tar(package_dir, tmpdir):
     from kpm.packager import pack_kub
-    kub = os.path.join(str(tmpdir.mkdir("tars")), "kube-ui.tar")
+    kub = os.path.join(str(tmpdir.mkdir("tars")), "kube-ui.tar.gz")
     pack_kub(kub)
     return kub
 
