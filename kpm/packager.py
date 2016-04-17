@@ -30,7 +30,7 @@ AUTHORIZED_FILES = ["templates/*.yaml",
 
 
 def pack_kub(kub):
-    tar = tarfile.open(kub, "w")
+    tar = tarfile.open(kub, "w:gz")
     for name in AUTHORIZED_FILES:
         for f in glob.glob(name):
             tar.add(f)
@@ -38,7 +38,7 @@ def pack_kub(kub):
 
 
 def unpack_kub(kub, dest="."):
-    tar = tarfile.open(kub, "r")
+    tar = tarfile.open(kub, "r:gz")
     tar.extractall(dest)
     tar.close()
 
@@ -53,7 +53,7 @@ class Package(object):
 
     def load(self, blob):
         self.blob = blob
-        self.tar = tarfile.open(fileobj=io.BytesIO(blob.encode()), mode='r')
+        self.tar = tarfile.open(fileobj=io.BytesIO(blob), mode='r:gz')
         for m in self.tar.getmembers():
             tf = self.tar.extractfile(m)
             if tf is not None:

@@ -12,7 +12,7 @@ import kpm.deploy
 from kpm.display import print_packages
 from kpm.new import new_package
 from kpm.console import KubernetesExec
-
+import base64
 
 def new(options):
     new_package(options.package[0], options.directory, options.with_comments)
@@ -73,12 +73,12 @@ def push(options):
     # @TODO: Override organization
     manifest = kpm.manifest.Manifest(path=".")
     # @TODO: Pack in memory
-    kubepath = os.path.join(".", manifest.package_name() + ".tar")
+    kubepath = os.path.join(".", manifest.package_name() + ".tar.gz")
     pack_kub(kubepath)
-    f = open(kubepath, 'r')
+    f = open(kubepath, 'rb')
     r.push(manifest.package['name'], {"name": manifest.package['name'],
                                       "version": manifest.package['version'],
-                                      "blob": f.read()}, options.force)
+                                      "blob": base64.b64encode(f.read())}, options.force)
     f.close()
     os.remove(kubepath)
     print "package: %s (%s) pushed" % (manifest.package['name'],
