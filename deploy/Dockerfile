@@ -1,6 +1,6 @@
 FROM python:2.7
 
-ARG version=v0.12.1
+ARG version=v0.13.0
 ARG workdir=/opt/kpm
 
 RUN rm -rf $workdir
