@@ -20,12 +20,17 @@ requirements = [
     'jinja2',
     'jsonpatch',
     'tabulate',
-    'termcolor'
+    'termcolor',
+    'python-etcd',
+    'semantic_version',
+    'flask',
+    'flask-cors',
 ]
 
 test_requirements = [
     "pytest",
     "pytest-cov",
+    'pytest-flask',
     "pytest-ordering",
     "requests-mock"
 ]
@@ -37,9 +42,10 @@ setup(
     long_description=readme + '\n\n' + history,
     author="Antoine Legrand",
     author_email='2t.antoine@gmail.com',
-    url='https://github.com/ant31/kpm',
+    url='https://github.com/kubespray/kpm',
     packages=[
         'kpm',
+        'kpm.api'
     ],
     scripts=[
         'bin/kpm'

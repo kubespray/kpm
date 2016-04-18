@@ -1,0 +1,40 @@
+---
+kind: ReplicationController
+apiVersion: v1
+metadata:
+  labels:
+    k8s-app: kpm
+  name: kpm
+  namespace: kube-system
+spec:
+  replicas: 1
+  selector:
+    k8s-app: kpm
+  template:
+    metadata:
+      labels:
+        k8s-app: kpm
+    spec:
+      containers:
+        - name: kpm
+          image: {{image}}
+          imagePullPolicy: Always
+          command:
+            - gunicorn
+            - kpm.api.wsgi:app
+            - -b
+            - :5000
+            - --threads
+            - 3
+            - w
+            - 1
+          ports:
+            - name: kpm
+              protocol: TCP
+              containerPort: 5000
+          livenessProbe:
+            httpGet:
+              path: /version
+              port: 5000
+            initialDelaySeconds: 30
+            timeoutSeconds: 30

@@ -1,0 +1,24 @@
+---
+package:
+  name: kubespray/kpm
+  author: Antoine Legrand
+  version: 0.12.1
+  description: kubespray/kpm
+  license: MIT
+
+variables:
+  image: quay.io/kubespray/kpm:v0.12.1
+  etcd_host: etcd.{{namespace}}.svc.cluster.local:2379
+  svc_type: NodePort
+
+resources:
+  - name: kpm
+    file: kpm-svc.yaml
+    type: svc
+
+  - name: kpm
+    file: kpm-rc.yaml
+    type: rc
+
+deploy:
+  - name: $self

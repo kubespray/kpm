@@ -14,6 +14,7 @@ from kpm.new import new_package
 from kpm.console import KubernetesExec
 import base64
 
+
 def new(options):
     new_package(options.package[0], options.directory, options.with_comments)
 
