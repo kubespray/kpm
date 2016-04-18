@@ -94,3 +94,9 @@ flake8:
 
 coveralls: test
 	coveralls
+
+dockerfile:
+	docker build -t quay.io/kubespray/kpm:$(VERSION) deploy/
+
+dockerfile-push: dockerfile
+	docker push quay.io/kubespray/kpm:$(VERSION)
