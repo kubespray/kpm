@@ -15,6 +15,7 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
+    'futures',
     'requests',
     'pyyaml',
     'jinja2',
@@ -24,6 +25,7 @@ requirements = [
     'python-etcd',
     'semantic_version',
     'flask',
+    'Flask>=0.10.1',
     'flask-cors',
 ]
 

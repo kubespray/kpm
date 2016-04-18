@@ -1,17 +1,21 @@
-FROM python:2.7
+FROM alpine:3.3
 
-ARG version=v0.13.0
-ARG workdir=/opt/kpm
-
+ARG version=0.13.0
+ARG workdir=/opt
 RUN rm -rf $workdir
-
-RUN git clone https://github.com/kubespray/kpm.git $workdir --depth=1 --branch=$version
+RUN mkdir -p $workdir
+COPY kpm-$version.tar.gz $workdir
 
 WORKDIR $workdir
+RUN tar xzvf kpm-$version.tar.gz
+WORKDIR $workdir/kpm-$version
 
-RUN pip install -r requirements.txt -U
-RUN pip install gunicorn -U
-RUN python setup.py install
+RUN apk --update add python py-pip openssl ca-certificates
+RUN apk --update add --virtual build-dependencies python-dev build-base wget \
+  && pip install gunicorn -U \
+  && python setup.py install \
+  && apk del build-dependencies
+
 
 ENTRYPOINT ["gunicorn", "kpm.api.wsgi:app"]
 CMD ["-b", ":5000", "--threads", "3", "-w", "1"]
