@@ -1,12 +1,5 @@
 <div class="package">
-  <div class="package-meta">
-    <span>
-      <i class="fa fa-download"></i> Downloads: {{package.downloads}}
-    </span>
-    <span>
-      <i class="fa fa-star"></i> Stars: 0
-    </span>
-  </div>
+  <ng-include src="'app/modules/packages/_actions.html'"></ng-include>
   <img ng-src="{{package.icon_url}}" class="package-icon" />
   <h2>
     <a ui-sref="organization({name: package.organization})" class="organization-name">

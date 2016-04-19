@@ -17,7 +17,9 @@
   <div class="user-packages">
     <div
       ng-include="'app/modules/packages/preview.html'"
-      ng-repeat="package in user.packages">
+      ng-repeat="package in user.packages"
+      ng-controller="PackageController"
+      ng-init="setPackage(package)">
     </div>
     <p ng-if="user.packages.length == 0" class="info-notice">
       <strong>{{user.username}}</strong> hasn't published any packages yet.

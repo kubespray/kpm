@@ -5,7 +5,7 @@ app.factory('Package', function(KpmApi) {
       this[key] = hash[key];
     }
 
-    // Split name
+    // Split name => organization/app
     var index = this.name.indexOf('/');
     this.organization = this.name.substr(0, index);
     this.appname = this.name.substr(index + 1);

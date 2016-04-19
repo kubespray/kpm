@@ -15,20 +15,20 @@ app.config(function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
   .state('packages', {
     url: '/packages?search',
     title: 'Package list',
-    controller: 'PackagesController',
-    templateUrl: 'app/modules/packages/packages.html'
+    controller: 'PackageListController',
+    templateUrl: 'app/modules/packages/list.html'
   })
   .state('package', {
     // Type 'any' prevents from encoding the '/' in package name
     url: '/package/{name:any}',
     title: 'Package detail',
-    controller: 'PackageDetailsController',
-    templateUrl: 'app/modules/packages/details.html'
+    controller: 'PackageController',
+    templateUrl: 'app/modules/packages/package.html'
   })
   .state('organization', {
     url: '/organization/{name}',
-    title: 'Organiaztion detail',
-    controller: 'OrganiaztionController',
+    title: 'Organization detail',
+    controller: 'OrganizationController',
     templateUrl: 'app/modules/organization/organization.html'
   })
   .state('user', {
