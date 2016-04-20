@@ -4,10 +4,13 @@ app.controller('PackageListController', function($scope, $stateParams, KpmApi,
       Package) {
 
   $scope.availableSorts = {
-    'Downloads': {sort_descending: true, sort_order: 'downloads'},
-    'Last update': {sort_descending: true, sort_order: 'updated_at'},
-    'Name': {sort_order: 'default'}
+    'Downloads': {sort_descending: true, sort_order: 'downloads', icon: 'download'},
+    'Stars': {sort_descending: true, sort_order: 'stars', icon: 'star'},
+    'Last update': {sort_descending: true, sort_order: 'updated_at', icon: 'clock-o'},
+    'Name': {sort_order: 'default', icon: 'font'}
   };
+
+  $scope.selectedSort = $scope.availableSorts['Downloads'];
 
   // Filtering and sorting parameters
   $scope.queryParams = {};
@@ -36,6 +39,6 @@ app.controller('PackageListController', function($scope, $stateParams, KpmApi,
     $scope.queryParams.named_like = $stateParams.search;
   };
 
-  // Init
-  $scope.getPackages();
+  // Init (get package list with default sort)
+  $scope.applySort($scope.selectedSort);
 });

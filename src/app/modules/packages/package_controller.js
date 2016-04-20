@@ -59,7 +59,6 @@ app.controller('PackageController', function($scope, $state, $stateParams,
   };
 
   $scope.setPackage = function(object) {
-    console.log("set package");
     $scope.package = new Package(object);
   };
 
