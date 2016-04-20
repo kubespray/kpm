@@ -111,16 +111,20 @@ def pull(organization, name):
     values = getvalues()
     package = "%s/%s" % (organization, name)
     package_data = get_package(package, values)
-    resp = current_app.make_response(b64decode(package_data.value))
-    resp.headers['Content-Disposition'] = 'filename="%s_%s.tar.gz"' % (package.replace("/", "_"),
-                                                                       package_data.key.split("/")[-1])
-    resp.mimetype = 'application/x-gzip'
+    if 'format' in values and values['format'] == 'json':
+        resp = jsonify({"package": package, "kub": package_data.value})
+    else:
+        resp = current_app.make_response(b64decode(package_data.value))
+        resp.headers['Content-Disposition'] = 'filename="%s_%s.tar.gz"' % (package.replace("/", "_"),
+                                                                           package_data.key.split("/")[-1])
+        resp.mimetype = 'application/x-gzip'
     return resp
 
 
 @registry_app.route("/api/v1/packages/<organization>/<name>", methods=['POST'], strict_slashes=False)
 @registry_app.route("/api/v1/packages", methods=['POST'], strict_slashes=False)
 def push(organization=None, name=None):
+
     values = getvalues()
     blob = values['blob']
     package = values['package']
@@ -155,10 +159,17 @@ def show_package(organization, name):
     package_data = get_package(package, values)
     p = Package(b64decode(package_data.value))
     manifest = yaml.load(p.manifest)
+    stable = True
+    if 'stable' in values and values['stable'] != 'true':
+        stable = False
+
     response = {"manifest": manifest,
                 "version": manifest['package']['version'],
                 "name":  package,
-                "available_versions": [str(x) for x in sorted(semver.versions(getversions(package)))]}
+                "available_versions": [str(x) for x in sorted(semver.versions(getversions(package), stable),
+                                                              reverse=True)]}
+    if 'pull' in values and values['pull'] == 'true':
+        response['kub'] = package_data.value
     return jsonify(response)
 
 
