@@ -1,4 +1,5 @@
 import yaml
+import json
 from base64 import b64decode
 from flask import jsonify, request, Blueprint, current_app
 import semantic_version
@@ -146,10 +147,24 @@ def list_packages():
         path += "/%s" % values['organization']
 
     packages = etcd_client.read(path, recursive=True)
-    r = []
+    r = {}
+
     for child in packages.children:
-        r.append(child.key.split(ETCD_PREFIX)[1])
-    return jsonify({"packages": r})
+        p = child.key.split(ETCD_PREFIX)[1]
+        organization, name, version = p.split("/")
+        package = "%s/%s" % (organization, name)
+        if package not in r:
+            r[package] = {"name": package, 'available_versions': [], 'version': None}
+        r[package]['available_versions'].append(version)
+
+    for _, v in r.iteritems():
+        v['available_versions'] = [str(x) for x in sorted(semver.versions(v['available_versions'], False),
+                                                          reverse=True)]
+        v['version'] = v['available_versions'][0]
+
+    resp = current_app.make_response(json.dumps(r.values()))
+    resp.mimetype = 'application/json'
+    return resp
 
 
 @registry_app.route("/api/v1/packages/<organization>/<name>", methods=['GET'], strict_slashes=False)

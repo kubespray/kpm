@@ -10,7 +10,7 @@ def print_packages(packages):
     table = []
 
     for p in packages:
-        table.append([p['name'], p['version'],  str(p['downloads'])])
+        table.append([p['name'], p['version'],  str(p.get('downloads', '-'))])
     print tabulate(table, header)
 
 
