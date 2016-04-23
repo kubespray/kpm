@@ -7,7 +7,7 @@ addons:
 env:
   - TOXENV=py27
   - TOXENV=flake8
-  - TOXENV=cli
+#  - TOXENV=cli
 
 install:
   - pip install -U tox
