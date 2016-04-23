@@ -16,7 +16,7 @@ import etcd
 
 registry_app = Blueprint('registry', __name__,)
 
-etcd_client = etcd.Client()
+etcd_client = etcd.Client(port=2379)
 
 ETCD_PREFIX = "kpm/packages/"
 
