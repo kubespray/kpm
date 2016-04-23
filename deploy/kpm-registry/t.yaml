@@ -1,0 +1,31 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels: {k8s-app: kpm-registry}
+  name: kpm-registry
+  namespace: test
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels: {k8s-app: kpm-registry}
+    spec:
+      containers:
+      - command: [etcd, --proxy, 'on', --listen-client-urls, 'http://127.0.0.1:2379',
+          --initial-cluster, 'etcd=http://etcd.test.svc.cluster.local:2380']
+        image: quay.io/coreos/etcd:v2.2.2
+        name: etcd-proxy
+        resources:
+          limits: {cpu: 50m, memory: 100Mi}
+      - command: [gunicorn, 'kpm.api.wsgi:app', -b, ':5000', --threads, "3", w, "1"]
+        image: quay.io/kubespray/kpm:v0.13.0
+        imagePullPolicy: Always
+        livenessProbe:
+          httpGet: {path: /version, port: 5000}
+          initialDelaySeconds: 30
+          timeoutSeconds: 30
+        name: kpm-registry
+        ports:
+        - {containerPort: 5000, name: kpm-registry, protocol: TCP}
+        resources:
+          limits: {cpu: 200m, memory: 200Mi}
