@@ -1,5 +1,6 @@
 import errno
 import os
+import collections
 from termcolor import colored
 
 
@@ -21,3 +22,14 @@ def colorize(status):
            'deleted': 'red',
            'protected': 'blue'}
     return colored(status, msg[status])
+
+
+def convert_utf8(data):
+    if isinstance(data, basestring):
+        return str(data)
+    elif isinstance(data, collections.Mapping):
+        return dict(map(convert_utf8, data.iteritems()))
+    elif isinstance(data, collections.Iterable):
+        return type(data)(map(convert_utf8, data))
+    else:
+        return data

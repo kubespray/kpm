@@ -24,6 +24,7 @@ resource_endpoints = {
     "persistentvolumeclaims": "api/v1/namespaces/{namespace}/persistentvolumeclaims",
     "services": "api/v1/namespaces/{namespace}/services",
     "serviceaccounts": "api/v1/namespaces/{namespace}/serviceaccounts",
+    "secrets": "api/v1/namespaces/{namespace}/secrets",
     "configmaps": "api/v1/namespaces/{namespace}/configmaps",
     "replicationcontrollers": "api/v1/namespaces/{namespace}/replicationcontrollers",
     "pods": "api/v1/namespaces/{namespace}/pods",
