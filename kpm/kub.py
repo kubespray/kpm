@@ -229,7 +229,7 @@ class Kub(object):
 
     def make_tarfile(self, source_dir):
         output = io.BytesIO()
-        with tarfile.open(fileobj=output, mode="w:") as tar:
+        with tarfile.open(fileobj=output, mode="w:gz") as tar:
             tar.add(source_dir, arcname=os.path.basename(source_dir))
         return output
 
@@ -242,7 +242,7 @@ class Kub(object):
             index = kub.prepare_resources(dest, index)
 
         package_json = self.build()
-        with open(os.path.join(dest, "package.json"), mode="w") as f:
+        with open(os.path.join(dest, ".package.json"), mode="w") as f:
             f.write(json.dumps(package_json))
 
         tar = self.make_tarfile(dest)
