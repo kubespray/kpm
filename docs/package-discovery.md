@@ -3,8 +3,7 @@
 By default, a package name is composed of 2 parts: `namespace/name`.
 
 When this format is used to reference a package, the package must be stored and available in the 'default' registry.
-
-This can quickly become an issue as different registries will appear and packages maybe move from one to an another or a dependency list may refer to packages that exist in differents registries only.
+This can quickly become an issue as different registries will appear and packages may move from one to an another or a dependency list refer to packages that exist in differents registries only.
 Another point: with the default format there is no source mirror.
 
 To solve this, as suggested in [issue#28](https://github.com/kubespray/kpm/issues/28) KPM has a discovery process to retrieve the sources of a package. 
