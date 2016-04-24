@@ -10,6 +10,7 @@ webbrowser.open("file://" + pathname2url(os.path.abspath(sys.argv[1])))
 endef
 export BROWSER_PYSCRIPT
 BROWSER := python -c "$$BROWSER_PYSCRIPT"
+VERSION := `cat VERSION`
 
 help:
 	@echo "clean - remove all build, test, coverage and Python artifacts"
@@ -94,3 +95,10 @@ flake8:
 
 coveralls: test
 	coveralls
+
+dockerfile: dist
+	cp deploy/Dockerfile dist
+	docker build --build-arg version=$(VERSION) -t quay.io/kubespray/kpm:v$(VERSION) dist/
+
+dockerfile-push: dockerfile
+	docker push quay.io/kubespray/kpm:v$(VERSION)

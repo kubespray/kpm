@@ -4,6 +4,7 @@ from urlparse import urlparse, urljoin
 import requests
 import kpm
 from kpm.auth import KpmAuth
+from kpm.discovery import ishosted, discover_sources
 
 __all__ = ['Registry']
 
@@ -35,10 +36,14 @@ class Registry(object):
         return headers
 
     def pull(self, name, version=None):
-        organization, name = name.split("/")
-        path = "/packages/%s/%s/pull" % (organization, name)
+        if ishosted(name):
+            sources = discover_sources(name)
+            path = sources[0]
+        else:
+            organization, name = name.split("/")
+            path = self._url("/packages/%s/%s/pull" % (organization, name))
         params = {"version": version}
-        r = requests.get(self._url(path), params=params, headers=self.headers)
+        r = requests.get(path, params=params, headers=self.headers)
         r.raise_for_status()
         return r.content
 

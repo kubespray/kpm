@@ -2,6 +2,7 @@ import json
 import pytest
 import requests
 import requests_mock
+from base64 import b64encode
 from conftest import get_response
 from kpm.registry import Registry
 import kpm
@@ -169,7 +170,7 @@ def test_delete_package_unauthorized():
 def test_push_unauthorized(kubeui_blob):
     r = Registry()
     with requests_mock.mock() as m:
-        body = {"blob": kubeui_blob}
+        body = {"blob": b64encode(kubeui_blob)}
         response = '{"packages": "true"}'
         m.post("https://api.kpm.sh/api/v1/packages/ant31/kube-ui?force=false",
                  complete_qs=True,
@@ -180,7 +181,7 @@ def test_push_unauthorized(kubeui_blob):
 
 
 def test_push(kubeui_blob):
-    body = {"blob": kubeui_blob}
+    body = {"blob": b64encode(kubeui_blob)}
     r = Registry()
     response = '{"packages": "true"}'
     with requests_mock.mock() as m:
@@ -192,7 +193,7 @@ def test_push(kubeui_blob):
 
 
 def test_push_force(kubeui_blob):
-    body = {"blob": kubeui_blob}
+    body = {"blob": b64encode(kubeui_blob)}
     r = Registry()
     response = '{"packages": "true"}'
     with requests_mock.mock() as m:

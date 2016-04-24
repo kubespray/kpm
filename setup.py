@@ -15,31 +15,39 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
+    'futures',
     'requests',
     'pyyaml',
     'jinja2',
     'jsonpatch',
     'tabulate',
-    'termcolor'
+    'termcolor',
+    'python-etcd',
+    'semantic_version',
+    'flask',
+    'Flask>=0.10.1',
+    'flask-cors',
 ]
 
 test_requirements = [
     "pytest",
     "pytest-cov",
+    'pytest-flask',
     "pytest-ordering",
     "requests-mock"
 ]
 
 setup(
     name='kpm',
-    version='0.12.1',
+    version='0.13.0',
     description="KPM cli",
     long_description=readme + '\n\n' + history,
     author="Antoine Legrand",
     author_email='2t.antoine@gmail.com',
-    url='https://github.com/ant31/kpm',
+    url='https://github.com/kubespray/kpm',
     packages=[
         'kpm',
+        'kpm.api'
     ],
     scripts=[
         'bin/kpm'

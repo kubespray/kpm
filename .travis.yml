@@ -5,15 +5,16 @@ addons:
     repo_token: a6adb14185da38fc06b3df732a5b2a5cc06df0004f73b2a792c10b3d5fdbe3ff
 
 env:
-  - TOXENV=coveralls
+  - TOXENV=py27
   - TOXENV=flake8
-  - TOXENV=cli
+#  - TOXENV=cli
 
 install:
   - pip install -U tox
   - pip install -U coveralls
+
 language: python
 script: tox
 
 after_success:
-  - coveralls
+  - if [ "$TOXENV" == "py27" ] ; then coveralls ; fi
