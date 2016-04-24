@@ -39,7 +39,7 @@ test_requirements = [
 
 setup(
     name='kpm',
-    version='0.13.0',
+    version='0.14.0',
     description="KPM cli",
     long_description=readme + '\n\n' + history,
     author="Antoine Legrand",
