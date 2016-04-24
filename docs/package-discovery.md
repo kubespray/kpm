@@ -33,7 +33,7 @@ then inspect HTML returned for meta tags that have the following format:
 
 
 ### Example
-To perform deploy `kpm deploy kpm.sh/kpm-registry`
+To perform a deployment `kpm deploy kpm.sh/kpm-registry`
 the client will:
 
 - get `https://kpm.sh?kpm-discovery=1`
