@@ -6,7 +6,7 @@ When this format is used to reference a package, the package must be stored and 
 This can quickly become an issue as different registries will appear and packages may move from one to an another or a dependency list refer to packages that exist in differents registries only.
 Another point: with the default format there is no source mirror.
 
-To solve this, as suggested in [issue#28](https://github.com/kubespray/kpm/issues/28) KPM has a discovery process to retrieve the sources of a package. 
+To solve this, as suggested in [issue#28](https://github.com/kubespray/kpm/issues/28) KPM has a discovery process to retrieve the sources of a package.
 
 To use this discovery feature, a package must have a URL-like structure: `example.com/name`.
 
@@ -28,6 +28,17 @@ then inspect HTML returned for meta tags that have the following format:
 
 ```html
 <meta name="kpm-package" content="package-name url-source">
+```
+
+### Templates
+It's possible to use variables for basic replacement.
+
+Currently supported variables:
+
+##### name
+
+```html
+<meta name="kpm-package" content="example.com/{name} https//myregistry.example.com/{name}">
 ```
 
 
