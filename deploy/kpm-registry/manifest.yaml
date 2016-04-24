@@ -2,12 +2,12 @@
 package:
   name: kubespray/kpm-registry
   author: Antoine Legrand
-  version: 0.14.0
+  version: 0.14.1
   description: kpm-registry
   license: MIT
 
 variables:
-  image: quay.io/kubespray/kpm:v0.14.0
+  image: quay.io/kubespray/kpm:v0.14.1
   image_etcd: quay.io/coreos/etcd:v2.2.2
   initial_cluster: etcd=http://etcd.{{namespace}}.svc.cluster.local:2380
   svc_type: NodePort
