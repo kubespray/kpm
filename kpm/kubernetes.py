@@ -34,6 +34,7 @@ resource_endpoints = {
 resources_alias = {"ds": "daemonsets",
                    "hpa": "horizontalpodautoscalers",
                    "ing": "ingresses",
+                   "ingress": "ingresses",
                    "ns": "namespaces",
                    "po": "pods",
                    "pv": "persistentvolumes",
