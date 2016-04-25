@@ -8,7 +8,7 @@ package:
 
 variables:
   image: quay.io/kubespray/kpm:v0.14.3
-  image_etcd: quay.io/coreos/etcd:v2.2.2
+  image_etcd: quay.io/coreos/etcd:v2.3.2
   initial_cluster: etcd=http://etcd.{{namespace}}.svc.cluster.local:2380
   svc_type: NodePort
 
@@ -21,6 +21,23 @@ resources:
     name: kpm-registry
     type: svc
 
+
 deploy:
-  - name: kubespray/etcd
+  - name: base/persistent-volume-claims
+    shards:
+      - name: etcd-1
+      - name: etcd-2
+      - name: etcd-3
+  - name: coreos/etcd
+    shards:
+      - name: 1
+      - name: 2
+      - name: 3
+    variables:
+      image: quay.io/coreos/etcd:v2.3.2
+      data_volumes:
+        - name: varetcd
+          persistentVolumeClaim:
+            claimName: pvc-etcd-{{name}}
+
   - name: $self
