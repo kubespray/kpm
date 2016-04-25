@@ -40,7 +40,7 @@ def _process(package_name,
     i = 0
     for package in packages["deploy"]:
         i += 1
-        organization, name = package["package"].split("/")
+        pname = package["package"]
         version = package["version"]
         namespace = package["namespace"]
         if fmt == "stdout":
@@ -55,7 +55,7 @@ def _process(package_name,
             status = getattr(kubresource, action)(force=force, dry=dry)
             if fmt == "stdout":
                 output_progress(kubresource, status)
-            result_line = OrderedDict([("package", "%s/%s" % (organization, name)),
+            result_line = OrderedDict([("package", pname),
                                        ("version", version),
                                        ("kind", kubresource.kind),
                                        ("dry", dry),

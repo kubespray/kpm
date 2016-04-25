@@ -59,8 +59,7 @@ class Registry(object):
         return r.json()
 
     def generate(self, name, namespace=None, variables=None, version=None, tarball=False):
-        organization, name = name.split("/")
-        path = "/packages/%s/%s/generate" % (organization, name)
+        path = "/packages/%s/generate" % name
         params = {}
         if tarball:
             params['tarball'] = 'true'

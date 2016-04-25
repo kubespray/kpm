@@ -144,7 +144,7 @@ def get_parser():
     # PUSH
     push_parser = subparsers.add_parser('push', help='push a package to the registry')
     push_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
-                             help=argparse.SUPPRESS)
+                             help='registry API url')
     push_parser.add_argument("-o", "--organization", nargs="?", default=None,
                              help="push to another organization")
     push_parser.add_argument("-f", "--force", action='store_true', default=False,
@@ -156,7 +156,7 @@ def get_parser():
     pull_parser = subparsers.add_parser('pull', help='download a package and extract it')
     pull_parser.add_argument('package', nargs=1, help="package-name")
     pull_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
-                             help=argparse.SUPPRESS)
+                             help='registry API url')
     pull_parser.add_argument("--directory", nargs="?", default=".",
                              help="destionation directory")
     pull_parser.add_argument("-v", "--version", nargs="?", default=None,
@@ -173,7 +173,7 @@ def get_parser():
                              help="package version")
 
     show_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
-                             help=argparse.SUPPRESS)
+                             help='registry API url')
 
     show_parser.set_defaults(func=show)
 
@@ -190,7 +190,7 @@ def get_parser():
     # Login
     login_parser = subparsers.add_parser('login', help='login')
     login_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
-                              help=argparse.SUPPRESS)
+                              help='registry API url')
     login_parser.add_argument("-s", "--signup", action='store_true', default=False,
                               help="Create a new account and login")
     login_parser.add_argument("-u", "--user", nargs="?", default=None,
@@ -205,7 +205,7 @@ def get_parser():
     # Logout
     logout_parser = subparsers.add_parser('logout', help='logout')
     logout_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
-                               help=argparse.SUPPRESS)
+                               help='registry API url')
     logout_parser.set_defaults(func=logout)
 
     # Install
@@ -225,7 +225,7 @@ def get_parser():
     install_parser.add_argument("--force", action='store_true', default=False,
                                 help="force upgrade, delete and recreate resources")
     install_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
-                                help=argparse.SUPPRESS)
+                                help='registry API url')
     install_parser.set_defaults(func=install)
 
     # remove
@@ -244,7 +244,7 @@ def get_parser():
                                help="package VERSION to delete", default=None)
 
     remove_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
-                               help=argparse.SUPPRESS)
+                               help='registry API url')
     remove_parser.set_defaults(func=remove)
 
     # list
@@ -254,7 +254,7 @@ def get_parser():
     list_parser.add_argument("-o", "--organization", nargs="?", default=None,
                              help="list ORGANIZATION packages")
     list_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
-                             help=argparse.SUPPRESS)
+                             help='registry API url')
 
     list_parser.set_defaults(func=list_packages)
 
@@ -262,7 +262,7 @@ def get_parser():
     delete_parser = subparsers.add_parser('delete-package', help='delete package from the registry')
     delete_parser.add_argument('package', nargs=1, help="package-name")
     delete_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
-                               help=argparse.SUPPRESS)
+                               help='registry API url')
     delete_parser.add_argument("-v", "--version", nargs="?", default=None,
                                help="package version")
 

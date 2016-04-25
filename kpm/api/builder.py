@@ -1,3 +1,4 @@
+import json
 from flask import jsonify, request, Blueprint, current_app
 from kpm.kub import Kub
 from werkzeug.exceptions import BadRequest
@@ -6,8 +7,8 @@ from werkzeug.exceptions import BadRequest
 builder_app = Blueprint('builder', __name__,)
 
 
-def _build(organization, package):
-    name = "%s/%s" % (organization, package)
+def _build(package):
+    name = package
     args = {}
     version = None
     try:
@@ -34,29 +35,27 @@ def _build(organization, package):
     return k
 
 
-@builder_app.route("/api/v1/packages/<organization>/<package>/file/<path:filepath>")
-def show(organization, package, filepath):
-    name = "%s/%s" % (organization, package)
-    k = Kub(name, endpoint=current_app.config['KPM_URI'])
-    return jsonify(k.manifest)
+@builder_app.route("/api/v1/packages/<path:package>/file/<path:filepath>")
+def show_file(package, filepath):
+    k = Kub(package, endpoint=current_app.config['KPM_URI'])
+    return k.package.file(filepath)
 
 
-@builder_app.route("/api/v1/packages/<organization>/<package>/tree")
-def tree(organization, package):
-    name = "%s/%s" % (organization, package)
-    k = Kub(name, endpoint=current_app.config['KPM_URI'])
-    return jsonify(k.manifest)
+@builder_app.route("/api/v1/packages/<path:package>/tree")
+def tree(package):
+    k = Kub(package, endpoint=current_app.config['KPM_URI'])
+    return json.dumps(k.package.tree())
 
 
-@builder_app.route("/api/v1/packages/<organization>/<package>/generate", methods=['POST', 'GET'])
-def build(organization, package):
-    k = _build(organization, package)
+@builder_app.route("/api/v1/packages/<path:package>/generate", methods=['POST', 'GET'])
+def build(package):
+    k = _build(package)
     return jsonify(k.build())
 
 
-@builder_app.route("/api/v1/packages/<organization>/<package>/generate-tar", methods=['POST', 'GET'])
-def build_tar(organization, package):
-    k = _build(organization, package)
+@builder_app.route("/api/v1/packages/<path:package>/generate-tar", methods=['POST', 'GET'])
+def build_tar(package):
+    k = _build(package)
     resp = current_app.make_response(k.build_tar())
     resp.mimetype = 'application/tar'
     resp.headers['Content-Disposition'] = 'filename="%s_%s.tar.gz"' % (k.name.replace("/", "_"), k.version)
