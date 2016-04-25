@@ -3,6 +3,9 @@ import requests
 from HTMLParser import HTMLParser
 
 
+package_regexp = "(.+?)/(.+)"
+
+
 class MetaHTMLParser(HTMLParser):
     def __init__(self, variables=None):
         self.meta = {}
@@ -29,7 +32,7 @@ class MetaHTMLParser(HTMLParser):
 
 
 def ishosted(package):
-    m = re.search("(.+)/(.+)", package)
+    m = re.search(package_regexp, package)
     host = m.group(1)
     if "." in host:
         return True
@@ -38,7 +41,7 @@ def ishosted(package):
 
 
 def discover_sources(package, secure=False):
-    m = re.search("(.+)/(.+)", package)
+    m = re.search(package_regexp, package)
     host, name = (m.group(1), m.group(2))
     schemes = ["https://", "http://"]
     for scheme in schemes:
