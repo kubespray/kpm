@@ -11,6 +11,12 @@ def app():
     return app
 
 
+@pytest.fixture(scope='module')
+def jinja_env():
+    import kpm.kub
+    return kpm.kub.jinja_env
+
+
 @pytest.fixture()
 def fake_home(monkeypatch, tmpdir):
     home = tmpdir.mkdir('home')

@@ -14,6 +14,7 @@ from collections import OrderedDict
 import kpm.registry as registry
 import kpm.packager as packager
 import kpm.manifest as manifest
+import kpm.jinja_filters as jinja_filters
 from kpm.kubernetes import get_endpoint
 from kpm.utils import mkdir_p, convert_utf8
 
@@ -36,6 +37,9 @@ def dict_constructor(loader, node):
 
 yaml.add_representer(OrderedDict, dict_representer)
 yaml.add_constructor(_mapping_tag, dict_constructor)
+
+jinja_env = jinja2.Environment()
+jinja_env.filters.update(jinja_filters.filters())
 
 
 class Kub(object):
@@ -177,7 +181,7 @@ class Kub(object):
                 val = yaml.safe_dump(convert_utf8(resource['value']))
             else:
                 val = self.package.files[os.path.join('templates', tpl_file)]
-            template = jinja2.Template(val)
+            template = jinja_env.from_string(val)
             variables = copy.deepcopy(self.variables)
             if 'variables' in resource:
                 variables.update(resource['variables'])
