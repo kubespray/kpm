@@ -294,10 +294,14 @@ class Kub(object):
         self._dependencies = []
         for dep in self.manifest.deploy:
             if dep['name'] != '$self':
+                variables = dep.get('variables', {})
+                variables['kpmparent'] = {'name': self.name,
+                                          'shards': self.shards,
+                                          'variables': self.variables}
                 kub = Kub(dep['name'],
                           endpoint=self.endpoint,
                           version=dep.get('version', None),
-                          variables=dep.get('variables', {}),
+                          variables=variables,
                           shards=dep.get('shards', []),
                           resources=dep.get('resources', []),
                           namespace=self.namespace)
