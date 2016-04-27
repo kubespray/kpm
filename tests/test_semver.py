@@ -39,11 +39,11 @@ def test_ordering(version_list):
 
 
 def test_stable_only(version_list):
-    assert semver.versions(version_list) == semver.versions(["1.4.0", "1.6.0"])
+    assert semver.versions(version_list, stable=True) == semver.versions(["1.4.0", "1.6.0"])
 
 
 def test_last_stable_version(version_list):
-    assert str(semver.last_version(version_list)) == "1.6.0"
+    assert str(semver.last_version(version_list, True)) == "1.6.0"
 
 
 def test_last_unstable_version(version_list):

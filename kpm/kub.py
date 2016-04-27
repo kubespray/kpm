@@ -14,6 +14,7 @@ from collections import OrderedDict
 import kpm.registry as registry
 import kpm.packager as packager
 import kpm.manifest as manifest
+import kpm.jinja_filters as jinja_filters
 from kpm.kubernetes import get_endpoint
 from kpm.utils import mkdir_p, convert_utf8
 
@@ -36,6 +37,9 @@ def dict_constructor(loader, node):
 
 yaml.add_representer(OrderedDict, dict_representer)
 yaml.add_constructor(_mapping_tag, dict_constructor)
+
+jinja_env = jinja2.Environment()
+jinja_env.filters.update(jinja_filters.filters())
 
 
 class Kub(object):
@@ -108,8 +112,8 @@ class Kub(object):
             index += 1
             resources[resource['file']] = resource
             resource["order"] = index
-            # @TODO fetch value from manifest
-            resource["protected"] = False
+            if 'protected' not in resource:
+                resource["protected"] = False
             if 'patch' not in resource:
                 resource['patch'] = []
 
@@ -177,7 +181,7 @@ class Kub(object):
                 val = yaml.safe_dump(convert_utf8(resource['value']))
             else:
                 val = self.package.files[os.path.join('templates', tpl_file)]
-            template = jinja2.Template(val)
+            template = jinja_env.from_string(val)
             variables = copy.deepcopy(self.variables)
             if 'variables' in resource:
                 variables.update(resource['variables'])
@@ -290,10 +294,14 @@ class Kub(object):
         self._dependencies = []
         for dep in self.manifest.deploy:
             if dep['name'] != '$self':
+                variables = dep.get('variables', {})
+                variables['kpmparent'] = {'name': self.name,
+                                          'shards': self.shards,
+                                          'variables': self.variables}
                 kub = Kub(dep['name'],
                           endpoint=self.endpoint,
                           version=dep.get('version', None),
-                          variables=dep.get('variables', {}),
+                          variables=variables,
                           shards=dep.get('shards', []),
                           resources=dep.get('resources', []),
                           namespace=self.namespace)

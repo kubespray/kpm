@@ -52,13 +52,13 @@ def getversions(package):
     return versions
 
 
-def getversion(package, version):
+def getversion(package, version, stable=False):
     versions = getversions(package)
     if version is None or version == 'latest':
-        return last_version(versions)
+        return last_version(versions, stable)
     else:
         try:
-            return select_version(versions, str(version))
+            return select_version(versions, str(version), stable)
         except ValueError as e:
             raise InvalidVersion(e.message, {"version": version})
 
@@ -174,9 +174,9 @@ def show_package(organization, name):
     package_data = get_package(package, values)
     p = Package(b64decode(package_data.value))
     manifest = yaml.load(p.manifest)
-    stable = True
-    if 'stable' in values and values['stable'] != 'true':
-        stable = False
+    stable = False
+    if 'stable' in values and values['stable'] == 'true':
+        stable = True
 
     response = {"manifest": manifest,
                 "version": manifest['package']['version'],

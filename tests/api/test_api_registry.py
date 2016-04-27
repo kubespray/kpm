@@ -82,11 +82,11 @@ def test_getversions_empty(monkeypatch):
 
 
 def test_getversion_latest(getversions):
-    assert str(api.getversion("ant31/rocketchat", "latest")) == "1.4.2"
+    assert str(api.getversion("ant31/rocketchat", "latest")) == "1.8.2-rc2"
 
 
-def test_getversion_none(getversions):
-    assert str(api.getversion("ant31/rocketchat", None)) == "1.4.2"
+def test_getversion_stable_none(getversions):
+    assert str(api.getversion("ant31/rocketchat", None, True)) == "1.4.2"
 
 
 def test_getversion_invalid(getversions):
