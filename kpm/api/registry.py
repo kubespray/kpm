@@ -174,9 +174,9 @@ def show_package(organization, name):
     package_data = get_package(package, values)
     p = Package(b64decode(package_data.value))
     manifest = yaml.load(p.manifest)
-    stable = True
-    if 'stable' in values and values['stable'] != 'true':
-        stable = False
+    stable = False
+    if 'stable' in values and values['stable'] == 'true':
+        stable = True
 
     response = {"manifest": manifest,
                 "version": manifest['package']['version'],
