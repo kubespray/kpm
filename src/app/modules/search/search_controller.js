@@ -16,8 +16,10 @@ app.controller('SearchController', function($scope, $state, $q, KpmApi) {
    * Redirect to the package view page
    */
   this.itemSelected = function(item) {
-    $state.go('package', {name: item.name});
-    this.searchText = null;
+    if (item) {
+      $state.go('package', {name: item.name});
+      this.searchText = null;
+    }
   };
 
   /**
