@@ -1,3 +1,4 @@
+import re
 import yaml
 import json
 from base64 import b64decode
@@ -143,15 +144,20 @@ def push(organization=None, name=None):
 def list_packages():
     values = getvalues()
     path = ETCD_PREFIX
-    if 'organization' in values:
-        path += "/%s" % values['organization']
-
-    packages = etcd_client.read(path, recursive=True)
     r = {}
 
+    if 'organization' in values:
+        path += "/%s" % values['organization']
+    try:
+        packages = etcd_client.read(path, recursive=True)
+    except etcd.EtcdKeyNotFound:
+        etcd_client.write(path, None, dir=True)
+
     for child in packages.children:
-        p = child.key.split(ETCD_PREFIX)[1]
-        organization, name, version = p.split("/")
+        m = re.match("^/%s(.+)/(.+)/(.+)$" % ETCD_PREFIX, child.key)
+        if m is None:
+            continue
+        organization, name, version = (m.group(1), m.group(2), m.group(3))
         package = "%s/%s" % (organization, name)
         if package not in r:
             r[package] = {"name": package, 'available_versions': [], 'version': None}
