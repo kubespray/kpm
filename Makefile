@@ -102,7 +102,7 @@ dockerfile: dist
 
 dockerfile-canary: dist
 	cp deploy/Dockerfile dist
-	docker build --build-arg version=master -t quay.io/kubespray/kpm:canary dist/
+	docker build --build-arg version=$(VERSION) -t quay.io/kubespray/kpm:canary dist/
 	docker push quay.io/kubespray/kpm:canary
 
 dockerfile-push: dockerfile
