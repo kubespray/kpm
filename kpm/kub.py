@@ -112,8 +112,8 @@ class Kub(object):
             index += 1
             resources[resource['file']] = resource
             resource["order"] = index
-            # @TODO fetch value from manifest
-            resource["protected"] = False
+            if 'protected' not in resource:
+                resource["protected"] = False
             if 'patch' not in resource:
                 resource['patch'] = []
 
