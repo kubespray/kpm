@@ -52,13 +52,13 @@ def getversions(package):
     return versions
 
 
-def getversion(package, version):
+def getversion(package, version, stable=False):
     versions = getversions(package)
     if version is None or version == 'latest':
-        return last_version(versions)
+        return last_version(versions, stable)
     else:
         try:
-            return select_version(versions, str(version))
+            return select_version(versions, str(version), stable)
         except ValueError as e:
             raise InvalidVersion(e.message, {"version": version})
 

@@ -12,7 +12,7 @@ def last_version(versions_str, stable=False):
     return sorted(versions(versions_str, stable))[-1]
 
 
-def select_version(versions_str, query):
+def select_version(versions_str, query, stable=False):
     if isinstance(query, str):
         query = query.split(",")
     query = [x.replace(" ", "") for x in query]
