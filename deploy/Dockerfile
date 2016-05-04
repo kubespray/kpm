@@ -11,7 +11,7 @@ RUN tar xzvf kpm-$version.tar.gz
 WORKDIR $workdir/kpm-$version
 
 RUN apk --update add python py-pip openssl ca-certificates
-RUN apk --update add --virtual build-dependencies python-dev build-base wget libffi-dev openssl-dev\
+RUN apk --update add --virtual build-dependencies python-dev build-base wget openssl-dev libffi-dev\
   && pip install gunicorn -U \
   && python setup.py install \
   && apk del build-dependencies

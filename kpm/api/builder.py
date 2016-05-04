@@ -13,19 +13,20 @@ def _build(package):
     namespace = values.get('namespace', 'default')
     variables = values.get('variables', {})
     variables['namespace'] = namespace
-    k = Kub(name, endpoint=current_app.config['KPM_URI'], variables=variables, namespace=namespace, version=version)
+    k = Kub(name, endpoint=current_app.config['KPM_REGISTRY_HOST'],
+            variables=variables, namespace=namespace, version=version)
     return k
 
 
 @builder_app.route("/api/v1/packages/<path:package>/file/<path:filepath>")
 def show_file(package, filepath):
-    k = Kub(package, endpoint=current_app.config['KPM_URI'])
+    k = Kub(package, endpoint=current_app.config['KPM_REGISTRY_HOST'])
     return k.package.file(filepath)
 
 
 @builder_app.route("/api/v1/packages/<path:package>/tree")
 def tree(package):
-    k = Kub(package, endpoint=current_app.config['KPM_URI'])
+    k = Kub(package, endpoint=current_app.config['KPM_REGISTRY_HOST'])
     return json.dumps(k.package.tree())
 
 
