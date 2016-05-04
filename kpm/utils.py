@@ -9,7 +9,6 @@ from termcolor import colored
 def parse_cmdline_variables(l):
     r = {}
     for var in l:
-        print var
         try:
             r.update(json.loads(var))
         except ValueError:
