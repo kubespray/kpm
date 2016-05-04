@@ -7,10 +7,8 @@ package_regexp = "(.+?)/(.+)"
 
 
 class MetaHTMLParser(HTMLParser):
-    def __init__(self, variables=None):
+    def __init__(self, variables):
         self.meta = {}
-        if variables is None:
-            variables = {}
         self.variables = variables
         HTMLParser.__init__(self)
 
@@ -57,7 +55,6 @@ def discover_sources(package, secure=False):
         r.raise_for_status()
         p = MetaHTMLParser({'name': name})
         p.feed(r.content)
-    if package in p.meta:
-        return p.meta[package]
-    else:
-        return None
+        if package in p.meta:
+            return p.meta[package]
+    return None

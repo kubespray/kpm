@@ -1,7 +1,15 @@
 import os
-from flask import Flask
+from flask import Flask, request
 import flask.ext.cors
 from kpm.loghandler import init_logging
+
+
+def getvalues():
+    jsonbody = request.get_json(force=True, silent=True)
+    values = request.values.to_dict()
+    if jsonbody:
+        values.update(jsonbody)
+    return values
 
 
 def create_app():

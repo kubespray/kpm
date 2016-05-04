@@ -4,6 +4,7 @@ import json
 from base64 import b64decode
 from flask import jsonify, request, Blueprint, current_app
 import semantic_version
+from kpm.api.app import getvalues
 from kpm.packager import Package
 import kpm.semver as semver
 from kpm.semver import last_version, select_version
@@ -25,14 +26,6 @@ ETCD_PREFIX = "kpm/packages/"
 
 def pathfor(package, version):
     return ETCD_PREFIX + "%s/%s" % (package, version)
-
-
-def getvalues():
-    jsonbody = request.get_json(force=True, silent=True)
-    values = request.values.to_dict()
-    if jsonbody:
-        values.update(jsonbody)
-    return values
 
 
 def check_data(package, version, blob):
