@@ -6,6 +6,20 @@ from kpm.api.app import create_app
 
 
 @pytest.fixture
+def discovery_html():
+    return """<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="kpm-package" content="kpm.sh/{name} https://api.kubespray.io/api/v1/packages/{name}/pull">
+    </head>
+    <body>
+    <a href=https://github.com/kubespray/kpm>kubespray/kpm</a>
+    </body>
+    </html>"""
+
+
+@pytest.fixture
 def app():
     app = create_app()
     return app

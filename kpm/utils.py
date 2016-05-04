@@ -1,7 +1,25 @@
 import errno
 import os
 import collections
+import json
+import re
 from termcolor import colored
+
+
+def parse_cmdline_variables(l):
+    r = {}
+    for var in l:
+        print var
+        try:
+            r.update(json.loads(var))
+        except ValueError:
+            for v in var.split(","):
+                sp = re.match("(.+?)=(.+)", v)
+                if sp is None:
+                    raise ValueError("Malformed variable: %s" % v)
+                key, value = sp.group(1), sp.group(2)
+                r[key] = value
+    return r
 
 
 def mkdir_p(path):

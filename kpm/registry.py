@@ -61,6 +61,7 @@ class Registry(object):
     def generate(self, name, namespace=None, variables=None, version=None, tarball=False):
         path = "/packages/%s/generate" % name
         params = {}
+        body = {}
         if tarball:
             params['tarball'] = 'true'
         if version:
@@ -68,8 +69,8 @@ class Registry(object):
         if namespace:
             params['namespace'] = namespace
         if variables:
-            params['variables'] = variables
-        r = requests.get(self._url(path), params=params, headers=self.headers)
+            body = {'variables':  variables}
+        r = requests.get(self._url(path), data=json.dumps(body), params=params, headers=self.headers)
         r.raise_for_status()
         return r.json()
 

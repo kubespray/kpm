@@ -42,6 +42,25 @@ def test_pull():
         assert r.pull("orga/p1") == response
 
 
+def test_pull_discovery_https(discovery_html):
+    r = Registry()
+    with requests_mock.mock() as m:
+        response = 'package_data'
+        m.get("https://kpm.sh/?kpm-discovery=1", text=discovery_html, complete_qs=True)
+        m.get("https://api.kubespray.io/api/v1/packages/orga/p1/pull", text=response)
+        assert r.pull("kpm.sh/orga/p1") == response
+
+
+def test_pull_discovery_http(discovery_html):
+    r = Registry()
+    with requests_mock.mock() as m:
+        response = 'package_data'
+        m.get("https://kpm.sh/?kpm-discovery=1", text="<html/>", complete_qs=True)
+        m.get("http://kpm.sh/?kpm-discovery=1", text=discovery_html, complete_qs=True)
+        m.get("https://api.kubespray.io/api/v1/packages/orga/p1/pull", text=response)
+        assert r.pull("kpm.sh/orga/p1") == response
+
+
 def test_pull_with_version():
     r = Registry()
     with requests_mock.mock() as m:
@@ -94,7 +113,7 @@ def test_generate_with_params():
     r = Registry()
     with requests_mock.mock() as m:
         response = '{"packages": "true"}'
-        m.get("https://api.kpm.sh/api/v1/packages/ant31/kube-ui/generate?tarball=true&variables=a&variables=c&version=1.3.4&namespace=testns", complete_qs=True, text=response)
+        m.get("https://api.kpm.sh/api/v1/packages/ant31/kube-ui/generate?tarball=true&version=1.3.4&namespace=testns", complete_qs=True, text=response)
         assert json.dumps(r.generate(name="ant31/kube-ui", namespace="testns", variables={"a": "b", "c": "d"}, version="1.3.4", tarball=True)) == response
 
 

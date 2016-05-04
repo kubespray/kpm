@@ -12,6 +12,9 @@ import kpm.deploy
 from kpm.display import print_packages
 from kpm.new import new_package
 from kpm.console import KubernetesExec
+from kpm.utils import parse_cmdline_variables
+
+
 import base64
 
 
@@ -32,6 +35,9 @@ def show(options):
 
 
 def install(options):
+    variables = None
+    if options.variables is not None:
+        variables = parse_cmdline_variables(options.variables)
     kpm.deploy.deploy(options.package[0],
                       version=options.version,
                       dest=options.tmpdir,
@@ -39,7 +45,8 @@ def install(options):
                       force=options.force,
                       dry=options.dry_run,
                       endpoint=options.registry_host,
-                      proxy=options.api_proxy)
+                      proxy=options.api_proxy,
+                      variables=variables)
 
 
 def remove(options):
@@ -221,6 +228,8 @@ def get_parser():
                                 help="kubectl proxy url", const="http://localhost:8001")
     install_parser.add_argument("-v", "--version", nargs="?",
                                 help="package VERSION", default=None)
+    install_parser.add_argument("-x", "--variables",
+                                help="variables", default=None, action="append")
 
     install_parser.add_argument("--force", action='store_true', default=False,
                                 help="force upgrade, delete and recreate resources")
