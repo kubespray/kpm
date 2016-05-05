@@ -72,6 +72,7 @@ def render_etcdkeyerror(error):
 
 
 @registry_app.errorhandler(PackageAlreadyExists)
+@registry_app.errorhandler(InvalidVersion)
 @registry_app.errorhandler(PackageNotFound)
 @registry_app.errorhandler(PackageVersionNotFound)
 @registry_app.errorhandler(ApiException)
@@ -100,11 +101,10 @@ def get_package(package, values):
     return package_data
 
 
-@registry_app.route("/api/v1/packages/<organization>/<name>/pull", methods=['GET'], strict_slashes=False)
-def pull(organization, name):
-    current_app.logger.info("pull %s,%s", organization, name)
+@registry_app.route("/api/v1/packages/<path:package>/pull", methods=['GET'], strict_slashes=False)
+def pull(package):
+    current_app.logger.info("pull %s", package)
     values = getvalues()
-    package = "%s/%s" % (organization, name)
     package_data = get_package(package, values)
     if 'format' in values and values['format'] == 'json':
         resp = jsonify({"package": package, "kub": package_data.value})
@@ -116,9 +116,9 @@ def pull(organization, name):
     return resp
 
 
-@registry_app.route("/api/v1/packages/<organization>/<name>", methods=['POST'], strict_slashes=False)
+@registry_app.route("/api/v1/packages/<path:package>", methods=['POST'], strict_slashes=False)
 @registry_app.route("/api/v1/packages", methods=['POST'], strict_slashes=False)
-def push(organization=None, name=None):
+def push(package=None):
 
     values = getvalues()
     blob = values['blob']
@@ -166,9 +166,8 @@ def list_packages():
     return resp
 
 
-@registry_app.route("/api/v1/packages/<organization>/<name>", methods=['GET'], strict_slashes=False)
-def show_package(organization, name):
-    package = "%s/%s" % (organization, name)
+@registry_app.route("/api/v1/packages/<path:package>", methods=['GET'], strict_slashes=False)
+def show_package(package):
     values = getvalues()
     package_data = get_package(package, values)
     p = Package(b64decode(package_data.value))
@@ -187,9 +186,8 @@ def show_package(organization, name):
     return jsonify(response)
 
 
-@registry_app.route("/api/v1/packages/<organization>/<name>", methods=['DELETE'], strict_slashes=False)
-def delete_package(organization, name):
-    package = "%s/%s" % (organization, name)
+@registry_app.route("/api/v1/packages/<path:package>", methods=['DELETE'], strict_slashes=False)
+def delete_package(package):
     values = getvalues()
     package_data = get_package(package, values)
     etcd_client.delete(package_data.key)

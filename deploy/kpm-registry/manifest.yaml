@@ -2,7 +2,7 @@
 package:
   name: kubespray/kpm-registry
   author: Antoine Legrand
-  version: 0.16.0
+  version: 0.16.0-1
   description: kpm-registry
   license: MIT
 
