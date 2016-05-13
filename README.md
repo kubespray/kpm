@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/kubespray/kpm.svg?branch=master)](https://travis-ci.org/kubespray/kpm) [![Code Climate](https://codeclimate.com/github/kubespray/kpm/badges/gpa.svg)](https://codeclimate.com/github/kubespray/kpm) [![Coverage Status](https://coveralls.io/repos/github/kubespray/kpm/badge.svg?branch=master)](https://coveralls.io/github/kubespray/kpm?branch=master)
 
+if you have any question you can **chat** with us  [![SlackStatus](https://slack.kubespray.io/badge.svg)](https://kubespray.slack.com)
 
 # KPM
 
