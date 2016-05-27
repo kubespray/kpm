@@ -1,7 +1,7 @@
 import logging
 import os.path
 import yaml
-from kpm.render_jsonnet import RenderJsonnet
+from kpm.render_jsonnet import RenderJsonnet, yaml_to_jsonnet
 from kpm.packager import authorized_files
 
 __all__ = ['Manifest']
@@ -12,40 +12,43 @@ MANIFEST_FILES = ["manifest.jsonnet", "manifest.yaml"]
 
 class Manifest(dict):
     def __init__(self, package=None):
-        self.mfile = None
         if package is not None:
             self._load_from_package(package)
         else:
             self._load_from_path()
+
         super(Manifest, self).__init__()
 
     def _load_from_package(self, package):
-        if package.isjsonnet:
+        if package.isjsonnet():
             self._load_jsonnet(package.manifest, package.files)
         else:
-            self._load_yaml(package.manifest)
+            self._load_yaml(package.manifest, package.files)
 
     def _load_from_path(self):
         for f in MANIFEST_FILES:
             if os.path.exists(f):
-                self.mfile = f
+                mfile = f
                 break
-        _, ext = os.path.splitext(self.mfile)
-        with open(self.mfile) as f:
+        _, ext = os.path.splitext(mfile)
+        with open(mfile) as f:
+            auth_files = authorized_files()
+            files = dict(zip(auth_files, [None] * len(auth_files)))
             if ext == '.jsonnet':
-                files = authorized_files()
-                self._load_jsonnet(f.read(), zip(files, [None] * len(files)))
+                self._load_jsonnet(f.read(), files)
             else:
-                self._load_yaml(f.read())
+                self._load_yaml(f.read(), files)
 
     def _load_jsonnet(self, jsonnetstr, files):
         k = RenderJsonnet(files)
-        self.update(k.render_jsonnet(jsonnetstr))
+        r = k.render_jsonnet(jsonnetstr)
+        self.update(r)
 
-    def _load_yaml(self, yamlstr):
+    def _load_yaml(self, yamlstr, files):
         try:
-            y = yaml.safe_load(yamlstr)
-            self.update(y)
+            jsonnetstr = yaml_to_jsonnet(yamlstr)
+            files['manifest.jsonnet'] = jsonnetstr
+            self._load_jsonnet(jsonnetstr, files)
         except yaml.YAMLError, exc:
             print "Error in configuration file:"
             if hasattr(exc, 'problem_mark'):

@@ -1,15 +1,15 @@
+import re
 import os
 import logging
 import os.path
 import yaml
 import json
 import _jsonnet
-
+import jinja2
+import kpm.jinja_filters as jinja_filters
+from kpm.utils import convert_utf8
 
 logger = logging.getLogger(__name__)
-
-
-_mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
 
 JSONNET_TEMPLATE = """
@@ -27,10 +27,12 @@ function(
   variables: kpm.variables(
     {{manifest.variables}}, variables),
 
+{% if manifest.shards is defined and manifest.shards|length > 0 %}
  shards: kpm.shards(
    {{manifest.shards}}, shards),
+{% endif %}
 
-{% if manifest.resources|length > 0 %}
+{% if manifest.resources is defined and manifest.resources|length > 0 %}
  resources: kpm.resources([{% for item in manifest.resources %}
 
     {{item|json}} + {template: (importstr "templates/{{item.file}}")}
@@ -44,6 +46,16 @@ function(
 """
 
 
+def yaml_to_jsonnet(manifestyaml):
+    jinja_env = jinja2.Environment()
+    jinja_env.filters.update(jinja_filters.filters())
+    template = jinja_env.from_string(JSONNET_TEMPLATE)
+    v = {"manifest": convert_utf8(json.loads(json.dumps(yaml.load(manifestyaml))))}
+    templatedjsonnet = template.render(v)
+    jsonnet_str = re.sub(r'[\'"]{{(.*?)}}["\']', r"\1", templatedjsonnet)
+    return jsonnet_str
+
+
 class RenderJsonnet(object):
     def __init__(self, files=None):
         self.files = files
@@ -52,12 +64,8 @@ class RenderJsonnet(object):
     def try_path(self, path, rel):
         if not rel:
             raise RuntimeError('Got invalid filename (empty string).')
-        print self.files
-        print "try_path"
         if rel in self.files:
-            print "true"
             if self.files[rel] is None:
-                print "none"
                 with open(rel) as f:
                     self.files[rel] = f.read()
             return rel, self.files[rel]
@@ -83,8 +91,10 @@ class RenderJsonnet(object):
             return full_path, content
         raise RuntimeError('File not found')
 
-    def render_jsonnet(self, manifeststr=None):
-        if manifeststr is None:
-            manifeststr = self.files['manifest.jsonnet']
-        json_str = _jsonnet.evaluate_snippet("snippet", manifeststr, import_callback=self.import_callback)
+    def render_jsonnet(self, manifeststr):
+        try:
+            json_str = _jsonnet.evaluate_snippet("snippet", manifeststr, import_callback=self.import_callback)
+        except RuntimeError as e:
+            print "\n".join(["%s %s" % (i, line) for i, line in enumerate(manifeststr.split("\n"))])
+            raise e
         return json.loads(json_str)
