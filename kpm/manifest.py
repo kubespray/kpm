@@ -1,27 +1,49 @@
 import logging
 import os.path
 import yaml
-
+from kpm.render_jsonnet import RenderJsonnet
+from kpm.packager import authorized_files
 
 __all__ = ['Manifest']
 logger = logging.getLogger(__name__)
 
-MANIFEST_FILE = "manifest.yaml"
+MANIFEST_FILES = ["manifest.jsonnet", "manifest.yaml"]
 
 
 class Manifest(dict):
-    def __init__(self, package=None, path="."):
+    def __init__(self, package=None):
         if package is not None:
-            self.update(yaml.safe_load(package.manifest))
-            super(Manifest, self).__init__()
+            self._load_from_package(package)
+        else:
+            self._load_from_path()
+        super(Manifest, self).__init__()
 
-        elif path is not None:
-            self.mfile = os.path.join(path, MANIFEST_FILE)
-            self._load_yaml(self.mfile)
+    def _load_from_package(self, package):
+        if package.isjsonnet:
+            self._load_jsonnet(package.manifest, package.files)
+        else:
+            self._load_yaml(package.manifest)
 
-    def _load_yaml(self, mfile):
+    def _load_from_path(self):
+        for f in MANIFEST_FILES:
+            if os.path.exists(f):
+                self.mfile = f
+                break
+        _, ext = os.path.splitext(self.mfile)
+        with open(self.mfile) as f:
+            if ext == '.jsonnet':
+                files = authorized_files()
+                self._load_jsonnet(f.read(), zip(files, [None] * len(files)))
+            else:
+                self._load_yaml(f.read())
+
+    def _load_jsonnet(self, jsonnetstr, files):
+        k = RenderJsonnet(files)
+        self.update(k.render_jsonnet(jsonnetstr))
+
+    def _load_yaml(self, yamlstr):
         try:
-            y = yaml.safe_load(open(mfile, 'r'))
+            y = yaml.safe_load(yamlstr)
             self.update(y)
         except yaml.YAMLError, exc:
             print "Error in configuration file:"

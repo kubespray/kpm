@@ -2,8 +2,9 @@ import logging
 import tarfile
 import glob
 import io
+import os
 
-__all__ = ['pack_kub', 'unpack_kub', 'Package']
+__all__ = ['pack_kub', 'unpack_kub', 'Package', "authorized_files"]
 
 logger = logging.getLogger(__name__)
 
@@ -19,6 +20,8 @@ logger = logging.getLogger(__name__)
 #
 #
 AUTHORIZED_FILES = ["templates/*.yaml",
+                    "templates/*.jsonnet",
+                    "*.jsonnet",
                     "templates/*.yml",
                     "templates/*.j2",
                     "templates/*.yaml.j2",
@@ -29,11 +32,18 @@ AUTHORIZED_FILES = ["templates/*.yaml",
                     "deps/*.kub"]
 
 
-def pack_kub(kub):
-    tar = tarfile.open(kub, "w:gz")
+def authorized_files():
+    files = []
     for name in AUTHORIZED_FILES:
         for f in glob.glob(name):
-            tar.add(f)
+            files.append(f)
+    return files
+
+
+def pack_kub(kub):
+    tar = tarfile.open(kub, "w:gz")
+    for f in authorized_files():
+        tar.add(f)
     tar.close()
 
 
@@ -79,6 +89,19 @@ class Package(object):
     def file(self, filename):
         return self.files[filename]
 
+    def isjsonnet(self):
+        if "manifest.yaml" in self.files:
+            return False
+        elif "manifest.jsonnet" in self.files:
+            return True
+        else:
+            raise RuntimeError("Unknown manifest format")
+
     @property
     def manifest(self):
-        return self.files['manifest.yaml']
+        if "manifest.yaml" in self.files:
+            return self.files['manifest.yaml']
+        elif "manifest.jsonnet" in self.files:
+            return self.files['manifest.jsonnet']
+        else:
+            raise RuntimeError("Unknown manifest format")

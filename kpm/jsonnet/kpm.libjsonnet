@@ -1,0 +1,81 @@
+{
+
+  seq(i):: (
+    [x for x in std.range(1, i)]
+   ),
+
+  variables(vars, target):: (
+    std.mergePatch(vars, target)
+  ),
+
+  deploy(dep):: (
+    dep
+  ),
+
+  shards(s, target):: (
+     if std.type(target) == 'null' then
+        s
+     else if std.type(target) == "object" then
+        std.mergePatch(s, target)
+     else if std.type(target) == "array" then
+        target
+     else if std.type(target) == "number" then
+        [{name: x} for x in self.seq(target)]
+     else
+       error "Bad shard type: %s (%s)" % [target, std.type(target)]
+  ),
+
+  shard_count(n):: ([{name: x} for x in std.range(1, n)]),
+
+  shard_list(shard, shards):: (
+    if shard == "true" || std.type(shard) == "boolean" then
+      shards
+    else if std.type(shard) == "string" then
+       if std.type(shards[shard]) == "number" then
+          self.shard_count(shards[shard])
+       else
+           shards[shard]
+    else if std.type(shard) == "number" then
+       self.shard_count(shard)
+    else
+      error "Unknow shard value: %s (%s)" % [shard, std.type(shard)]
+   ),
+
+   template(resource):: (
+      resource + {template: resource.template % resource.variables}
+    ),
+
+
+   sharded_resource(resource, shards, variables):: (
+     local resource_shards = self.shard_list(resource.sharded, shards);
+     [
+      local extra = {
+       shard: shard.name,
+       name: "%s-%s" % [resource.name, shard.name],
+       };
+
+      local var = if std.objectHas(shard, "variables") == true then
+                     {variables: variables + extra +
+                                shard.variables + {shards: resource_shards}}
+                  else
+                     {variables: variables + extra + {shards: resource_shards}};
+
+      local r = resource + extra + var;
+      self.template(r) for shard in resource_shards]
+     ),
+
+    templated_resource(resource, shards, variables):: (
+       self.template(resource + {variables: variables})
+    ),
+
+    resources(resources, shards, variables):: (
+    [
+     if std.objectHas(resource, "sharded") then
+        self.sharded_resource(resource, shards, variables)
+     else
+        self.templated_resource(resource, shards, variables)
+     for resource in resources]
+    )
+
+
+ }
