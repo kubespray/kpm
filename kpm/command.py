@@ -67,6 +67,23 @@ def pull(options):
     p.extract(path)
 
 
+def generate(options):
+    r = Registry(options.registry_host)
+    name = options.pull
+
+    version = options.version
+    namespace = values.get('namespace', 'default')
+    variables = values.get('variables', {})
+    variables['namespace'] = namespace
+    k = Kub(name, endpoint=current_app.config['KPM_REGISTRY_HOST'],
+            variables=variables, namespace=namespace, version=version)
+
+    result = r.pull(options.package[0], version=options.version)
+    p = Package(result)
+    path = os.path.join(options.directory, kpm.manifest.Manifest(p).package_name())
+    p.extract(path)
+
+
 def exec_cmd(options):
     c = KubernetesExec(options.name,
                        cmd=" ".join(options.cmd),
@@ -79,7 +96,7 @@ def exec_cmd(options):
 def push(options):
     r = Registry(options.registry_host)
     # @TODO: Override organization
-    manifest = kpm.manifest.Manifest(path=".")
+    manifest = kpm.manifest.Manifest()
     # @TODO: Pack in memory
     kubepath = os.path.join(".", manifest.package_name() + ".tar.gz")
     pack_kub(kubepath)
@@ -290,5 +307,17 @@ def get_parser():
     exec_parser.add_argument('-c', '--container', nargs='?', help="container name", default=None)
 
     exec_parser.set_defaults(func=exec_cmd)
+
+    #  Generate
+    generate_parser = subparsers.add_parser('generate', help='generate a command in pod from the RC or RS name.\
+    It generateutes the command on the first matching pod')
+    generate_parser.add_argument("--namespace", nargs="?",
+                                 help="kubernetes namespace", default='default')
+    generate_parser.add_argument("-x", "--variables",
+                                 help="variables", default=None, action="append")
+    generate_parser.add_argument('-p', "--pull package-name", nargs=1, help="Fetch package from the registry")
+    generate_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
+                                 help='registry API url')
+    generate_parser.set_defaults(func=generate)
 
     return parser
