@@ -69,12 +69,12 @@
     ),
 
     resources(resources, shards, variables):: (
-    [
+    std.flattenArrays([
      if std.objectHas(resource, "sharded") then
         self.sharded_resource(resource, shards, variables)
      else
-        self.templated_resource(resource, shards, variables)
-     for resource in resources]
+        [self.templated_resource(resource, shards, variables)]
+     for resource in resources])
     )
 
 
