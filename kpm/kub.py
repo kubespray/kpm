@@ -35,8 +35,8 @@ def dict_constructor(loader, node):
     return OrderedDict(loader.construct_pairs(node))
 
 
-yaml.add_representer(OrderedDict, dict_representer)
-yaml.add_constructor(_mapping_tag, dict_constructor)
+# yaml.add_representer(OrderedDict, dict_representer)
+# yaml.add_constructor(_mapping_tag, dict_constructor)
 
 jinja_env = jinja2.Environment()
 jinja_env.filters.update(jinja_filters.filters())
@@ -88,7 +88,7 @@ class Kub(object):
                  "metadata": {"name": namespace}}
 
         resource = {"file": "%s-ns.yaml" % namespace,
-                    "value": value,
+                    "template": yaml.dump(value),
                     "name": namespace,
                     "generated": True,
                     "order": -1,
@@ -130,35 +130,6 @@ class Kub(object):
             shards = self._deploy_shards
         return shards
 
-    def _generate_shards(self, resources):
-        if not len(self.shards):
-            return resources
-        sharded = {}
-        to_remove = []
-        index = 0
-        for _, resource in resources.iteritems():
-            index += 1
-            resource['order'] = index
-            if 'sharded' in resource and resource['sharded'] is True:
-                for shard in self.shards:
-                    shard_vars = shard.get('variables', {})
-                    shard_vars.update({"name": shard['name']})
-
-                    r = {"file": "%s-%s.yaml" % (os.path.splitext(resource['file'])[0], shard['name']),
-                         "order": index,
-                         "protected": False,
-                         "template": resource['file'],
-                         "variables": shard_vars,
-                         "patch": resource['patch'] + shard.get('patch', []),
-                         "name": "%s-%s" % (resource['name'], shard['name']),
-                         "type": resource['type']}
-                    sharded[r['file']] = r
-                    index += 1
-                to_remove.append(resource['file'])
-        map(resources.pop, to_remove)
-        resources.update(sharded)
-        return resources
-
     def _default_patch(self, resources):
         for _, resource in resources.iteritems():
             patch = [
@@ -173,14 +144,7 @@ class Kub(object):
 
     def _resolve_jinja(self, resources, from_value=False):
         for _, resource in resources.iteritems():
-            if 'template' in resource:
-                tpl_file = resource['template']
-            else:
-                tpl_file = resource['file']
-            if from_value or resource.get('generated', False) is True:
-                val = yaml.safe_dump(convert_utf8(resource['value']))
-            else:
-                val = self.package.files[os.path.join('templates', tpl_file)]
+            val = resource['template']
             template = jinja_env.from_string(val)
             variables = copy.deepcopy(self.variables)
             if 'variables' in resource:
@@ -212,7 +176,6 @@ class Kub(object):
             resources = self._resources
             resources = self._create_namespaces(resources)
             resources = self._append_patch(resources)
-            resources = self._generate_shards(resources)
             resources = self._default_patch(resources)
             resources = self._resolve_jinja(resources)
             resources = self._apply_patches(resources)
