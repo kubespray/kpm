@@ -72,8 +72,30 @@ def gen_privatekey(keytype='rsa'):
         raise ValueError("Unknow private key type: %s" % keytype)
 
 
+def do_json(value, **kwargs):
+    """
+    Serializes an object as JSON. Optionally given keyword arguments
+    are passed to json.dumps(), ensure_ascii however defaults to False.
+    """
+    import json
+    kwargs.setdefault('ensure_ascii', False)
+    return json.dumps(value, **kwargs)
+
+
+def do_yaml(value, **kwargs):
+    """
+    Serializes an object as YAML. Optionally given keyword arguments
+    are passed to yaml.dumps(), ensure_ascii however defaults to False.
+    """
+    import yaml
+    print "yaml"
+    print value
+    return yaml.dump(value,  default_flow_style=True)
+
 def filters():
     filters = {
+        'json': do_json,
+        'yaml': do_yaml,
         'get_hash': get_hash,
         'b64decode': b64decode,
         'b64encode': b64encode,
