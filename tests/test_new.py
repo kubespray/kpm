@@ -32,15 +32,20 @@ def test_files_created(new):
         assert os.path.exists(os.path.join("organization/newpackage", f))
 
 
-def test_load_manifest(new):
+def test_load_manifest(new, monkeypatch, fake_home):
     import kpm.manifest
-    m = kpm.manifest.Manifest(path="organization/newpackage")
+    name = "organization/newpackage"
+    monkeypatch.chdir(os.path.join(str(fake_home), name))
+
+    m = kpm.manifest.Manifest()
     assert m.package["name"] == "organization/newpackage"
     assert m.deploy == [{'name': "$self"}]
 
 
-def test_load_manifest_comments(new_with_comments):
+def test_load_manifest_comments(new_with_comments, monkeypatch, fake_home):
     import kpm.manifest
-    m = kpm.manifest.Manifest(path="organization/newpackage2")
-    assert m.package["name"] == "organization/newpackage2"
+    name = "organization/newpackage2"
+    monkeypatch.chdir(os.path.join(str(fake_home), name))
+    m = kpm.manifest.Manifest()
+    assert m.package["name"] == name
     assert m.deploy == [{'name': "$self"}]

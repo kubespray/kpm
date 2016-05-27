@@ -12,6 +12,7 @@ MANIFEST_FILES = ["manifest.jsonnet", "manifest.yaml"]
 
 class Manifest(dict):
     def __init__(self, package=None):
+        self.mfile = None
         if package is not None:
             self._load_from_package(package)
         else:
