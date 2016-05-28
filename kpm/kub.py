@@ -17,7 +17,7 @@ import kpm.manifest as manifest
 import kpm.jinja_filters as jinja_filters
 from kpm.kubernetes import get_endpoint
 from kpm.utils import mkdir_p, convert_utf8
-
+from kpm.render_jsonnet import RenderJsonnet
 
 # __all__ = ['Kub']
 
@@ -142,33 +142,44 @@ class Kub(object):
             resource['patch'] += patch
         return resources
 
-    def _resolve_jinja(self, resources, from_value=False):
-        for _, resource in resources.iteritems():
-            val = resource['template']
-            template = jinja_env.from_string(val)
-            variables = copy.deepcopy(self.variables)
-            if 'variables' in resource:
-                variables.update(resource['variables'])
-            if len(self.shards):
-                variables['kpmshards'] = self.shards
-            t = template.render(variables)
-            resource['value'] = yaml.load(t)
-        return resources
+    def _resolve_jinja(self, resource):
+        val = resource['template']
+        template = jinja_env.from_string(val)
+        variables = copy.deepcopy(self.variables)
+        if 'variables' in resource:
+            variables.update(resource['variables'])
+        if len(self.shards):
+            variables['kpmshards'] = self.shards
+        t = template.render(variables)
+        resource['value'] = yaml.load(t)
+        return resource
 
-    def _apply_patches(self, resources):
-        for _, resource in resources.iteritems():
-            if self.namespace:
-                if 'namespace' in resource['value']['metadata']:
-                    op = 'replace'
-                else:
-                    op = 'add'
-                resource['patch'].append({"op": op, "path": "/metadata/namespace", "value": self.namespace})
+    def _apply_patches(self, resource):
+        if self.namespace:
+            if 'namespace' in resource['value']['metadata']:
+                op = 'replace'
+            else:
+                op = 'add'
+            resource['patch'].append({"op": op, "path": "/metadata/namespace", "value": self.namespace})
 
-            if len(resource['patch']):
-                patch = jsonpatch.JsonPatch(resource['patch'])
-                result = patch.apply(resource['value'])
-                resource['value'] = result
-        return resources
+        if len(resource['patch']):
+            patch = jsonpatch.JsonPatch(resource['patch'])
+            resource['value'] = patch.apply(resource['value'])
+        return resource
+
+    def _resolve_jsonnet(self, resource):
+        renderer = RenderJsonnet()
+        resource['value'] = renderer.render_jsonnet(resource['template'])
+
+    def _resolve_templates(self, resources):
+        for _, resource in resources.iteritems():
+            _, ext = os.path.splitext(resource['file'])
+            if ext == ".j2":
+                self._resolve_jinja(resource)
+                self._apply_patches(resource)
+                self._resolve_jinja(resource)
+            elif ext == ".jsonnet":
+                self._resolve_jsonnet(resource)
 
     def resources(self):
         if self._resources is None:
@@ -177,9 +188,7 @@ class Kub(object):
             resources = self._create_namespaces(resources)
             resources = self._append_patch(resources)
             resources = self._default_patch(resources)
-            resources = self._resolve_jinja(resources)
-            resources = self._apply_patches(resources)
-            resources = self._resolve_jinja(resources, True)
+            resources = self._resolve_templates(resources)
         return self._resources
 
     def prepare_resources(self, dest="/tmp", index=0):

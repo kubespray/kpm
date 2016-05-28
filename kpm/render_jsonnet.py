@@ -64,7 +64,7 @@ class RenderJsonnet(object):
     def try_path(self, path, rel):
         if not rel:
             raise RuntimeError('Got invalid filename (empty string).')
-        if rel in self.files:
+        if self.files is not None and rel in self.files:
             if self.files[rel] is None:
                 with open(rel) as f:
                     self.files[rel] = f.read()
