@@ -1,54 +1,24 @@
+import yaml
+import json
+import _jsonnet
 import re
 import os
 import logging
 import os.path
-import yaml
-import json
-import _jsonnet
 import jinja2
-import kpm.jinja_filters as jinja_filters
+import kpm.template_filters as filters
 from kpm.utils import convert_utf8
 
 logger = logging.getLogger(__name__)
 
 
-JSONNET_TEMPLATE = """
-local kpm = import "kpm.libjsonnet";
-
-function(
-  namespace="default",
-  variables={namespace: namespace},
-  shards=null,
-)
-
-{
-  package: {{manifest.package}},
-
-  variables: kpm.variables(
-    {{manifest.variables}}, variables),
-
-{% if manifest.shards is defined and manifest.shards|length > 0 %}
- shards: kpm.shards(
-   {{manifest.shards}}, shards),
-{% endif %}
-
-{% if manifest.resources is defined and manifest.resources|length > 0 %}
- resources: kpm.resources([{% for item in manifest.resources %}
-
-    {{item|json}} + {template: (importstr "templates/{{item.file}}")}
-   ,
-{%- endfor %}], $.shards, $.variables),
-
-{% endif %}
- deploy: kpm.deploy({{manifest.deploy}})
-
-}
-"""
+with open(os.path.join(os.path.dirname(__file__), "jsonnet/manifest.jsonnet.j2")) as f:
+    JSONNET_TEMPLATE = f.read()
 
 
 def yaml_to_jsonnet(manifestyaml):
     jinja_env = jinja2.Environment()
-    jinja_env.filters.update(jinja_filters.filters())
+    jinja_env.filters.update(filters.jinja_filters())
     template = jinja_env.from_string(JSONNET_TEMPLATE)
     v = {"manifest": convert_utf8(json.loads(json.dumps(yaml.load(manifestyaml))))}
     templatedjsonnet = template.render(v)
@@ -93,7 +63,9 @@ class RenderJsonnet(object):
 
     def render_jsonnet(self, manifeststr):
         try:
-            json_str = _jsonnet.evaluate_snippet("snippet", manifeststr, import_callback=self.import_callback)
+            json_str = _jsonnet.evaluate_snippet("snippet", manifeststr,
+                                                 import_callback=self.import_callback,
+                                                 native_callbacks=filters.jsonnet_callbacks)
         except RuntimeError as e:
             print "\n".join(["%s %s" % (i, line) for i, line in enumerate(manifeststr.split("\n"))])
             raise e

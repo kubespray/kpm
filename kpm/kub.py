@@ -14,7 +14,7 @@ from collections import OrderedDict
 import kpm.registry as registry
 import kpm.packager as packager
 import kpm.manifest as manifest
-import kpm.jinja_filters as jinja_filters
+import kpm.template_filters as filters
 from kpm.kubernetes import get_endpoint
 from kpm.utils import mkdir_p, convert_utf8
 from kpm.render_jsonnet import RenderJsonnet
@@ -35,11 +35,8 @@ def dict_constructor(loader, node):
     return OrderedDict(loader.construct_pairs(node))
 
 
-# yaml.add_representer(OrderedDict, dict_representer)
-# yaml.add_constructor(_mapping_tag, dict_constructor)
-
 jinja_env = jinja2.Environment()
-jinja_env.filters.update(jinja_filters.filters())
+jinja_env.filters.update(filters.jinja_filters())
 
 
 class Kub(object):
@@ -75,12 +72,11 @@ class Kub(object):
     def __repr__(self):
         return unicode(self).encode('utf-8')
 
-    def _create_namespaces(self, resources):
+    def _create_namespaces(self):
         # @TODO create namespaces for all manifests
         if self.namespace:
             ns = self.create_namespace(self.namespace)
-            resources[ns['file']] = ns
-        return resources
+            self._resources.insert(0, ns)
 
     def create_namespace(self, namespace):
         value = {"apiVersion": "v1",
@@ -94,6 +90,7 @@ class Kub(object):
                     "order": -1,
                     "hash": False,
                     "protected": True,
+                    "value": value,
                     "patch": [],
                     "variables": {},
                     "type": "namespace"}
@@ -105,23 +102,13 @@ class Kub(object):
             self._fetch_deps()
         return self._dependencies
 
-    def _append_patch(self, resources={}):
+    def _init_resources(self):
         index = 0
-
-        for resource in self.manifest.resources:
+        for resource in self._resources:
             index += 1
-            resources[resource['file']] = resource
             resource["order"] = index
             if 'protected' not in resource:
                 resource["protected"] = False
-            if 'patch' not in resource:
-                resource['patch'] = []
-
-        for resource in self._deploy_resources:
-            if 'patch' in resource and len(resource['patch']) > 0:
-                resources[resource['file']]["patch"] += resource['patch']
-
-        return resources
 
     @property
     def shards(self):
@@ -129,18 +116,6 @@ class Kub(object):
         if len(self._deploy_shards):
             shards = self._deploy_shards
         return shards
-
-    def _default_patch(self, resources):
-        for _, resource in resources.iteritems():
-            patch = [
-                {"op": "replace",
-                 "path": "/metadata/name",
-                 "value": resource['name']},
-            ]
-            if 'patch' not in resource:
-                resource['patch'] = []
-            resource['patch'] += patch
-        return resources
 
     def _resolve_jinja(self, resource):
         val = resource['template']
@@ -154,45 +129,37 @@ class Kub(object):
         resource['value'] = yaml.load(t)
         return resource
 
-    def _apply_patches(self, resource):
-        if self.namespace:
-            if 'namespace' in resource['value']['metadata']:
-                op = 'replace'
-            else:
-                op = 'add'
-            resource['patch'].append({"op": op, "path": "/metadata/namespace", "value": self.namespace})
-
-        if len(resource['patch']):
-            patch = jsonpatch.JsonPatch(resource['patch'])
-            resource['value'] = patch.apply(resource['value'])
-        return resource
+    # @TODO replace this with jsonnet
+    def _default_values(self):
+        for resource in self._resources:
+            if 'metadata' not in resource['value']:
+                resource['value']['metadata'] = {}
+            resource['value']['metadata']['name'] = resource['name']
+            resource['value']['metadata']['namespace'] = self.namespace
 
     def _resolve_jsonnet(self, resource):
         renderer = RenderJsonnet()
         resource['value'] = renderer.render_jsonnet(resource['template'])
 
-    def _resolve_templates(self, resources):
-        for _, resource in resources.iteritems():
+    def _resolve_templates(self):
+        for resource in self._resources:
             _, ext = os.path.splitext(resource['file'])
-            if ext == ".j2":
-                self._resolve_jinja(resource)
-                self._apply_patches(resource)
-                self._resolve_jinja(resource)
-            elif ext == ".jsonnet":
+            if ext == ".jsonnet":
                 self._resolve_jsonnet(resource)
+            else:
+                self._resolve_jinja(resource)
 
     def resources(self):
         if self._resources is None:
-            self._resources = OrderedDict()
-            resources = self._resources
-            resources = self._create_namespaces(resources)
-            resources = self._append_patch(resources)
-            resources = self._default_patch(resources)
-            resources = self._resolve_templates(resources)
+            self._resources = copy.deepcopy(self.manifest.resources)
+            self._create_namespaces()
+            self._init_resources()
+            self._resolve_templates()
+            self._default_values()
         return self._resources
 
     def prepare_resources(self, dest="/tmp", index=0):
-        for _, resource in self.resources().iteritems():
+        for resource in self.resources():
             index += 1
             path = os.path.join(dest, "%02d_%s_%s" % (index,
                                                       self.version,
@@ -234,7 +201,7 @@ class Kub(object):
                                         ("version", kub.version),
                                         ("namespace", kub.namespace),
                                         ("resources", [])])
-            for _, resource in kub.resources().iteritems():
+            for resource in kub.resources():
                 sha = None
                 if 'annotations' not in resource['value']['metadata']:
                     resource['value']['metadata']['annotations'] = {}

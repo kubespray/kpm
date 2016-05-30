@@ -1,0 +1,30 @@
+local kpm = import "kpm.libjsonnet";
+
+function(
+  namespace="default",
+  variables={namespace: namespace},
+  shards=null,
+)
+
+{
+  package: {{manifest.package}},
+
+  variables: kpm.variables(
+    {{manifest.variables}}, variables),
+
+{% if manifest.shards is defined and manifest.shards|length > 0 %}
+ shards: kpm.shards(
+   {{manifest.shards}}, shards),
+{% endif %}
+
+{% if manifest.resources is defined and manifest.resources|length > 0 %}
+ resources: kpm.resources([{% for item in manifest.resources %}
+
+    {{item|json}} + {template: (importstr "templates/{{item.file}}")}
+   ,
+{%- endfor %}], $.shards, $.variables),
+
+{% endif %}
+ deploy: kpm.deploy({{manifest.deploy}})
+
+}

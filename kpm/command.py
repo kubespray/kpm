@@ -70,18 +70,13 @@ def pull(options):
 def generate(options):
     r = Registry(options.registry_host)
     name = options.pull
-
     version = options.version
-    namespace = values.get('namespace', 'default')
-    variables = values.get('variables', {})
+    namespace = options.get('namespace', 'default')
+    variables = options.get('variables', {})
     variables['namespace'] = namespace
-    k = Kub(name, endpoint=current_app.config['KPM_REGISTRY_HOST'],
-            variables=variables, namespace=namespace, version=version)
-
-    result = r.pull(options.package[0], version=options.version)
-    p = Package(result)
-    path = os.path.join(options.directory, kpm.manifest.Manifest(p).package_name())
-    p.extract(path)
+    k = kpm.kub.Kub(name, endpoint=options.registry_host,
+                    variables=variables, namespace=namespace, version=version)
+    return k
 
 
 def exec_cmd(options):

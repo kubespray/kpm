@@ -50,7 +50,7 @@ def _process(package_name,
             body = resource["body"]
             endpoint = resource["endpoint"]
             # Use API instead of kubectl
-            with open(os.path.join(dest, resource['file']), 'wb') as f:
+            with open(os.path.join(dest, "%s-%s" % (resource['name'], resource['file'])), 'wb') as f:
                 f.write(body)
             kubresource = Kubernetes(namespace=namespace, body=body, endpoint=endpoint, proxy=proxy)
             status = getattr(kubresource, action)(force=force, dry=dry)
