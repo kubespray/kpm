@@ -18,7 +18,10 @@
      else if std.type(target) == "object" then
         std.mergePatch(s, target)
      else if std.type(target) == "array" then
-        target
+     	if std.length(target) == 0 then
+	   s
+	else
+           target
      else if std.type(target) == "number" then
         [{name: x} for x in self.seq(target)]
      else

@@ -51,15 +51,15 @@ class Kub(object):
         self._registry = registry.Registry(endpoint=endpoint)
         result = self._registry.pull(self.name, version)
         self.package = packager.Package(result)
-
-        self.manifest = manifest.Manifest(self.package)
+        if self.namespace:
+            variables["namespace"] = self.namespace
+        self.tla_codes = {"variables": variables, "shards": shards}
+        self.manifest = manifest.Manifest(self.package, self.tla_codes)
         self.version = self.manifest.package['version']
         self.author = self.manifest.package['author']
         self.description = self.manifest.package['description']
         self.deploy = self.manifest.deploy
         self.variables = copy.deepcopy(self.manifest.variables)
-        if self.namespace:
-            variables["namespace"] = self.namespace
         self.variables.update(variables)
 
     def __unicode__(self):

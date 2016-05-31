@@ -11,7 +11,8 @@ MANIFEST_FILES = ["manifest.jsonnet", "manifest.yaml"]
 
 
 class Manifest(dict):
-    def __init__(self, package=None):
+    def __init__(self, package=None, tla_codes=None):
+        self.tla_codes = tla_codes
         if package is not None:
             self._load_from_package(package)
         else:
@@ -41,7 +42,7 @@ class Manifest(dict):
 
     def _load_jsonnet(self, jsonnetstr, files):
         k = RenderJsonnet(files)
-        r = k.render_jsonnet(jsonnetstr)
+        r = k.render_jsonnet(jsonnetstr, self.tla_codes)
         self.update(r)
 
     def _load_yaml(self, yamlstr, files):

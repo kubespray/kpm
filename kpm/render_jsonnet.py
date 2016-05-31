@@ -61,11 +61,17 @@ class RenderJsonnet(object):
             return full_path, content
         raise RuntimeError('File not found')
 
-    def render_jsonnet(self, manifeststr):
+    def render_jsonnet(self, manifeststr, tla_codes=None):
         try:
+            if tla_codes:
+                for x, j in tla_codes.iteritems():
+                    tla_codes[x] = json.dumps(j)
+            else:
+                tla_codes = {}
             json_str = _jsonnet.evaluate_snippet("snippet", manifeststr,
                                                  import_callback=self.import_callback,
-                                                 native_callbacks=filters.jsonnet_callbacks)
+                                                 native_callbacks=filters.jsonnet_callbacks, tla_codes=tla_codes)
+
         except RuntimeError as e:
             print "\n".join(["%s %s" % (i, line) for i, line in enumerate(manifeststr.split("\n"))])
             raise e

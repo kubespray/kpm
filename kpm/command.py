@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import argparse
 import getpass
-
+import json
 import os
 from kpm.auth import KpmAuth
 import kpm.registry as registry
@@ -242,7 +242,6 @@ def get_parser():
                                 help="package VERSION", default=None)
     install_parser.add_argument("-x", "--variables",
                                 help="variables", default=None, action="append")
-
     install_parser.add_argument("--force", action='store_true', default=False,
                                 help="force upgrade, delete and recreate resources")
     install_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
