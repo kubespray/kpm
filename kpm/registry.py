@@ -58,7 +58,7 @@ class Registry(object):
         r.raise_for_status()
         return r.json()
 
-    def generate(self, name, namespace=None, variables=None, version=None, tarball=False):
+    def generate(self, name, namespace=None, variables=None, version=None, tarball=False, shards=None):
         path = "/packages/%s/generate" % name
         params = {}
         body = {}
@@ -69,7 +69,9 @@ class Registry(object):
         if namespace:
             params['namespace'] = namespace
         if variables:
-            body = {'variables':  variables}
+            body['variables'] = variables
+        if shards:
+            body['shards'] = shards
         r = requests.get(self._url(path), data=json.dumps(body), params=params, headers=self.headers)
         r.raise_for_status()
         return r.json()

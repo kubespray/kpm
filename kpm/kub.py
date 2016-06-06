@@ -40,12 +40,11 @@ jinja_env.filters.update(filters.jinja_filters())
 
 
 class Kub(object):
-    def __init__(self, name, version=None, resources=[], variables={}, shards=[], namespace=None, endpoint=None):
+    def __init__(self, name, version=None, variables={}, shards=None, namespace=None, endpoint=None):
         self.name = name
         self.endpoint = endpoint
         self._dependencies = None
         self._resources = None
-        self._deploy_resources = resources
         self._deploy_shards = shards
         self.namespace = namespace
         self._registry = registry.Registry(endpoint=endpoint)
@@ -53,7 +52,9 @@ class Kub(object):
         self.package = packager.Package(result)
         if self.namespace:
             variables["namespace"] = self.namespace
-        self.tla_codes = {"variables": variables, "shards": shards}
+        self.tla_codes = {"variables": json.dumps(variables)}
+        if shards is not None:
+            self.tla_codes["shards"] = shards
         self.manifest = manifest.Manifest(self.package, self.tla_codes)
         self.version = self.manifest.package['version']
         self.author = self.manifest.package['author']
@@ -73,7 +74,6 @@ class Kub(object):
         return unicode(self).encode('utf-8')
 
     def _create_namespaces(self):
-        # @TODO create namespaces for all manifests
         if self.namespace:
             ns = self.create_namespace(self.namespace)
             self._resources.insert(0, ns)
@@ -113,7 +113,7 @@ class Kub(object):
     @property
     def shards(self):
         shards = self.manifest.shards
-        if len(self._deploy_shards):
+        if self._deploy_shards is not None and len(self._deploy_shards):
             shards = self._deploy_shards
         return shards
 
@@ -139,7 +139,8 @@ class Kub(object):
 
     def _resolve_jsonnet(self, resource):
         renderer = RenderJsonnet()
-        resource['value'] = renderer.render_jsonnet(resource['template'])
+        resource['value'] = renderer.render_jsonnet(resource['template'],
+                                                    tla_codes=self.tla_codes)
 
     def _resolve_templates(self):
         for resource in self._resources:
@@ -194,6 +195,18 @@ class Kub(object):
         shutil.rmtree(tempdir)
         return tar.read()
 
+    def _annotate_resource(self, kub, resource):
+        sha = None
+        if 'annotations' not in resource['value']['metadata']:
+            resource['value']['metadata']['annotations'] = {}
+        if resource.get('hash', True):
+            sha = hashlib.sha256(json.dumps(resource['value'])).hexdigest()
+            resource['value']['metadata']['annotations']['kpm.hash'] = sha
+        resource['value']['metadata']['annotations']['kpm.version'] = kub.version
+        resource['value']['metadata']['annotations']['kpm.package'] = kub.name
+        resource['value']['metadata']['annotations']['kpm.parent'] = self.name
+        resource['value']['metadata']['annotations']['kpm.protected'] = str(resource['protected']).lower()
+
     def build(self):
         result = []
         for kub in self.dependencies:
@@ -202,20 +215,10 @@ class Kub(object):
                                         ("namespace", kub.namespace),
                                         ("resources", [])])
             for resource in kub.resources():
-                sha = None
-                if 'annotations' not in resource['value']['metadata']:
-                    resource['value']['metadata']['annotations'] = {}
-                if resource.get('hash', True):
-                    sha = hashlib.sha256(json.dumps(resource['value'])).hexdigest()
-                    resource['value']['metadata']['annotations']['kpm.hash'] = sha
-                resource['value']['metadata']['annotations']['kpm.version'] = kub.version
-                resource['value']['metadata']['annotations']['kpm.package'] = kub.name
-                resource['value']['metadata']['annotations']['kpm.parent'] = self.name
-                resource['value']['metadata']['annotations']['kpm.protected'] = str(resource['protected']).lower()
-
+                self._annotate_resource(kub, resource)
                 kubresources['resources'].\
                     append(OrderedDict({"file": resource['file'],
-                                        "hash": sha,
+                                        "hash": resource['value']['metadata']['annotations'].get('kpm.hash', None),
                                         "protected": resource['protected'],
                                         "name": resource['name'],
                                         "kind": resource['value']['kind'].lower(),
@@ -237,12 +240,15 @@ class Kub(object):
                 variables['kpmparent'] = {'name': self.name,
                                           'shards': self.shards,
                                           'variables': self.variables}
+                if 'shards' in dep and isinstance(dep['shards'], dict):
+                    shards = json.dumps(dep['shards'])
+                else:
+                    shards = dep.get('shards', None)
                 kub = Kub(dep['name'],
                           endpoint=self.endpoint,
                           version=dep.get('version', None),
                           variables=variables,
-                          shards=dep.get('shards', []),
-                          resources=dep.get('resources', []),
+                          shards=shards,
                           namespace=self.namespace)
                 self._dependencies.append(kub)
             else:

@@ -63,11 +63,6 @@ class RenderJsonnet(object):
 
     def render_jsonnet(self, manifeststr, tla_codes=None):
         try:
-            if tla_codes:
-                for x, j in tla_codes.iteritems():
-                    tla_codes[x] = json.dumps(j)
-            else:
-                tla_codes = {}
             json_str = _jsonnet.evaluate_snippet("snippet", manifeststr,
                                                  import_callback=self.import_callback,
                                                  native_callbacks=filters.jsonnet_callbacks, tla_codes=tla_codes)

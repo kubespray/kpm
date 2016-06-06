@@ -12,9 +12,14 @@ def _build(package):
     version = values.get('version', None)
     namespace = values.get('namespace', 'default')
     variables = values.get('variables', {})
+    shards = values.get('shards', None)
     variables['namespace'] = namespace
-    k = Kub(name, endpoint=current_app.config['KPM_REGISTRY_HOST'],
-            variables=variables, namespace=namespace, version=version)
+    k = Kub(name,
+            endpoint=current_app.config['KPM_REGISTRY_HOST'],
+            variables=variables,
+            namespace=namespace,
+            version=version,
+            shards=shards)
 
     return k
 

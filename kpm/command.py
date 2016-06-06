@@ -38,6 +38,7 @@ def install(options):
     variables = None
     if options.variables is not None:
         variables = parse_cmdline_variables(options.variables)
+
     kpm.deploy.deploy(options.package[0],
                       version=options.version,
                       dest=options.tmpdir,
@@ -46,7 +47,8 @@ def install(options):
                       dry=options.dry_run,
                       endpoint=options.registry_host,
                       proxy=options.api_proxy,
-                      variables=variables)
+                      variables=variables,
+                      shards=options.shards)
 
 
 def remove(options):
@@ -242,6 +244,9 @@ def get_parser():
                                 help="package VERSION", default=None)
     install_parser.add_argument("-x", "--variables",
                                 help="variables", default=None, action="append")
+    install_parser.add_argument("--shards",
+                                help="Shards list/dict/count: eg. --shards=5 ; --shards='[{\"name\": 1, \"name\": 2}]'",
+                                default=None)
     install_parser.add_argument("--force", action='store_true', default=False,
                                 help="force upgrade, delete and recreate resources")
     install_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,

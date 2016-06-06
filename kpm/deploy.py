@@ -25,10 +25,11 @@ def _process(package_name,
              action="create",
              fmt="stdout",
              proxy=None,
-             variables=None):
+             variables=None,
+             shards=None):
 
     registry = Registry(endpoint=endpoint)
-    packages = registry.generate(package_name, namespace=namespace, version=version, variables=variables)
+    packages = registry.generate(package_name, namespace=namespace, version=version, variables=variables, shards=shards)
     dest = os.path.join(dest, package_name)
 
     if version:
