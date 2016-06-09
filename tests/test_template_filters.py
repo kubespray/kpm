@@ -1,7 +1,5 @@
 import pytest
 import base64
-import jinja2
-import kpm.jinja_filters as filters
 
 
 def test_get_hash(jinja_env):

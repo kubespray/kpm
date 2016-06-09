@@ -9,7 +9,7 @@ def manifest(kubeui_package, package_dir):
 
 @pytest.fixture()
 def empty_manifest(package_dir):
-    return Manifest(None)
+    return Manifest(package=None)
 
 
 def test_empty_resources(empty_manifest):
