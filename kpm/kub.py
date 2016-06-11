@@ -117,15 +117,14 @@ class Kub(object):
             shards = self._deploy_shards
         return shards
 
-    def _resolve_jinja(self, resource):
-        val = resource['template']
+    def _resolve_jinja(self, resource, val):
         template = jinja_env.from_string(val)
         variables = copy.deepcopy(self.variables)
         if 'variables' in resource:
             variables.update(resource['variables'])
         if len(self.shards):
             variables['kpmshards'] = self.shards
-        t = template.render(variables)
+        t = template.render(convert_utf8(variables))
         resource['value'] = yaml.load(t)
         return resource
 
@@ -133,7 +132,7 @@ class Kub(object):
     def _default_values(self):
         for resource in self._resources:
             if 'metadata' not in resource['value']:
-                resource['value']['metadata'] = {}
+                resource['value']['metadata'] = dict()
             resource['value']['metadata']['name'] = resource['name']
             resource['value']['metadata']['namespace'] = self.namespace
 
@@ -148,7 +147,8 @@ class Kub(object):
             if ext == ".jsonnet":
                 self._resolve_jsonnet(resource)
             else:
-                self._resolve_jinja(resource)
+                self._resolve_jinja(resource, resource['template'])
+                self._resolve_jinja(resource, json.dumps(resource['value']))
 
     def resources(self):
         if self._resources is None:

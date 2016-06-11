@@ -44,10 +44,24 @@
       error "Unknow shard value: %s (%s)" % [shard, std.type(shard)]
    ),
 
-   template(resource):: (
+   format(resource):: (
       resource + {template: resource.template % resource.variables}
     ),
 
+   jinja2(resource):: (
+      resource + {template: resource.template % resource.variables}
+    ),
+
+    template(resource):: (
+      if std.objectHas(resource, "expander") == false then
+           resource
+      else if resource.expander == "format" then
+          self.format(resource)
+      else if resource.expander == "jinja2" then
+          self.jinja2(resource)
+      else
+         error "Unknown expander: %s" % [resource.expander]
+     ),
 
    sharded_resource(resource, shards, variables):: (
      local resource_shards = self.shard_list(resource.sharded, shards);
@@ -67,16 +81,12 @@
       self.template(r) for shard in resource_shards]
      ),
 
-    templated_resource(resource, shards, variables):: (
-       self.template(resource + {variables: variables})
-    ),
-
     resources(resources, shards, variables):: (
     std.flattenArrays([
      if std.objectHas(resource, "sharded") then
         self.sharded_resource(resource, shards, variables)
      else
-        [self.templated_resource(resource, shards, variables)]
+        [self.template(resource + {variables: variables + {name: resource.name}})]
      for resource in resources])
     )
 
