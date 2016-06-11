@@ -1,5 +1,32 @@
-{
 
+local hash(data, hashtype='sha1') =
+   std.native("hash")(std.toString(data), hashtype);
+
+local to_yaml(data) =
+    std.native("to_yaml")(std.toString(data));
+
+local randAlphaNum(size=32, seed="") =
+    std.native("rand_alphanum")(std.toString(size), seed=seed);
+
+local randAlpha(size=32, seed="") =
+    std.native("rand_alpha")(std.toString(size), seed=seed);
+
+local randInt(size=32, seed="") =
+    std.native("randint")(std.toString(size), seed=seed);
+
+local genPrivateKey(keytype, seed="") =
+     std.native("privatekey")(keytype, seed=seed);
+
+local jinja2(template, env) =
+    std.native("jinja2")(template, std.toString(env));
+
+local jsonLoads(data) =
+     std.native("json_loads")(data);
+
+local yamlLoads(data) =
+     std.native("yaml_loads")(data);
+
+{
   seq(i):: (
     [x for x in std.range(1, i)]
    ),
@@ -44,21 +71,21 @@
       error "Unknow shard value: %s (%s)" % [shard, std.type(shard)]
    ),
 
-   format(resource):: (
+   template_format(resource):: (
       resource + {template: resource.template % resource.variables}
     ),
 
-   jinja2(resource):: (
-      resource + {template: resource.template % resource.variables}
+   template_jinja2(resource):: (
+       resource + {template: jinja2(resource.template, resource.variables)}
     ),
 
     template(resource):: (
       if std.objectHas(resource, "expander") == false then
            resource
       else if resource.expander == "format" then
-          self.format(resource)
+          self.template_format(resource)
       else if resource.expander == "jinja2" then
-          self.jinja2(resource)
+          self.template_jinja2(resource)
       else
          error "Unknown expander: %s" % [resource.expander]
      ),

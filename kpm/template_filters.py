@@ -86,6 +86,18 @@ def gen_privatekey(keytype='rsa', seed=None):
     else:
         raise ValueError("Unknow private key type: %s" % keytype)
 
+def jinja2(val, env):
+    import jinja2
+    from kpm.template_filters import jinja_filters
+    from kpm.utils import convert_utf8
+    jinja_env = jinja2.Environment()
+    jinja_env.filters.update(jinja_filters())
+    template = jinja_env.from_string(val)
+    return template.render(convert_utf8(json.loads(env)))
+
+def jsonnet(template, env):
+    pass
+
 
 def json_to_yaml(value):
     """
@@ -103,6 +115,22 @@ def do_json(value, **kwargs):
     import json
     kwargs.setdefault('ensure_ascii', False)
     return json.dumps(value, **kwargs)
+
+def json_loads(value):
+    """
+    Serializes an object as JSON. Optionally given keyword arguments
+    are passed to json.dumps(), ensure_ascii however defaults to False.
+    """
+    import json
+    return json.loads(value)
+
+def yaml_loads(value):
+    """
+    Serializes an object as JSON. Optionally given keyword arguments
+    are passed to json.dumps(), ensure_ascii however defaults to False.
+    """
+    import yaml
+    return yaml.load(value)
 
 
 def do_yaml(value, **kwargs):
@@ -135,6 +163,9 @@ def jsonnet_callbacks():
         'rand_alphanum': (('size', 'seed'), rand_alphanum),
         'rand_alpha': (('size', 'seed'), rand_alpha),
         'randint': (('size', 'seed'), randint),
+        'jinja2': (('template', 'env'), jinja2),
+        'json_loads': (('jsonstr',), json_loads),
+        'yaml_loads': (('jsonstr',), yaml_loads),
         'privatekey': (('keytype', "seed"), gen_privatekey),
     }
     return filters
