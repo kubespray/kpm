@@ -75,16 +75,28 @@ def gen_private_dsa():
     )
     return pem
 
+all_privates = {}
+def gen_privatekey(keytype='rsa', key='', seed=None):
+    k = seed + key
 
-def gen_privatekey(keytype='rsa', seed=None):
+    if k not in all_privates:
+        all_privates[k] = {}
+
     if keytype == "ecdsa":
-        return gen_private_ecdsa()
+        if 'ecdsa' not in all_privates[k]:
+            all_privates[k][keytype] = gen_private_ecdsa()
+
     elif keytype == "rsa":
-        return gen_private_rsa()
+        if 'rsa' not in all_privates[k]:
+            all_privates[k][keytype] = gen_private_rsa()
+
     elif keytype == "dsa":
-        return gen_private_dsa()
+        if 'dsa' not in all_privates[k]:
+            all_privates[k][keytype] = gen_private_dsa()
     else:
         raise ValueError("Unknow private key type: %s" % keytype)
+
+    return all_privates[k][keytype]
 
 def jinja2(val, env):
     import jinja2
@@ -166,6 +178,6 @@ def jsonnet_callbacks():
         'jinja2': (('template', 'env'), jinja2),
         'json_loads': (('jsonstr',), json_loads),
         'yaml_loads': (('jsonstr',), yaml_loads),
-        'privatekey': (('keytype', "seed"), gen_privatekey),
+        'privatekey': (('keytype', "key", "seed"), gen_privatekey),
     }
     return filters
