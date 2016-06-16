@@ -6,8 +6,8 @@ import os
 import logging
 import os.path
 import jinja2
-import kpm.template_filters as filters
 from kpm.utils import convert_utf8
+import kpm.template_filters as filters
 
 logger = logging.getLogger(__name__)
 
@@ -40,8 +40,8 @@ class RenderJsonnet(object):
                     self.files[rel] = f.read()
             return rel, self.files[rel]
 
-        if rel == "kpm.libjsonnet":
-            with open(os.path.join(os.path.dirname(__file__), "jsonnet/%s" % rel)) as f:
+        if rel in ["kpm.libjsonnet", "kpm-utils.libjsonnet"]:
+            with open(os.path.join(os.path.dirname(__file__), "jsonnet/lib/%s" % rel)) as f:
                 return rel, f.read()
 
         if rel[0] == '/':
@@ -65,9 +65,10 @@ class RenderJsonnet(object):
         try:
             json_str = _jsonnet.evaluate_snippet("snippet", manifeststr,
                                                  import_callback=self.import_callback,
-                                                 native_callbacks=filters.jsonnet_callbacks, tla_codes=tla_codes)
+                                                 native_callbacks=filters.jsonnet_callbacks(), tla_codes=tla_codes)
 
         except RuntimeError as e:
+            print "tla_codes: %s" % (str(tla_codes))
             print "\n".join(["%s %s" % (i, line) for i, line in enumerate(manifeststr.split("\n"))])
             raise e
         return json.loads(json_str)

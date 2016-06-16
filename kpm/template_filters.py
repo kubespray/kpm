@@ -75,6 +75,7 @@ def gen_private_dsa():
     )
     return pem
 
+
 all_privates = {}
 def gen_privatekey(keytype='rsa', key='', seed=None):
     k = seed + key
@@ -98,17 +99,26 @@ def gen_privatekey(keytype='rsa', key='', seed=None):
 
     return all_privates[k][keytype]
 
-def jinja2(val, env):
+
+def jinja2(val, env=None):
     import jinja2
     from kpm.template_filters import jinja_filters
     from kpm.utils import convert_utf8
     jinja_env = jinja2.Environment()
     jinja_env.filters.update(jinja_filters())
     template = jinja_env.from_string(val)
-    return template.render(convert_utf8(json.loads(env)))
+    if env is not None:
+        variables = convert_utf8(json.loads(env))
+    return template.render(variables)
 
-def jsonnet(template, env):
-    pass
+
+def jsonnet(val, env=None):
+    from kpm.render_jsonnet import RenderJsonnet
+    from kpm.utils import convert_utf8
+    r = RenderJsonnet()
+    if env is not None:
+        variables = convert_utf8(json.loads(env))
+    return r.render_jsonnet(val, tla_codes=variables)
 
 
 def json_to_yaml(value):
@@ -119,7 +129,7 @@ def json_to_yaml(value):
     return yaml.safe_dump(json.loads(value))
 
 
-def do_json(value, **kwargs):
+def json_dumps(value, **kwargs):
     """
     Serializes an object as JSON. Optionally given keyword arguments
     are passed to json.dumps(), ensure_ascii however defaults to False.
@@ -128,6 +138,16 @@ def do_json(value, **kwargs):
     kwargs.setdefault('ensure_ascii', False)
     return json.dumps(value, **kwargs)
 
+
+def yaml_dumps(value, **kwargs):
+    """
+    Serializes an object as YAML. Optionally given keyword arguments
+    are passed to yaml.dumps(), ensure_ascii however defaults to False.
+    """
+    import yaml
+    return yaml.dump(value,  default_flow_style=True)
+
+
 def json_loads(value):
     """
     Serializes an object as JSON. Optionally given keyword arguments
@@ -135,6 +155,7 @@ def json_loads(value):
     """
     import json
     return json.loads(value)
+
 
 def yaml_loads(value):
     """
@@ -145,19 +166,10 @@ def yaml_loads(value):
     return yaml.load(value)
 
 
-def do_yaml(value, **kwargs):
-    """
-    Serializes an object as YAML. Optionally given keyword arguments
-    are passed to yaml.dumps(), ensure_ascii however defaults to False.
-    """
-    import yaml
-    return yaml.dump(value,  default_flow_style=True)
-
-
 def jinja_filters():
     filters = {
-        'json': do_json,
-        'yaml': do_yaml,
+        'json': json_dumps,
+        'yaml': yaml_dumps,
         'get_hash': get_hash,
         'b64decode': b64decode,
         'b64encode': b64encode,
@@ -176,6 +188,7 @@ def jsonnet_callbacks():
         'rand_alpha': (('size', 'seed'), rand_alpha),
         'randint': (('size', 'seed'), randint),
         'jinja2': (('template', 'env'), jinja2),
+        'jsonnet': (('template', 'env'), jsonnet),
         'json_loads': (('jsonstr',), json_loads),
         'yaml_loads': (('jsonstr',), yaml_loads),
         'privatekey': (('keytype', "key", "seed"), gen_privatekey),
