@@ -6,8 +6,11 @@ function(
 
 kpm.package({
   package:  {expander: 'jinja2'} + {{manifest.package}},
-
+{% if manifest.variables is defined %}
   variables: {{manifest.variables}},
+{% else %}
+  variables: {},
+{% endif %}
 
 {% if manifest.shards is defined and manifest.shards|length > 0 %}
  shards: {{manifest.shards}},
@@ -19,6 +22,7 @@ kpm.package({
 {%- endfor %}
 ],
 {% endif %}
+
  deploy: {{manifest.deploy}}
 
 }, params)

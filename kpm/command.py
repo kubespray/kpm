@@ -85,7 +85,7 @@ def generate(options):
     filename = "%s_%s.tar.gz" % (k.name.replace("/", "_"), k.version)
     with open(filename, 'wb') as f:
         f.write(k.build_tar("."))
-    print filename
+    print json.dumps(k.manifest, indent=2, separators=(',', ': '))
 
 
 def exec_cmd(options):

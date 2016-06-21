@@ -102,7 +102,7 @@ def gen_privatekey(keytype='rsa', key='', seed=None):
     return all_privates[k][keytype]
 
 
-def jinja2(val, env=None):
+def jinja_template(val, env=None):
     import jinja2
     from kpm.template_filters import jinja_filters
     from kpm.utils import convert_utf8
