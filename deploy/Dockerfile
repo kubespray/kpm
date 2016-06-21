@@ -1,6 +1,6 @@
 FROM alpine:3.3
 
-ARG version=0.16.1
+ARG version=0.17.0
 ARG workdir=/opt
 RUN rm -rf $workdir
 RUN mkdir -p $workdir
