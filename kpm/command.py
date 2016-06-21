@@ -118,10 +118,8 @@ def jsonnet(options):
     if options.variables is not None:
         variables = parse_cmdline_variables(options.variables)
     variables['namespace'] = namespace
-    print variables
     tla_codes = {"variables": json.dumps(variables)}
     p = open(options.filepath[0]).read()
-    print p
     result = r.render_jsonnet(p)
     print json.dumps(result)
 
