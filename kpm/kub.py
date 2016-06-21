@@ -43,10 +43,10 @@ class Kub(object):
         self.package = packager.Package(result)
         if self.namespace:
             variables["namespace"] = self.namespace
-        self.tla_codes = {"variables": json.dumps(variables)}
+        self.tla_codes = {"variables": variables}
         if shards is not None:
             self.tla_codes["shards"] = shards
-        self.manifest = manifest.Manifest(self.package, self.tla_codes)
+        self.manifest = manifest.Manifest(self.package, {"params": json.dumps(self.tla_codes)})
         self.version = self.manifest.package['version']
         self.author = self.manifest.package['author']
         self.description = self.manifest.package['description']
@@ -150,6 +150,7 @@ class Kub(object):
         shutil.rmtree(tempdir)
         return tar.read()
 
+    # @TODO do it in jsonnet
     def _annotate_resource(self, kub, resource):
         sha = None
         if 'annotations' not in resource['value']['metadata']:

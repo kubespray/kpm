@@ -3,6 +3,7 @@ import argparse
 import getpass
 import json
 import os
+import kpm.kub
 from kpm.auth import KpmAuth
 import kpm.registry as registry
 from kpm.registry import Registry
@@ -71,7 +72,7 @@ def pull(options):
 
 def generate(options):
     r = Registry(options.registry_host)
-    name = options.pull
+    name = options.pull[0]
     version = options.version
     namespace = options.namespace
     variables = {}
@@ -81,7 +82,10 @@ def generate(options):
     variables['namespace'] = namespace
     k = kpm.kub.Kub(name, endpoint=options.registry_host,
                     variables=variables, namespace=namespace, version=version)
-    return k
+    filename = "%s_%s.tar.gz" % (k.name.replace("/", "_"), k.version)
+    with open(filename, 'wb') as f:
+        f.write(k.build_tar("."))
+    print filename
 
 
 def exec_cmd(options):
@@ -331,9 +335,12 @@ def get_parser():
                                  help="kubernetes namespace", default='default')
     generate_parser.add_argument("-x", "--variables",
                                  help="variables", default=None, action="append")
-    generate_parser.add_argument('-p', "--pull package-name", nargs=1, help="Fetch package from the registry")
+    generate_parser.add_argument('-p', "--pull", nargs=1, help="Fetch package from the registry")
     generate_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
                                  help='registry API url')
+    generate_parser.add_argument("-v", "--version", nargs="?", default=None,
+                               help="package version")
+
     generate_parser.set_defaults(func=generate)
 
     # Jsonnet

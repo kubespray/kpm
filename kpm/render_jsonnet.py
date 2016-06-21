@@ -69,6 +69,6 @@ class RenderJsonnet(object):
 
         except RuntimeError as e:
             print "tla_codes: %s" % (str(tla_codes))
-            print "\n".join(["%s %s" % (i, line) for i, line in enumerate(manifeststr.split("\n"))])
+            print "\n".join(["%s %s" % (i, line) for i, line in enumerate([l for l in manifeststr.split("\n") if re.match(r"^ *#",l) is None])])
             raise e
         return json.loads(json_str)

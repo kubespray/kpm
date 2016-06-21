@@ -77,6 +77,8 @@ def gen_private_dsa():
 
 
 all_privates = {}
+
+
 def gen_privatekey(keytype='rsa', key='', seed=None):
     k = seed + key
 
@@ -134,17 +136,15 @@ def json_dumps(value, **kwargs):
     Serializes an object as JSON. Optionally given keyword arguments
     are passed to json.dumps(), ensure_ascii however defaults to False.
     """
-    import json
     kwargs.setdefault('ensure_ascii', False)
     return json.dumps(value, **kwargs)
 
 
-def yaml_dumps(value, **kwargs):
+def yaml_dumps(value):
     """
     Serializes an object as YAML. Optionally given keyword arguments
     are passed to yaml.dumps(), ensure_ascii however defaults to False.
     """
-    import yaml
     return yaml.dump(value,  default_flow_style=True)
 
 
@@ -153,7 +153,6 @@ def json_loads(value):
     Serializes an object as JSON. Optionally given keyword arguments
     are passed to json.dumps(), ensure_ascii however defaults to False.
     """
-    import json
     return json.loads(value)
 
 
@@ -162,8 +161,14 @@ def yaml_loads(value):
     Serializes an object as JSON. Optionally given keyword arguments
     are passed to json.dumps(), ensure_ascii however defaults to False.
     """
-    import yaml
     return yaml.load(value)
+
+
+def obj_loads(value):
+    try:
+        return json.loads(value)
+    except ValueError:
+        return yaml.load(value)
 
 
 def jinja_filters():
@@ -187,10 +192,11 @@ def jsonnet_callbacks():
         'rand_alphanum': (('size', 'seed'), rand_alphanum),
         'rand_alpha': (('size', 'seed'), rand_alpha),
         'randint': (('size', 'seed'), randint),
-        'jinja2': (('template', 'env'), jinja2),
+        'jinja2': (('template', 'env'), jinja_template),
         'jsonnet': (('template', 'env'), jsonnet),
         'json_loads': (('jsonstr',), json_loads),
         'yaml_loads': (('jsonstr',), yaml_loads),
+        'obj_loads': (('jsonstr',), obj_loads),
         'privatekey': (('keytype', "key", "seed"), gen_privatekey),
     }
     return filters
