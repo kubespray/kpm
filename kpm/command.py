@@ -73,8 +73,11 @@ def generate(options):
     r = Registry(options.registry_host)
     name = options.pull
     version = options.version
-    namespace = options.get('namespace', 'default')
-    variables = options.get('variables', {})
+    namespace = options.namespace
+    variables = {}
+    if options.variables is not None:
+        variables = parse_cmdline_variables(options.variables)
+
     variables['namespace'] = namespace
     k = kpm.kub.Kub(name, endpoint=options.registry_host,
                     variables=variables, namespace=namespace, version=version)
@@ -105,6 +108,22 @@ def push(options):
     os.remove(kubepath)
     print "package: %s (%s) pushed" % (manifest.package['name'],
                                        manifest.package['version'])
+
+
+def jsonnet(options):
+    from kpm.render_jsonnet import RenderJsonnet
+    r = RenderJsonnet()
+    namespace = options.namespace
+    variables = {}
+    if options.variables is not None:
+        variables = parse_cmdline_variables(options.variables)
+    variables['namespace'] = namespace
+    print variables
+    tla_codes = {"variables": json.dumps(variables)}
+    p = open(options.filepath[0]).read()
+    print p
+    result = r.render_jsonnet(p)
+    print json.dumps(result)
 
 
 def list_packages(options):
@@ -318,5 +337,20 @@ def get_parser():
     generate_parser.add_argument("-H", "--registry-host", nargs="?", default=registry.DEFAULT_REGISTRY,
                                  help='registry API url')
     generate_parser.set_defaults(func=generate)
+
+    # Jsonnet
+    jsonnet_parser = subparsers.add_parser('jsonnet', help='jsonnet a command in pod from the RC or RS name.\
+    It jsonnetutes the command on the first matching pod')
+    jsonnet_parser.add_argument("--namespace", nargs="?",
+                                help="kubernetes namespace", default='default')
+    jsonnet_parser.add_argument("-x", "--variables",
+                                help="variables", default=None, action="append")
+    jsonnet_parser.add_argument("--shards",
+                                help="Shards list/dict/count: eg. --shards=5 ; --shards='[{\"name\": 1, \"name\": 2}]'",
+                                default=None)
+
+    jsonnet_parser.add_argument('filepath', nargs=1, help="Fetch package from the registry")
+
+    jsonnet_parser.set_defaults(func=jsonnet)
 
     return parser
