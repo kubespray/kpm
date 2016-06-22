@@ -8,24 +8,15 @@ KPM is a tool to deploy and manage application stacks on kubernetes.
 
 KPM provides the glue between kubernetes resources (ReplicaSet, DaemonSet, Secrets...). It defines a package as a composition of kubernetes resources and dependencies to other packages.
 
-### Why we built KPM (instead of using Helm) ?
-
-We started the project to manage our production cluster and applications deployments. 
-We wanted a simple way to deploy and upgrade a complete applications stack, including databases. Helm was not ready for our usecases.
-
 ##### Versioning and rollbacks
-Helm uses a git repository to store packages, and it's complex to perform search and browsing. 
-Deploying any previous package version isn't possible yet (https://github.com/helm/helm/issues/199).
 
---> KPM uses a global registry, packages are immediately accessible and visible to the community. Versioning is strong and was easy to implement: https://hub.kubespray.io
+KPM uses a global registry, packages are immediately accessible and visible to the community. Versioning is strong and was easy to implement: https://hub.kubespray.io
 
 
-##### Clustered applications and persistent-storage ! 
-We had a hard time trying to operate our persistent services on Kubernetes, which was a key motivation to start kpm. 
-Helm doesn't address it at all.
+##### Clustered applications and persistent-storage !
 
-  - How to scale database slaves(postgresql/mysql/redis) ? 
-  - How to deploy a production-grade elasticsearch/rabbitmq/zookeep/etcd/ clusters on kubernetes? 
+  - How to scale database slaves(postgresql/mysql/redis) ?
+  - How to deploy a production-grade elasticsearch/rabbitmq/zookeep/etcd/ clusters on kubernetes?
 It requires stable network identity and a unique storage per pod!
 
 ---> KPM creates multiple variation of a single template with simplicity
@@ -47,7 +38,7 @@ resources:
     file: rabbitmq-svc.yaml
     type: service
     sharded: yes
-    
+
   # LB to any of the rabbitmq shard
   - name: rabbitmq
     file: rabbitmq-umbrella-svc.yaml
@@ -60,43 +51,22 @@ shards:
   - name: bunny
     variables:
       data_volume:  {name: data, persistentVolumeClaim: {claimName: claim-bunny}}
-  - name: rabbit-on-ram
+- name: rabbit-on-ram
     variables:
        data_volume: {name: data, emptyDir: ""}
        args: [--ram]
 ```
-Demo: 
+Demo:
 [![asciicast](https://asciinema.org/a/2ktj7kr2d2m3w25xrpz7mjkbu.png)](https://asciinema.org/a/2ktj7kr2d2m3w25xrpz7mjkbu?speed=2)
 
 
-##### Helm is a client-side tool
-KPM is an API with an command line interface, its major difference in terms of design and possible integration. 
-Helm is performing all actions client-side, and integration to third-party software isn't easy.
+##### Server-side
+KPM is an API with an command line interface, its major difference in terms of design and possible integration.
 
 --> We wanted a tool that could be integrated anywhere, for that KPM is building the package server side.
-Clients are brainless and easy to implement. As a POC we integrated KPM to a fork of https://github.com/kubernetes/dashboard in less than a day: 
+Clients are brainless and easy to implement. As a POC we integrated KPM to a fork of https://github.com/kubernetes/dashboard in less than a day:
 https://youtu.be/7SJ6p38W-WM
 
-
-##### Patch vs Templates
-Helm, KPM and many others are using templates/parametrization. 
-KPM added the concept of patch for packages. 
-Templates are a good way to improve reusability but it's not enough. Often the values we want to edit aren't parametrized. In such case, the only option with Helm is to fork the package and maintain its own version of it. 
-
---> To use and reuse directly 'upstream' packages: KPM can apply a [json-patch](https://tools.ietf.org/html/rfc6902) to the resource with its own personal requirements.
-
-To add an environment variable that was not included in the original package:
-
-```
-deploy: 
- - name: rabbitmq/rabbitmq
-    resources:
-      - file: rabbitmq-rc.yaml
-        patch: 
-        - op: add,
-          path: "/spec/template/spec/containers/0/env/-"
-          value: {name: RABBITMQ_DEFAULT_VHOST, value: logs}
-```
 
 ## Install kpm
 
@@ -138,7 +108,7 @@ The website [https://kpm.kubespray.io](https://kpm.kubespray.io) has more advanc
 `kpm deploy package_name [-v VERSION] [--namespace namespace]`
 ```
 $ kpm deploy ant31/rocketchat --namespace myns
-create ant31/rocketchat 
+create ant31/rocketchat
 
 package           version    type                   name        namespace    status
 ----------------  ---------  ---------------------  ----------  -----------  --------
@@ -151,11 +121,11 @@ ant31/rocketchat  1.6.2      replicationcontroller  rocketchat  myns         cre
 ```
 
 It deploys the package and its dependencies.
-The command can be executed multiple times, kpm detects changes in resource and apply only the modified ones. 
+The command can be executed multiple times, kpm detects changes in resource and apply only the modified ones.
 
 ### Uninstall an application
 
-The opposite action to `deploy` is the `remove` command. It performs a delete on all resources created by `deploy`.  It's possible to mark some resources as `protected`. 
+The opposite action to `deploy` is the `remove` command. It performs a delete on all resources created by `deploy`.  It's possible to mark some resources as `protected`.
 
 `Namespace` resources are protected by default.
 
@@ -170,5 +140,3 @@ ant31/rocketchat  1.6.2      namespace              myns        myns         pro
 ant31/rocketchat  1.6.2      service                rocketchat  myns         deleted
 ant31/rocketchat  1.6.2      replicationcontroller  rocketchat  myns         deleted
 ```
-
- 
