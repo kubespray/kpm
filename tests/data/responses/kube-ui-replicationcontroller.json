@@ -1,0 +1,86 @@
+{
+    "kind": "ReplicationController",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "kube-ui",
+        "namespace": "testns",
+        "selfLink": "/api/v1/namespaces/testns/replicationcontrollers/kube-ui",
+        "uid": "00ebfe28-f6cb-11e5-9efd-549f351415c4",
+        "resourceVersion": "3237653",
+        "generation": 1,
+        "creationTimestamp": "2016-03-30T22:59:05Z",
+        "labels": {
+            "k8s-app": "kube-ui",
+            "kubernetes.io/cluster-service": "true",
+            "version": "v3"
+        },
+        "annotations": {
+            "kpm.hash": "c0298c75be9b15c79c14237d1605f884bd40c40c81098a29cce0bb4a9e048e3d",
+            "kpm.package": "ant31/kube-ui",
+            "kpm.parent": "ant31/kube-ui",
+            "kpm.protected": "false",
+            "kpm.version": "1.0.1"
+        }
+    },
+    "spec": {
+        "replicas": 2,
+        "selector": {
+            "k8s-app": "kube-ui",
+            "kubernetes.io/cluster-service": "true",
+            "version": "v3"
+        },
+        "template": {
+            "metadata": {
+                "creationTimestamp": null,
+                "labels": {
+                    "k8s-app": "kube-ui",
+                    "kubernetes.io/cluster-service": "true",
+                    "version": "v3"
+                }
+            },
+            "spec": {
+                "containers": [
+                    {
+                        "name": "kube-ui-container",
+                        "image": "gcr.io/google_containers/kube-ui:v5",
+                        "ports": [
+                            {
+                                "containerPort": 8080,
+                                "protocol": "TCP"
+                            }
+                        ],
+                        "resources": {
+                            "limits": {
+                                "cpu": "100m",
+                                "memory": "50Mi"
+                            }
+                        },
+                        "livenessProbe": {
+                            "httpGet": {
+                                "path": "/",
+                                "port": 8080,
+                                "scheme": "HTTP"
+                            },
+                            "initialDelaySeconds": 30,
+                            "timeoutSeconds": 5,
+                            "periodSeconds": 10,
+                            "successThreshold": 1,
+                            "failureThreshold": 3
+                        },
+                        "terminationMessagePath": "/dev/termination-log",
+                        "imagePullPolicy": "IfNotPresent"
+                    }
+                ],
+                "restartPolicy": "Always",
+                "terminationGracePeriodSeconds": 30,
+                "dnsPolicy": "ClusterFirst",
+                "securityContext": {}
+            }
+        }
+    },
+    "status": {
+        "replicas": 2,
+        "fullyLabeledReplicas": 2,
+        "observedGeneration": 1
+    }
+}

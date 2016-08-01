@@ -1,0 +1,55 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: kpm-registry
+  name: kpm-registry
+  namespace: kube-system
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        k8s-app: kpm-registry
+    spec:
+      containers:
+        - name: etcd-proxy
+          image: {{image_etcd}}
+          resources:
+            limits:
+              cpu: 50m
+              memory: 100Mi
+          args:
+            - --proxy
+            - 'on'
+            - --listen-client-urls
+            - http://127.0.0.1:2379,http://127.0.0.1:4001
+            - --initial-cluster
+            - {{initial_cluster}}
+        - name: kpm-registry
+          image: {{image}}
+          imagePullPolicy: Always
+          resources:
+            limits:
+              cpu: 200m
+              memory: 200Mi
+          command:
+            - gunicorn
+            - kpm.api.wsgi:app
+            - -b
+            - :5000
+            - --threads
+            - "3"
+            - -w
+            - "1"
+          ports:
+            - name: kpm-registry
+              protocol: TCP
+              containerPort: 5000
+          livenessProbe:
+            httpGet:
+              path: /version
+              port: 5000
+            initialDelaySeconds: 30
+            timeoutSeconds: 30

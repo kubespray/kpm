@@ -1,0 +1,45 @@
+{
+    "kind": "Service",
+    "apiVersion": "v1",
+    "metadata": {
+        "name": "kube-ui",
+        "namespace": "testns",
+        "selfLink": "/api/v1/namespaces/testns/services/kube-ui",
+        "uid": "020a95c1-f6cb-11e5-9efd-549f351415c4",
+        "resourceVersion": "3237672",
+        "creationTimestamp": "2016-03-30T22:59:07Z",
+        "labels": {
+            "k8s-app": "kube-ui",
+            "kubernetes.io/cluster-service": "true",
+            "version": "v3"
+        },
+        "annotations": {
+            "kpm.hash": "f76bb41c00cf4de5d30be4efc4679ecc6bac4b453d26f631a315435c14d919a7",
+            "kpm.package": "ant31/kube-ui",
+            "kpm.parent": "ant31/kube-ui",
+            "kpm.protected": "false",
+            "kpm.version": "1.0.1"
+        }
+    },
+    "spec": {
+        "ports": [
+            {
+                "protocol": "TCP",
+                "port": 80,
+                "targetPort": 8080,
+                "nodePort": 30535
+            }
+        ],
+        "selector": {
+            "k8s-app": "kube-ui",
+            "kubernetes.io/cluster-service": "true",
+            "version": "v3"
+        },
+        "clusterIP": "192.168.51.246",
+        "type": "NodePort",
+        "sessionAffinity": "None"
+    },
+    "status": {
+        "loadBalancer": {}
+    }
+}
