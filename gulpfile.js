@@ -67,7 +67,7 @@ gulp.task('build', ['config', 'sass'], function() {
   gulp.src('src/app/**/*.html')
     .pipe(templateCache({
       root: 'app',
-      module: 'osm-dark-label'
+      module: 'kpm-ui'
     }))
     .pipe(gulp.dest(setup.dir + '/js'));
 
