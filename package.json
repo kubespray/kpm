@@ -1,0 +1,19 @@
+{
+  "name": "kpm-website",
+  "version": "1.0.0",
+  "description": "Front-end for KPM API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@gitlab.com/kubespray/kpm-website.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://gitlab.com/kubespray/kpm-website/issues"
+  },
+  "homepage": "https://gitlab.com/kubespray/kpm-website#README"
+}
