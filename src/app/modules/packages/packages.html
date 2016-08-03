@@ -1,8 +1,15 @@
-<div>
+<div class="package-wrapper">
+  <p>
+    Browse package list
+  </p>
   <div class="package" ng-repeat="package in packages">
     <h2>
       <a ui-sref="package({id: package.id})">{{package.name}}</a>
     </h2>
-    <span class="version">Version: <code>{{package.version}}</code></span>
+    <ul>
+      <li>Author: <code>{{package.author}}</code></li>
+      <li>Version: <code>{{package.version}}</code></li>
+      <li>Downloads: <code>{{package.downloads}}</code></li>
+    </ul>
   </div>
-</div<
+</div>
