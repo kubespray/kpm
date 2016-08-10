@@ -1,0 +1,56 @@
+stages:
+  - unit-test
+  - build-image
+  - push-image
+  - kpm-test
+  - kpm-push
+  - deploy
+
+variables:
+  RAILS_ENV: test
+  RAILS_LOGGER: default
+  DOCKER_EMAIL: gitlab@kpm.sh
+  DOCKER_USERNAME: gitlabci
+  DOCKER_PASSWORD: gitlabci-kpm
+  KPM_USER: kpm-gitlabci
+  KPM_PASSWORD: gitlabci-kpm00
+  REGISTRY: registry.kubespray.io
+  REGISTRY_HOST: registry.kubespray.io
+
+cache:
+  paths:
+    - cache
+
+build_image:
+  stage: build-image
+  only:
+    - tags
+    - master
+  script:
+    - docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD"  $REGISTRY_HOST
+    - docker build --no-cache --build-arg "version=$CI_BUILD_REF_NAME" -t $REGISTRY/kpm-ui:$CI_BUILD_REF_NAME deploy/build/
+    - docker push $REGISTRY/kpm-ui:$CI_BUILD_REF_NAME
+  tags:
+    - kubespray
+    - shell
+
+
+# kpm_push:
+#   stage: kpm-push
+#   image: python:2.7
+#   only:
+#     - tags
+#     - master
+#   script:
+#     - pip install kpm -U
+#     - kpm login -u $KPM_USER -p $KPM_PASSWORD
+#     - cd deploy/kpm-ui && kpm push -f
+
+
+# deploy:
+#   stage: deploy
+#   only:
+#     - tags
+#   script:
+#     - kpm deploy kpm/kpm-ui version=$VERSION --namespace=kpm-stg
+#     - kpm exec -k deployment -n kpm-ui -c kpm-ui --namespace=kpm-stg bundle exec rake db:migrate
