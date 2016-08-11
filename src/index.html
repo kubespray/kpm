@@ -1,16 +1,25 @@
 <html lang="en" ng-app="kpm-ui">
 <head>
-  <title>KPM</title>
+  <title ng-bind-html="pageTitle"></title>
   <!-- FontAwesome icons -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
 
   <!-- Application CSS -->
-	<link rel="stylesheet" href="style/style.min.css" />
+  <link rel="stylesheet" href="style/style.min.css" />
   <link rel="icon" href="images/favico.png" />
 </head>
 <body ng-cloak ng-controller="AppController">
   <header id="header">
     <div class="inner">
+      <nav ng-if="!session.isAuthenticated()">
+        <a ui-sref="login">Login</a> |
+        <a ui-sref="signup">Sign-up</a>
+      </nav>
+      <nav ng-if="session.isAuthenticated()">
+        Connected as <a href>{{session.username}}</a> |
+        <a href>Logout</a>
+      </nav>
+
       <div class="search" ng-controller="SearchController">
         <input type="text" name="search" placeholder="search..." />
         <i class="fa fa-search"></i>
@@ -34,19 +43,23 @@
     </div>
   </footer>
 
-	<!-- Angular.js Libraries -->
-	<script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
+  <!-- Angular.js Libraries -->
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
 
   <!-- App configuration -->
-	<script src="config/config.js"></script>
+  <script src="config/config.js"></script>
 
   <!-- build:js js/app.min.js -->
-	<script src="app/app.js"></script>
+  <script src="app/app.js"></script>
   <script src="app/directives/ui-loading.js"></script>
-	<script src="app/services/kpm_api.js"></script>
-	<script src="app/modules/packages/packages_controller.js"></script>
-	<script src="app/modules/search/search_controller.js"></script>
+  <script src="app/services/kpm_api.js"></script>
+  <script src="app/services/session.js"></script>
+  <script src="app/modules/home/home_controller.js"></script>
+  <script src="app/modules/user/signup_controller.js"></script>
+  <script src="app/modules/user/login_controller.js"></script>
+  <script src="app/modules/packages/packages_controller.js"></script>
+  <script src="app/modules/search/search_controller.js"></script>
   <!-- /build -->
 
   <!-- build:js js/templates.js -->

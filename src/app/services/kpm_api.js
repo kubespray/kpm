@@ -1,9 +1,9 @@
 app.service('KpmApi', function($http) {
 
   this.get = function(target, params) {
-    // GET requests don't support JSON payload
     return this.perform('GET', target, {
       params: angular.copy(params),
+      // Serialize JSON parameters in URL
       paramSerializer: '$httpParamSerializerJQLike'
     });
   };
@@ -21,14 +21,15 @@ app.service('KpmApi', function($http) {
   };
 
   this.perform = function(method, target, config) {
-    config.url = Config.backend_url + '/' + target + '.json';
+    config.url = Config.backend_url + target;
     config.method = method;
 
-    /*
+    // Apply authorization token if any
+    if (this.authorization_token) {
       config.headers =  {
         'Authorization': this.authorization_token
       }
-    */
+    }
     return $http(config);
   };
 });
