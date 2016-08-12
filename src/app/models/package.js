@@ -6,5 +6,5 @@ app.factory('Package', function(KpmApi) {
     }
   }
 
-  return Media;
+  return Package;
 });

@@ -34,10 +34,16 @@ app.service('Session', function($rootScope, KpmApi) {
    * Deauthenticate a connected user
    */
   this.logout = function() {
-    KpmApi.post('users/logout')
+    KpmApi.delete('users/logout')
     .success(function(data) {
+      delete self.email;
+      delete self.username;
+      KpmApi.authorization_token = null;
+
+      $rootScope.$broadcast('logout_success', data);
     })
     .error(function(data) {
+      $rootScope.$broadcast('logout_failure', data);
     });
   };
 

@@ -13,6 +13,4 @@ app.controller('PackagesController', function($scope, $stateParams, KpmApi) {
       $scope.packages = data;
     });
   }
-
-  console.log("PackagesController()");
 });
