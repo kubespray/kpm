@@ -3,17 +3,24 @@ form.app-form {
     padding: 4px;
     label {
       display: block;
+      span {
+        display: block;
+      }
     }
     input[type=text],
-    input[type=password] {
+    input[type=password],
+    input[type=email] {
       padding: 4px;
       width: 300px;
     }
   }
-  p.error {
+  .error-notice {
     border-radius: 4px;
     padding: 1em;
     background: #cb3837;
     color: white;
+    li {
+      margin-left: 2em;
+    }
   }
 }
