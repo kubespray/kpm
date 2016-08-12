@@ -1,4 +1,4 @@
-var app = angular.module('kpm-ui', ['ui.router']);
+var app = angular.module('kpm-ui', ['ngMaterial', 'ui.router']);
 
 app.config(function($stateProvider) {
 

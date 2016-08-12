@@ -18,11 +18,13 @@ a {
 
 #header {
   .inner {
-    padding: 20px;
+    padding-top: 20px;
     display: flex;
-    .search {
-      text-align: right;
-      flex: 1;
+    align-items: baseline;
+    form.search {
+      width: 300px;
+      margin-left: auto; // pull right
+      margin-right: 0.5em;
     }
   }
 }
@@ -55,7 +57,7 @@ a {
 }
 
 div.inner {
-  max-width: 920px;
+  max-width: 900px;
   margin: auto;
 }
 
