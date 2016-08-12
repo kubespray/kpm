@@ -5,9 +5,14 @@
 }
 
 .package {
-  h2 a {
-   color: $blue;
-   text-decoration: none;
+  h2 {
+    margin-top: 0;
+    i.fa {
+      color: #aaa;
+    }
+    a {
+      padding-left: 0.3em;
+    }
   }
   padding: 20px;
   border: 1px solid #f0f0f0;
