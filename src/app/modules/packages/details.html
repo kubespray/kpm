@@ -5,6 +5,12 @@
       <li>Version: <code>{{package.version}}</code></li>
       <li>Downloads: <code>{{package.downloads}}</code></li>
     </ul>
+    <h3>Dependencies</h3>
+    <ol>
+      <li ng-repeat="dependency in package.dependencies">
+        <a ui-sref="package({name: dependency})">{{dependency}}</a>
+      </li>
+    </ol>
 </div>
 
 <a ui-sref="packages">Back</a>

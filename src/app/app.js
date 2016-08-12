@@ -17,7 +17,8 @@ app.config(function($stateProvider) {
     templateUrl: 'app/modules/packages/packages.html'
   })
   .state('package', {
-    url: '/package/:id',
+    // Type 'any' prevents from encoding the '/' in package name
+    url: '/package/{name:any}',
     title: 'Package detail',
     controller: 'PackagesController',
     templateUrl: 'app/modules/packages/details.html'
