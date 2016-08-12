@@ -13,4 +13,16 @@ app.controller('PackagesController', function($scope, $stateParams, KpmApi) {
       $scope.packages = data;
     });
   }
+
+  $scope.toggleResource = function(resource) {
+    if (resource.content) {
+      delete resource.content;
+    }
+    else {
+      KpmApi.get('packages/' + $scope.package.name + '/file/templates/' + resource.file)
+      .success(function(data) {
+        resource.content = data;
+      });
+    }
+  };
 });

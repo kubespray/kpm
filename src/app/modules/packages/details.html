@@ -14,6 +14,13 @@
         <a ui-sref="package({name: dependency})">{{dependency}}</a>
       </li>
     </ol>
+    <h3>Files</h3>
+    <ul>
+      <li ng-repeat="resource in package.manifest.resources">
+        <a href ng-click="toggleResource(resource)">{{resource.file}}</a>
+        <pre ng-if="resource.content" class="resource">{{resource.content}}</pre>
+      </li>
+    </ul>
 </div>
 
 <a ui-sref="packages">Back</a>
