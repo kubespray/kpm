@@ -31,9 +31,17 @@
           md-selected-item-change="ctrl.itemSelected(item)"
           placeholder="Search packages">
           <md-item-template>
-            <span md-highlight-text="ctrl.searchText" md-highlight-flags="^i">
+            <div md-highlight-text="ctrl.searchText" md-highlight-flags="^i" class="item-title">
               {{item.name}}
-            </span>
+            </div>
+            <div class="item-info">
+              <span class="item-meta">
+                Last version: <strong>{{item.version}}</strong>
+              </span>
+              <span class="item-meta">
+                Downloads: <strong>{{item.downloads}}</strong>
+              </span>
+            </div>
           </md-item-template>
           <md-not-found>
             No packages matching "{{ctrl.searchText}}" were found.
