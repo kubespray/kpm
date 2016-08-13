@@ -60,7 +60,11 @@
     </div>
   </section>
   <section id="main">
-    <div class="inner" ui-view>
+    <div class="inner">
+      <ui-view></ui-view>
+      <div layout="row" class="loader" ng-if="ui.loading">
+        <md-progress-circular md-mode="indeterminate" md-diameter="150"></md-progress-circular>
+      </div>
     </div>
   </section>
   <footer id="footer">
@@ -87,7 +91,6 @@
 
   <!-- build:js js/app.min.js -->
   <script src="app/app.js"></script>
-  <script src="app/directives/ui-loading.js"></script>
   <script src="app/services/kpm_api.js"></script>
   <script src="app/services/session.js"></script>
   <script src="app/modules/home/home_controller.js"></script>

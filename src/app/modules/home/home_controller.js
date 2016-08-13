@@ -5,13 +5,15 @@ app.controller('HomeController', function($scope, $state, KpmApi, Session) {
   }
 
   // Fetch user's packages
+  $scope.ui.loading = true;
   KpmApi.get('packages', {
     username: Session.username
   })
   .success(function(data) {
+    $scope.ui.loading = false;
     $scope.packages = data;
   })
   .error(function(data) {
-
+    $scope.ui.loading = false;
   });
 });
