@@ -173,6 +173,11 @@ def obj_loads(value):
         return yaml.load(value)
 
 
+def rec_update(d, u):
+    from kpm.utils import recursive_update
+    return recursive_update(json.loads(d), json.loads(u))
+
+
 def jinja_filters():
     filters = {
         'json': json_dumps,
@@ -200,5 +205,6 @@ def jsonnet_callbacks():
         'yaml_loads': (('jsonstr',), yaml_loads),
         'obj_loads': (('jsonstr',), obj_loads),
         'privatekey': (('keytype', "key", "seed"), gen_privatekey),
+        'recursive_update': (('d', 'u'), rec_update),
     }
     return filters

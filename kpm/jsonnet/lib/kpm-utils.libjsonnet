@@ -55,11 +55,17 @@
 
    # Convert yaml string to object
    yamlLoads(data):: (
-      std.native("yaml_loads")(data)),
+      std.native("yaml_loads")(data)
+   ),
 
    # Generate a sequence array from 1 to i
    seq(i):: (
       [x for x in std.range(1, i)]
+   ),
+
+   # Recursively update the dict d using u
+   recursiveUpdate(d, u):: (
+      std.native("recursive_update")(std.toString(d), std.toString(u))
    ),
 
    local initSeed = kpmutils.randAlpha(256),
