@@ -115,7 +115,7 @@ class Kub(KubBase):
             template = jinja_env.from_string(val)
             variables = copy.deepcopy(self.variables)
             if 'variables' in resource:
-                recursive_update(variables, resource['variables'])
+                variables = recursive_update(variables, resource['variables'])
             if len(self.shards):
                 variables['kpmshards'] = self.shards
             t = template.render(variables)

@@ -82,7 +82,7 @@ class KubBase(object):
     def variables(self):
         if self._variables is None:
             self._variables = copy.deepcopy(self.manifest.variables)
-            recursive_update(self._variables, self._deploy_vars)
+            self._variables = recursive_update(self._variables, self._deploy_vars)
         return self._variables
 
     def _fetch_package(self):

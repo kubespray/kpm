@@ -28,7 +28,7 @@ def yaml_to_jsonnet(manifestyaml, tla_codes=None):
     variables = v['manifest']['variables']
     if tla_codes is not None and 'params' in tla_codes:
         tla = json.loads(tla_codes['params']).get("variables", {})
-        recursive_update(variables, tla)
+        variables = recursive_update(variables, tla)
     # Resolve the templated variables inside the 'old' manifest
     manifest_tpl = jinja_env.from_string(manifestyaml)
 

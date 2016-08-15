@@ -174,6 +174,11 @@ def obj_loads(value):
 
 
 def rec_update(d, u):
+    """
+    Realizes a recursive update of the first dictionary using the second
+    dictionary. Unlike the usual update() method, the operation isn't done
+    in-place, the first dictionary isn't modified, instead, a copy is returned.
+    """
     from kpm.utils import recursive_update
     return recursive_update(json.loads(d), json.loads(u))
 
