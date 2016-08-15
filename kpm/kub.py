@@ -10,7 +10,7 @@ import kpm.manifest as manifest
 from kpm.template_filters import jinja_filters
 from kpm.kub_base import KubBase
 from kpm.kubernetes import get_endpoint
-from kpm.utils import convert_utf8
+from kpm.utils import convert_utf8, recursive_update
 
 
 # __all__ = ['Kub']
@@ -115,7 +115,7 @@ class Kub(KubBase):
             template = jinja_env.from_string(val)
             variables = copy.deepcopy(self.variables)
             if 'variables' in resource:
-                variables.update(resource['variables'])
+                recursive_update(variables, resource['variables'])
             if len(self.shards):
                 variables['kpmshards'] = self.shards
             t = template.render(variables)

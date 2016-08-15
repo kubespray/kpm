@@ -127,3 +127,13 @@ def symbol_by_name(name, aliases={}, imp=None, package=None,
         if default is None:
             raise
     return default
+
+
+def recursive_update(d, u):
+    for k, v in u.iteritems():
+        if isinstance(v, collections.Mapping):
+            r = recursive_update(d.get(k, {}), v)
+            d[k] = r
+        else:
+            d[k] = u[k]
+    return d
