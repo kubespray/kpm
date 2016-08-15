@@ -5,7 +5,7 @@ kpmstd {
    utils:: kpmstd,
 
    variables(vars, target):: (
-      std.mergePatch(vars, target)
+      kpmstd.recursiveUpdate(vars, target)
    ),
 
    deploy(dep):: (
@@ -129,7 +129,7 @@ kpmstd {
        };
 
       local params = std.mergePatch(default_params, env);
-      local p = p2 + {variables+: params.variables};
+      local p = p2;
 
       local shards = if std.objectHas(p, "shards") then
          { shards: kpm.shards(p.shards, params.shards) }

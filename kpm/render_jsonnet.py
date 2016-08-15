@@ -6,7 +6,7 @@ import os
 import logging
 import os.path
 import jinja2
-from kpm.utils import convert_utf8
+from kpm.utils import convert_utf8, recursive_update
 import kpm.template_filters as filters
 
 logger = logging.getLogger(__name__)
@@ -27,7 +27,7 @@ def yaml_to_jsonnet(manifestyaml, tla_codes=None):
     variables = v['manifest']['variables']
     if tla_codes is not None and 'params' in tla_codes:
         tla = json.loads(tla_codes['params']).get("variables", {})
-        variables.update(tla)
+        variables = recursive_update(variables, tla)
     # Resolve the templated variables inside the 'old' manifest
     manifest_tpl = jinja_env.from_string(manifestyaml)
 

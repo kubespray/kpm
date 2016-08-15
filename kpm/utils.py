@@ -6,6 +6,7 @@ import os
 import collections
 import json
 import re
+import copy
 from termcolor import colored
 
 
@@ -127,3 +128,19 @@ def symbol_by_name(name, aliases={}, imp=None, package=None,
         if default is None:
             raise
     return default
+
+
+def recursive_update(d, u):
+    """
+    Realizes a recursive update of the first dictionary using the second
+    dictionary. Unlike the usual update() method, the operation isn't done
+    in-place, the first dictionary isn't modified, instead, a copy is returned.
+    """
+    dc = copy.deepcopy(d)
+    for k, v in u.iteritems():
+        if isinstance(v, collections.Mapping):
+            r = recursive_update(dc.get(k, {}), v)
+            dc[k] = r
+        else:
+            dc[k] = u[k]
+    return dc
