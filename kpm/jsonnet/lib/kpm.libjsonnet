@@ -111,13 +111,13 @@ kpmstd {
    ),
 
    resources(resources, shards, variables, package):: (
-      std.flattenArrays([
+       std.flattenArrays([
          local r = kpm.resource_defaults(resource, package) + resource;
          local result = if std.objectHas(resource, "sharded") then
             kpm.sharded_resource(r, shards, variables)
          else
             [kpm.template(r { variables: { name: r.name } + variables })];
-         result for resource in resources])
+         result for resource in resources if resource != null])
    ),
 
 
@@ -149,7 +149,7 @@ kpmstd {
 
       local package = {
          package: p.package,
-         deploy: p.deploy } + variables + shards + resources;
+         deploy: kpmstd.compact(p.deploy) } + variables + shards + resources;
 
       package
    ),

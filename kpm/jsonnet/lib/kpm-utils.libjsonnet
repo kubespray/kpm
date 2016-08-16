@@ -62,5 +62,9 @@
       [x for x in std.range(1, i)]
    ),
 
+   compact(array):: (
+     [x for x in array if x != null]
+   ),
+
    local initSeed = kpmutils.randAlpha(256),
 }
