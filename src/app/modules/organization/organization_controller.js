@@ -1,6 +1,6 @@
 'use strict';
 
-app.controller('OrganiaztionController', function($scope, $stateParams, KpmApi,
+app.controller('OrganizationController', function($scope, $stateParams, KpmApi,
       User) {
 
   // Methods

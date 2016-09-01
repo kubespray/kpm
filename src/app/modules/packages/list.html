@@ -20,6 +20,8 @@
   </p>
   <div
     ng-include="'app/modules/packages/preview.html'"
-    ng-repeat="package in packages">
+    ng-repeat="package in packages"
+    ng-controller="PackageController"
+    ng-init="setPackage(package)">
   </div>
 </div>

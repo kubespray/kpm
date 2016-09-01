@@ -1,6 +1,6 @@
 'use strict';
 
-app.factory('User', function(KpmApi, Package) {
+app.factory('User', function(KpmApi) {
   /**
    * Ctor
    */
@@ -9,7 +9,6 @@ app.factory('User', function(KpmApi, Package) {
       this[key] = hash[key];
     }
     this.setGravatarUrl();
-    this.getPackages();
   }
 
   /**
@@ -20,22 +19,6 @@ app.factory('User', function(KpmApi, Package) {
       var hash = Crypto.MD5(this.email.toLowerCase());
       this.gravatar = 'http://www.gravatar.com/avatar/' + hash;
     }
-  };
-
-  /**
-   * Get packages for user
-   */
-  User.prototype.getPackages = function() {
-    var self = this;
-    KpmApi.get('packages/' + this.username)
-    .success(function(data) {
-      self.packages = data.map(function(hash) {
-        return new Package(hash);
-      });
-    })
-    .error(function(data) {
-      console.log('[User] cannot get packages');
-    });
   };
 
   return User;
