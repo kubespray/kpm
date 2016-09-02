@@ -10,7 +10,7 @@ app.controller('UserController', function($scope, $stateParams, KpmApi, User) {
     .success(function(data) {
       $scope.user = new User(data);
       // Get packages for user
-      KpmApi.get('packages/' + username)
+      KpmApi.get('packages', {username: username})
       .success(function(data) {
         $scope.user.packages = data;
       })

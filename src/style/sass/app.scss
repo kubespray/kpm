@@ -193,6 +193,12 @@ md-tooltip {
   font-size: 14px;
 }
 
+md-select-menu, md-select-value {
+  i.fa {
+    color: #555;
+    margin-right: 1em;
+  }
+}
 a:not(.md-button),
 a:not(.md-button):hover {
   color: $link_color;
