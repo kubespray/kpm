@@ -23,7 +23,7 @@
         <a href ng-click="session.logout()">Logout</a>
       </nav>
 
-      <form ng-controller="SearchController as ctrl" class="search">
+      <form ng-controller="SearchController as ctrl" ng-submit="ctrl.submit()" class="search">
         <md-autocomplete
           md-search-text="ctrl.searchText"
           md-items="item in ctrl.querySearch(ctrl.searchText)"

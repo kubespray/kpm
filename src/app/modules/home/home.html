@@ -1,6 +1,8 @@
 <h2>Greetings, {{session.username}}!</h2>
 <div class="package-wrapper">
-  <h3>My packages | <a ui-sref="packages">All packages</a></h3>
+  <p class="menu">
+    My packages
+  </p>
   <div
      ng-if="packages.length > 0"
      ng-include="'app/modules/packages/preview.html'"
@@ -8,5 +10,6 @@
   </div>
   <p ng-if="packages.length == 0" class="info-notice">
     You don't have any packages yet.
+    Check out the <a ui-sref="packages">available packages</a>!
   </p>
 <div>
