@@ -1,11 +1,11 @@
 var app = angular.module('kpm-ui', ['ngMaterial', 'ui.router']);
 
-app.config(function($stateProvider) {
+app.config(function($stateProvider, $urlRouterProvider) {
 
   // Bind routes to controllers
   $stateProvider
   .state('home', {
-    url: '',
+    url: '/home',
     title: 'Welcome to KPM',
     controller: 'HomeController',
     templateUrl: 'app/modules/home/home.html'
@@ -39,6 +39,10 @@ app.config(function($stateProvider) {
     url: '/404',
     templateUrl: 'app/modules/errors/404.html'
   });
+
+  $urlRouterProvider
+    .when('', '/home')
+    .otherwise('404');
 });
 
 app.controller('AppController', function($rootScope, $sce, Session) {

@@ -1,15 +1,21 @@
 <h2>Greetings, {{session.username}}!</h2>
-<div class="package-wrapper">
-  <p class="menu">
-    My packages
-  </p>
-  <div
-     ng-if="packages.length > 0"
-     ng-include="'app/modules/packages/preview.html'"
-     ng-repeat="package in packages">
+<div class="home">
+  <div class="user-packages">
+    <h3>My packages</h3>
+    <div
+      ng-if="packages.length > 0"
+      ng-include="'app/modules/packages/preview.html'"
+      ng-repeat="package in packages">
+    </div>
+    <p ng-if="packages.length == 0" class="info-notice">
+      You don't have any packages yet.
+      Check out the <a ui-sref="packages">available packages</a>!
+    </p>
   </div>
-  <p ng-if="packages.length == 0" class="info-notice">
-    You don't have any packages yet.
-    Check out the <a ui-sref="packages">available packages</a>!
-  </p>
+  <div class="user-profile">
+    <h3>My profile</h3>
+    <p>
+      {{session.email}}
+    </p>
+  </div>
 <div>
