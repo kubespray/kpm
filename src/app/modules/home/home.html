@@ -15,7 +15,10 @@
   <div class="user-profile">
     <h3>My profile</h3>
     <p>
-      {{session.email}}
+      <img ng-src="{{session.gravatar}}?s=200" alt="gravatar" />
+    </p>
+    <p>
+      <i class="fa fa-email"></i>{{session.email}}
     </p>
   </div>
 <div>
