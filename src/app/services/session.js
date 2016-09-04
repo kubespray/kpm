@@ -1,4 +1,4 @@
-app.service('Session', function($rootScope, KpmApi) {
+app.service('Session', function($rootScope, KpmApi, User) {
 
   var self = this;
 
@@ -15,9 +15,7 @@ app.service('Session', function($rootScope, KpmApi) {
       }
     })
     .success(function(data) {
-      self.email = data.email;
-      self.username = data.username;
-      self.setGravatarUrl();
+      self.user = new User(data);
       KpmApi.authorization_token = data.token;
 
       // Broadcast success event
@@ -37,8 +35,7 @@ app.service('Session', function($rootScope, KpmApi) {
   this.logout = function() {
     KpmApi.delete('users/logout')
     .success(function(data) {
-      delete self.email;
-      delete self.username;
+      delete self.user;
       KpmApi.authorization_token = null;
 
       $rootScope.$broadcast('logout_success', data);
@@ -54,12 +51,5 @@ app.service('Session', function($rootScope, KpmApi) {
    */
   this.isAuthenticated = function() {
     return KpmApi.authorization_token != null;
-  };
-
-  this.setGravatarUrl = function() {
-    if (this.email) {
-      var hash = Crypto.MD5(this.email.toLowerCase());
-      this.gravatar = 'http://www.gravatar.com/avatar/' + hash;
-    }
   };
 });

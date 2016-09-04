@@ -1,4 +1,5 @@
-app.controller('SignupController', function($scope, $state, KpmApi, Session) {
+app.controller('SignupController', function($scope, $state, KpmApi, Session,
+  User) {
 
   // Create user
   $scope.submit = function() {
@@ -15,12 +16,11 @@ app.controller('SignupController', function($scope, $state, KpmApi, Session) {
       $scope.ui.loading = false;
 
       // Login user after sign-up
-      Session.username = data.username;
-      Session.email = data.email;
+      Session.user = new User(data);
       KpmApi.authorization_token = data.token;
 
       // Redirect to homepage
-      $state.go('packages');
+      $state.go('home');
     })
     .error(function(data) {
       $scope.ui.loading = false;
