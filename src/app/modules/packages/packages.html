@@ -1,9 +1,19 @@
 <div class="package-wrapper">
-  <p class="info-notice" ng-if="search && packages.length > 0">
-    {{packages.length}} result(s) for <em>"{{search}}"</em>
+  <p class="info-notice" ng-if="queryParams.named_like && packages.length > 0">
+    {{packages.length}} result(s) for <em>"{{queryParams.named_like}}"</em>
   </p>
   <p class="info-notice" ng-if="search && packages.length == 0">
-    Sorry, no results for <em>"{{search}}"</em>
+    Sorry, no results for <em>"{{queryParams.named_like}}"</em>
+  </p>
+  <p>
+    <md-select
+      placeholder="sort package list"
+      ng-model="querySort"
+      md-on-close="applySort(querySort)">
+      <md-option ng-repeat="(label, params) in availableSorts" ng-value="params">
+        {{label}}
+      </md-option>
+    </md-select>
   </p>
   <div
     ng-include="'app/modules/packages/preview.html'"

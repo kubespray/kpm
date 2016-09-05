@@ -20,7 +20,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
     // Type 'any' prevents from encoding the '/' in package name
     url: '/package/{name:any}',
     title: 'Package detail',
-    controller: 'PackagesController',
+    controller: 'PackageDetailsController',
     templateUrl: 'app/modules/packages/details.html'
   })
   .state('user', {
