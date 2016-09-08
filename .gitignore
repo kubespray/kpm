@@ -5,7 +5,7 @@ npm-debug.log
 .sass-cache
 
 # auto-generated
-src/style/style.min.css
+src/style/app.min.css
 src/config/config.js
 
 # editors
