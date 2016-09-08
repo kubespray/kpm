@@ -1,3 +1,5 @@
+'use strict';
+
 app.controller('PackagesController', function($scope, $stateParams, KpmApi) {
 
   $scope.availableSorts = {
