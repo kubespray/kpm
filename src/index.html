@@ -7,6 +7,9 @@
   <!-- Angular Material CSS -->
   <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.0.0/angular-material.min.css" />
 
+  <!-- Prism -->
+  <link rel="stylesheet" href="vendor/prism/prism.css" />
+
   <!-- Application CSS -->
   <link rel="stylesheet" href="style/style.min.css" />
 
@@ -24,7 +27,6 @@
         Connected as <a ui-sref="home">{{session.user.username}}</a> |
         <a href ng-click="session.logout()">Logout</a>
       </nav>
-
       <form ng-controller="SearchController as ctrl" ng-submit="ctrl.submit()" class="search">
         <md-autocomplete
           md-search-text="ctrl.searchText"
@@ -49,9 +51,8 @@
             No packages matching "{{ctrl.searchText}}" were found.
           </md-not-found>
         </md-autocomplete>
-
       </form>
-        <i class="fa fa-search"></i>
+      <i class="fa fa-search"></i>
     </div>
   </header>
   <section id="banner">
@@ -71,7 +72,9 @@
   </section>
   <footer id="footer">
     <div class="inner">
-      By <a href="http://kubespray.io">kubespray.io</a>
+      By <a href="http://kubespray.io">kubespray.io</a> |
+      <a href="https://twitter.com/kubespray" title="twitter">@kubespray</a> |
+      <a ui-sref="about">About KPM</a>
     </div>
   </footer>
 
@@ -90,12 +93,14 @@
 
   <!-- Vendor -->
   <script src="vendor/md5/md5.js"></script>
+  <script src="vendor/prism/prism.js"></script>
 
   <!-- App configuration -->
   <script src="config/config.js"></script>
 
   <!-- build:js js/app.min.js -->
   <script src="app/app.js"></script>
+  <script src="app/directives/prism.js"></script>
   <script src="app/services/kpm_api.js"></script>
   <script src="app/services/session.js"></script>
   <script src="app/modules/home/home_controller.js"></script>
