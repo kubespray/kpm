@@ -10,7 +10,7 @@ app.controller('LoginController', function($scope, $state, KpmApi, Session) {
 
   $scope.$on('login_failure', function(event, data) {
     $scope.ui.loading = false;
-    $scope.error = data.message;
+    $scope.error = $scope.build_error(data);
   });
 
   // Methods
