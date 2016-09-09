@@ -26,7 +26,10 @@
       </nav>
       <nav ng-if="session.isAuthenticated()">
         <img ng-src="{{session.user.gravatar}}?s=40" class="gravatar" />
-        Connected as <a ui-sref="home">{{session.user.username}}</a> |
+        Connected as
+        <a ui-sref="user({username: session.user.username})">
+          {{session.user.username}}
+        </a> |
         <a href ng-click="session.logout()">Logout</a>
       </nav>
       <form ng-controller="SearchController as ctrl" ng-submit="ctrl.submit()" class="search">
@@ -111,6 +114,10 @@
   <script src="app/modules/user/user_controller.js"></script>
   <script src="app/modules/user/signup_controller.js"></script>
   <script src="app/modules/user/login_controller.js"></script>
+  <script src="app/modules/settings/settings_controller.js"></script>
+  <script src="app/modules/settings/profile_controller.js"></script>
+  <script src="app/modules/settings/tokens_controller.js"></script>
+  <script src="app/modules/settings/organizations_controller.js"></script>
   <script src="app/modules/packages/packages_controller.js"></script>
   <script src="app/modules/packages/package_details_controller.js"></script>
   <script src="app/modules/search/search_controller.js"></script>

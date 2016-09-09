@@ -11,6 +11,10 @@ body {
   flex-direction: column;
 }
 
+h1, h2, h3 {
+  margin-top: 0;
+}
+
 a {
   color: $link_color;
   text-decoration: none;
@@ -84,8 +88,8 @@ a {
 
 #main {
   flex: 1 0 auto;
+  margin: 2em 0;
   div.inner {
-    padding: 20px;
     position: relative;
     min-height: 200px;
     .loader {
@@ -108,7 +112,7 @@ div.inner {
 #footer {
   text-align: center;
   .inner {
-    padding: 1.5em;
+    padding: 2em 0;
     border-top: 1px solid #ccc;
   }
 }

@@ -7,7 +7,12 @@
     <ul>
       <li>{{user.email}}</li>
       <li>Joined on {{user.created_at | date}}</li>
-    </li>
+    </ul>
+    <p ng-if="user.username == session.user.username">
+      <md-button ui-sref="settings.profile" class="md-raised">
+        Edit my profile
+      </md-button>
+    </p>
   </div>
   <div class="user-packages">
     <div
@@ -15,7 +20,7 @@
       ng-repeat="package in user.packages">
     </div>
     <p ng-if="user.packages.length == 0" class="info-notice">
-      {{user.username}} hasn't published any packages yet.
+      <strong>{{user.username}}</strong> hasn't published any packages yet.
     </p>
   </div>
 </div>

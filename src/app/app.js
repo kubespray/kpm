@@ -31,6 +31,34 @@ app.config(function($stateProvider, $urlRouterProvider) {
     controller: 'UserController',
     templateUrl: 'app/modules/user/user.html',
   })
+  // Settings (authenticated users only)
+  .state('settings', {
+    url: '/settings',
+    controller: 'SettingsController',
+    templateUrl: 'app/modules/settings/settings.html',
+    abstract: true,
+    onEnter: function($state, Session) {
+      if (!Session.isAuthenticated()) {
+        $state.go('login');
+      }
+    }
+  })
+  .state('settings.profile', {
+    url: '/profile',
+    controller: 'SettingsProfileController',
+    templateUrl: 'app/modules/settings/profile.html'
+  })
+  .state('settings.tokens', {
+    url: '/tokens',
+    controller: 'SettingsTokensController',
+    templateUrl: 'app/modules/settings/tokens.html'
+  })
+  .state('settings.organizations', {
+    url: '/organizations',
+    controller: 'SettingsOrganizationsController',
+    templateUrl: 'app/modules/settings/organizations.html'
+  })
+  // Session
   .state('login', {
     url: '/login',
     title: 'Login',
