@@ -50,18 +50,32 @@
         </md-autocomplete>
       </form>
       <i class="fa fa-search"></i>
-      <nav ng-if="!session.isAuthenticated()">
+      <div ng-if="!session.isAuthenticated()" class="navigation">
         <a ui-sref="login">Login</a> |
         <a ui-sref="signup">Sign-up</a>
-      </nav>
-      <nav ng-if="session.isAuthenticated()">
-        Connected as
-        <a ui-sref="user({username: session.user.username})">
+      </div>
+      <md-menu
+        ng-if="session.isAuthenticated()"
+        md-position-mode="target-right bottom"
+        class="navigation">
+        <a href ng-click="$mdOpenMenu($event)" class="menu-trigger">
           {{session.user.username}}
-        </a> |
-        <a href ng-click="session.logout()">Logout</a>
-        <img ng-src="{{session.user.gravatar}}?s=40" class="gravatar" />
-      </nav>
+          <img ng-src="{{session.user.gravatar}}?s=50" class="gravatar" />
+          <i class="fa fa-chevron-{{menuIsOpen ? 'up' : 'down'}}"></i>
+        </a>
+        <md-menu-content width="4">
+          <md-menu-item>
+            <md-button ui-sref="user({username: session.user.username})">
+              My profile
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="session.logout()">
+              Logout
+            </md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
     </div>
   </header>
   <section id="banner-home" ng-if="stateName == 'home'">
@@ -85,7 +99,12 @@
   <footer id="footer">
     <div class="inner">
       By <a href="http://kubespray.io">kubespray.io</a> |
-      <a href="https://twitter.com/kubespray" title="twitter">@kubespray</a> |
+      <a href="https://twitter.com/kubespray" title="twitter">
+        <i class="fa fa-twitter"></i> twitter
+      </a> |
+      <a href="https://github.com/kubespray/kpm" title="github">
+        <i class="fa fa-github"></i> github
+      </a> |
       <a ui-sref="about">About KPM</a>
     </div>
   </footer>
