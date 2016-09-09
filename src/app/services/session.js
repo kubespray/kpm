@@ -17,12 +17,9 @@ app.service('Session', function($rootScope, $cookies, $state, KpmApi, User) {
       .success(function(data) {
         console.log('[Session] token is valid, logged as ' + data.username);
         self.user = new User(data);
-
-        $state.go('user', {username: self.user.username});
       })
       .error(function(data) {
         delete KpmApi.authentication_token;
-
         console.log('[Session] Token rejected.');
       });
     }
