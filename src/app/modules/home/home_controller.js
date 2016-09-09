@@ -1,20 +1,13 @@
-app.controller('HomeController', function($scope, $state, KpmApi, Session) {
-  if (Session.isAuthenticated()) {
-    // Fetch user's packages
-    $scope.ui.loading = true;
-    KpmApi.get('packages', {
-      username: Session.user.username
-    })
+app.controller('HomeController', function($scope, KpmApi) {
+  $scope.countPackages = function() {
+    KpmApi.get('packages/count')
     .success(function(data) {
-      $scope.ui.loading = false;
-      $scope.packages = data;
+      $scope.count = data.count;
     })
-    .error(function(data) {
-      $scope.ui.loading = false;
+    .error(function() {
+
     });
-  }
-  else {
-    // Redirect unauthenticated users to login page
-    $state.go('login');
-  }
+  };
+
+  $scope.countPackages();
 });

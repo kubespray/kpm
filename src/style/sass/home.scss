@@ -1,9 +1,26 @@
 div.home {
-  display: flex;
-  div.user-packages {
-    flex: 1;
+  p {
+    text-align: justify;
   }
-  div.user-profile {
-    margin-left: 2em;
+  ul.columns {
+    display: flex;
+    padding: 0;
+    margin-left: -1em;
+    margin-right: -1em;
+    li {
+      flex: 1;
+      margin: 1em;
+      display: block;
+      h2 {
+        font-size: 20px;
+      }
+    }
+  }
+  p.explore {
+    text-align: center;
+    .md-button {
+      font-size: 30px;
+      padding: 0.5em;
+    }
   }
 }

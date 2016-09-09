@@ -20,18 +20,9 @@
 <body ng-cloak ng-controller="AppController">
   <header id="header">
     <div class="inner">
-      <nav ng-if="!session.isAuthenticated()">
-        <a ui-sref="login">Login</a> |
-        <a ui-sref="signup">Sign-up</a>
-      </nav>
-      <nav ng-if="session.isAuthenticated()">
-        <img ng-src="{{session.user.gravatar}}?s=40" class="gravatar" />
-        Connected as
-        <a ui-sref="user({username: session.user.username})">
-          {{session.user.username}}
-        </a> |
-        <a href ng-click="session.logout()">Logout</a>
-      </nav>
+      <a ui-sref="home">
+        <img src="images/kubespray-80px.png" alt="logo" />
+      </a>
       <form ng-controller="SearchController as ctrl"
         ng-submit="ctrl.submit()" class="search">
         <md-autocomplete
@@ -59,21 +50,36 @@
         </md-autocomplete>
       </form>
       <i class="fa fa-search"></i>
+      <nav ng-if="!session.isAuthenticated()">
+        <a ui-sref="login">Login</a> |
+        <a ui-sref="signup">Sign-up</a>
+      </nav>
+      <nav ng-if="session.isAuthenticated()">
+        Connected as
+        <a ui-sref="user({username: session.user.username})">
+          {{session.user.username}}
+        </a> |
+        <a href ng-click="session.logout()">Logout</a>
+        <img ng-src="{{session.user.gravatar}}?s=40" class="gravatar" />
+      </nav>
     </div>
   </header>
-  <section id="banner">
+  <section id="banner-home" ng-if="stateName == 'home'">
     <div class="inner">
       <img src="images/kubespray-logo.png" class="logo" />
       <h1>KPM, by Kubespray</h1>
       <p class="description">Registry of kubernetes ready to use applications</p>
     </div>
   </section>
-  <section id="main">
+  <section id="banner-small" ng-if="stateName != 'home'">
     <div class="inner">
-      <ui-view></ui-view>
-      <div layout="row" class="loader" ng-if="ui.loading">
-        <md-progress-circular md-mode="indeterminate" md-diameter="150"></md-progress-circular>
-      </div>
+      <a ui-sref="packages">Browse packages</a>
+    </div>
+  </section>
+  <section id="main">
+    <div ui-view class="inner"></div>
+    <div layout="row" class="loader" ng-if="ui.loading">
+      <md-progress-circular md-mode="indeterminate" md-diameter="200"></md-progress-circular>
     </div>
   </section>
   <footer id="footer">

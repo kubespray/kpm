@@ -19,6 +19,7 @@ app.controller('PackagesController', function($scope, $stateParams, KpmApi) {
       $scope.packages = data;
     })
     .error(function(data) {
+      $scope.error = $scope.build_error(data);
       $scope.ui.loading = false;
     });
   };
