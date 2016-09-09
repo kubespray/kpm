@@ -1,0 +1,12 @@
+<div ng-if="organization">
+  <h2>{{organization.name}}</h2>
+  <p>
+    {{organization.description}}
+  </p>
+  <p>
+    Joined on {{organization.created_at | date}}
+  </p>
+</div>
+<p class="error-notice" ng-if="!organization">
+  {{error}}
+</p>
