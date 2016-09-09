@@ -8,6 +8,7 @@ app.controller('SearchController', function($scope, $state, $q, KpmApi) {
    */
   this.submit = function() {
     $state.go('packages', {search: this.searchText});
+    this.searchText = null;
   };
 
   /**
@@ -16,6 +17,7 @@ app.controller('SearchController', function($scope, $state, $q, KpmApi) {
    */
   this.itemSelected = function(item) {
     $state.go('package', {name: item.name});
+    this.searchText = null;
   };
 
   /**
