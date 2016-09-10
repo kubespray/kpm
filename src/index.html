@@ -61,12 +61,17 @@
         <a href ng-click="$mdOpenMenu($event)" class="menu-trigger">
           {{session.user.username}}
           <img ng-src="{{session.user.gravatar}}?s=50" class="gravatar" />
-          <i class="fa fa-chevron-{{menuIsOpen ? 'up' : 'down'}}"></i>
+          <i class="fa fa-chevron-down"></i>
         </a>
         <md-menu-content width="4">
           <md-menu-item>
             <md-button ui-sref="user({username: session.user.username})">
               My profile
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ui-sref="settings.profile">
+              Settings
             </md-button>
           </md-menu-item>
           <md-menu-item>
