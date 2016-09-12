@@ -1,4 +1,4 @@
-app.service('Session', function($rootScope, KpmApi, User) {
+app.service('Session', function($rootScope, $state, KpmApi, User) {
 
   var self = this;
 
@@ -38,10 +38,9 @@ app.service('Session', function($rootScope, KpmApi, User) {
       delete self.user;
       KpmApi.authorization_token = null;
 
-      $rootScope.$broadcast('logout_success', data);
+      $state.go('home');
     })
     .error(function(data) {
-      $rootScope.$broadcast('logout_failure', data);
     });
   };
 
@@ -51,5 +50,10 @@ app.service('Session', function($rootScope, KpmApi, User) {
    */
   this.isAuthenticated = function() {
     return KpmApi.authorization_token != null;
+  };
+
+  this.isCurrent = function(token) {
+    // FIXME: s/authorization/authentication
+    return KpmApi.authorization_token === token.authentication_token;
   };
 });
