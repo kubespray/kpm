@@ -1,7 +1,7 @@
 'use strict';
 
 app.controller('PackageDetailsController', function($scope, $stateParams,
-  KpmApi) {
+      KpmApi, Package) {
 
   // Methods
 
@@ -29,7 +29,7 @@ app.controller('PackageDetailsController', function($scope, $stateParams,
     KpmApi.get('packages/' + package_name)
     .success(function(data) {
       $scope.ui.loading = false;
-      $scope.package = data;
+      $scope.package = new Package(data);
     })
     .error(function(data) {
       $scope.ui.loading = false;

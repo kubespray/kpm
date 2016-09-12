@@ -1,6 +1,7 @@
 'use strict';
 
-app.controller('PackagesController', function($scope, $stateParams, KpmApi) {
+app.controller('PackagesController', function($scope, $stateParams, KpmApi,
+      Package) {
 
   $scope.availableSorts = {
     'Downloads': {sort_descending: true, sort_order: 'downloads'},
@@ -16,7 +17,9 @@ app.controller('PackagesController', function($scope, $stateParams, KpmApi) {
     KpmApi.get('packages', $scope.queryParams)
     .success(function(data) {
       $scope.ui.loading = false;
-      $scope.packages = data;
+      $scope.packages = data.map(function(hash) {
+        return new Package(hash);
+      });
     })
     .error(function(data) {
       $scope.error = $scope.build_error(data);

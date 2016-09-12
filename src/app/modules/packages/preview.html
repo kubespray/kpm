@@ -1,10 +1,16 @@
 <div class="package">
+  <div class="package-meta">
+    <span>
+      <i class="fa fa-download"></i> Downloads: {{package.downloads}}
+    </span>
+    <span>
+      <i class="fa fa-star"></i> Stars: 0
+    </span>
+  </div>
+  <img ng-src="{{package.icon_url}}" class="package-icon" />
   <h2>
-    <a ui-sref="package({name: package.name})">{{package.name}}</a>
+    <a ui-sref="organization({name: package.organization})">{{package.organization}}</a> /
+    <a ui-sref="package({name: package.name})">{{package.appname}}</a>
   </h2>
-  <ul>
-    <li>Author: <code>{{package.author}}</code></li>
-    <li>Version: <code>{{package.version}}</code></li>
-    <li>Downloads: <code>{{package.downloads}}</code></li>
-  </ul>
+  <code>v{{package.version}}</code> - Updated on {{package.updated_at | date}}
 </div>

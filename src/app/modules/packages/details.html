@@ -1,45 +1,57 @@
 <div class="package" ng-if="package">
+  <div class="package-meta">
+    <span>
+      <i class="fa fa-download"></i> Downloads: {{package.downloads}}
+    </span>
+    <span>
+      <i class="fa fa-star"></i> Stars: 0
+    </span>
+  </div>
+  <img ng-src="{{package.icon_url}}" class="package-icon" />
   <h2>
-    {{package.name}}
+    <a ui-sref="organization({name: package.organization})">{{package.organization}}</a> /
+    <a ui-sref="package({name: package.name})">{{package.appname}}</a>
   </h2>
   <p>
     {{package.description}}
   </p>
-    <ul>
-      <li>Author: <code>{{package.author}}</code></li>
-      <li>Version: <code>{{package.version}}</code></li>
-      <li>Available versions:
-        <code ng-repeat="version in package.available_versions">
-          <a ui-sref="package({name: package.name + '/' + version})">{{version}}</a>
-        </code>
-      </li>
-      <li>Downloads: <code>{{package.downloads}}</code></li>
-    </ul>
-    <h3>Dependencies</h3>
-    <ol>
-      <li ng-repeat="dependency in package.dependencies">
-        <a ui-sref="package({name: dependency})">{{dependency}}</a>
-      </li>
-    </ol>
-    <h3>Templates</h3>
-    <ul>
-      <li ng-repeat="resource in package.manifest.resources">
-        <code>{{resource.type}}</code>
-        {{resource.name}}
-        <a href ng-click="toggleResource(resource)">{{resource.file}}</a>
-        <pre ng-if="resource.content"><code prism="yaml">{{resource.content}}</code></pre>
-      </li>
-    </ul>
-    <a ng-href="{{downloadUrl()}}" class="md-button md-raised">
-      <md-tooltip>
-        Generate tarball
-      </md-tooltip>
-      Download
-    </a>
+  <p>
+    <code>v{{package.version}}</code> - Updated on {{package.updated_at | date}}
+  </p>
+  <p>
+    Available versions:
+    <code ng-repeat="version in package.available_versions">
+      <a ui-sref="package({name: package.name + '/' + version})">{{version}}</a>
+    </code>
+  </p>
+  <h3>Dependencies</h3>
+  <ol>
+    <li ng-repeat="dependency in package.dependencies">
+      <a ui-sref="package({name: dependency})">{{dependency}}</a>
+    </li>
+  </ol>
+  <h3>Templates</h3>
+  <ol>
+    <li ng-repeat="resource in package.manifest.resources">
+      <code>{{resource.type}}</code>
+      {{resource.name}}
+      <a href ng-click="toggleResource(resource)">{{resource.file}}</a>
+      <pre ng-if="resource.content"><code prism="yaml">{{resource.content}}</code></pre>
+    </li>
+  </ol>
+  <!-- API BROKEN
+  <a ng-href="{{downloadUrl()}}" class="md-button md-raised">
+    <md-tooltip>
+      Generate tarball
+    </md-tooltip>
+    Download
+  </a>
+  -->
 </div>
 
 <p class="error-notice" ng-if="error">
   {{error}}
 </p>
 
-<a ui-sref="packages">Back</a>
+<md-button class="md-raised" ui-sref="packages">Back</md-button>
+
