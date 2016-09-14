@@ -9,7 +9,8 @@
   </div>
   <img ng-src="{{package.icon_url}}" class="package-icon" />
   <h2>
-    <a ui-sref="organization({name: package.organization})">{{package.organization}}</a> /
+    <a ui-sref="organization({name: package.organization})" class="organization-name">
+      {{package.organization}}</a> /
     <a ui-sref="package({name: package.name})">{{package.appname}}</a>
   </h2>
   <p>
@@ -39,7 +40,7 @@
       <pre ng-if="resource.content"><code prism="yaml">{{resource.content}}</code></pre>
     </li>
   </ol>
-  <a ng-href="{{downloadUrl()}}" class="md-button md-raised">
+  <a href ng-click="downloadTarball($event)" class="md-button md-raised">
     <md-tooltip>
       Generate tarball
     </md-tooltip>

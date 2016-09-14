@@ -13,6 +13,12 @@
   background-color: #f0f0f0;
   h2 a {
     color: inherit;
+    &.organization-name {
+      font-weight: normal;
+    }
+    &:hover {
+      text-decoration: underline;
+    }
   }
   &:hover {
     background-color: white;
