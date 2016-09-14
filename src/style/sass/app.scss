@@ -49,13 +49,13 @@ pre > code {
         transition: background 0.4s;
         text-shadow: 0 1px 0 white;
       }
-      &.md-open a.menu-trigger {
+      &._md-open a.menu-trigger {
         background: #eee;
       }
       i.fa {
         transition: transform 0.4s;
       }
-      &.md-open i.fa {
+      &._md-open i.fa {
         transform: rotate(180deg);
       }
       img.gravatar {
@@ -64,7 +64,7 @@ pre > code {
         margin: 0 0.5em;
         transition: box-shadow 0.4s;
       }
-      &.md-open img.gravatar {
+      &._md-open img.gravatar {
         box-shadow: 0 0 0 4px $kubegray;
       }
     }

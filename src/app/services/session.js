@@ -1,6 +1,32 @@
-app.service('Session', function($rootScope, $state, KpmApi, User) {
+'use strict';
+
+app.service('Session', function($rootScope, $cookies, $state, KpmApi, User) {
 
   var self = this;
+
+  /**
+   * Authenticate user on KPM API from token
+   */
+  this.connectFromCookie = function() {
+    var token = $cookies.get('authentication_token');
+    if (token) {
+      console.log('[Session] token ' + token + ' found in cookie, checking status...');
+      KpmApi.authentication_token = token;
+
+      KpmApi.get('account/status')
+      .success(function(data) {
+        console.log('[Session] token is valid, logged as ' + data.username);
+        self.user = new User(data);
+
+        $state.go('user', {username: self.user.username});
+      })
+      .error(function(data) {
+        delete KpmApi.authentication_token;
+
+        console.log('[Session] Token rejected.');
+      });
+    }
+  };
 
   /**
    * Authenticate user on KPM API
@@ -16,13 +42,15 @@ app.service('Session', function($rootScope, $state, KpmApi, User) {
     })
     .success(function(data) {
       self.user = new User(data);
-      KpmApi.authorization_token = data.token;
+      KpmApi.authentication_token = data.token;
+
+      $cookies.put('authentication_token', data.token);
 
       // Broadcast success event
       $rootScope.$broadcast('login_success', data);
     })
     .error(function(data) {
-      KpmApi.authorization_token = null;
+      delete KpmApi.authentication_token;
 
       // Broadcast failure event
       $rootScope.$broadcast('login_failure', data);
@@ -36,8 +64,9 @@ app.service('Session', function($rootScope, $state, KpmApi, User) {
     KpmApi.delete('users/logout')
     .success(function(data) {
       delete self.user;
-      KpmApi.authorization_token = null;
+      delete KpmApi.authentication_token;
 
+      $cookies.remove('authentication_token');
       $state.go('home');
     })
     .error(function(data) {
@@ -49,11 +78,10 @@ app.service('Session', function($rootScope, $state, KpmApi, User) {
    * @return {boolean}
    */
   this.isAuthenticated = function() {
-    return KpmApi.authorization_token != null;
+    return KpmApi.authentication_token != null;
   };
 
   this.isCurrent = function(token) {
-    // FIXME: s/authorization/authentication
-    return KpmApi.authorization_token === token.authentication_token;
+    return KpmApi.authentication_token === token.authentication_token;
   };
 });

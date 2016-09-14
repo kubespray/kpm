@@ -24,10 +24,10 @@ app.service('KpmApi', function($http) {
     config.url = Config.backend_url + target;
     config.method = method;
 
-    // Apply authorization token if any
-    if (this.authorization_token) {
+    // Apply Authorization header if token provided
+    if (this.authentication_token) {
       config.headers =  {
-        'Authorization': this.authorization_token
+        'Authorization': this.authentication_token
       }
     }
     return $http(config);

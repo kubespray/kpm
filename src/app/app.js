@@ -1,6 +1,6 @@
 'use strict';
 
-var app = angular.module('kpm-ui', ['ngMaterial', 'ui.router']);
+var app = angular.module('kpm-ui', ['ngCookies', 'ngMaterial', 'ui.router']);
 
 app.config(function($stateProvider, $urlRouterProvider, $mdThemingProvider) {
 
@@ -114,11 +114,7 @@ app.controller('AppController', function($rootScope, $sce, Session) {
     return string + ' (╯°□°）╯︵ ┻━┻)';
   };
 
-  $rootScope.$on('$mdMenuOpen', function() {
-    $rootScope.menuIsOpen = true;
-  });
-  $rootScope.$on('$mdMenuClose', function() {
-    $rootScope.menuIsOpen = false;
-  });
+  // Attempt to auto-connect user from cookies
+  Session.connectFromCookie();
 });
 
