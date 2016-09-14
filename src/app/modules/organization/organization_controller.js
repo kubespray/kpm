@@ -1,8 +1,13 @@
 'use strict';
 
-app.controller('OrganiaztionController', function($scope, $stateParams, KpmApi) {
+app.controller('OrganiaztionController', function($scope, $stateParams, KpmApi,
+      User) {
+
   // Methods
 
+  /**
+   * Load organization and associated users
+   */
   $scope.loadOrganization = function(name) {
     KpmApi.get('organizations/' + name)
     .success(function(data) {
@@ -12,6 +17,15 @@ app.controller('OrganiaztionController', function($scope, $stateParams, KpmApi) 
       $scope.error = $scope.build_error(data);
     });
 
+    KpmApi.get('/organizations/' + name + '/users')
+    .success(function(data) {
+      $scope.users = data.map(function(hash) {
+        return new User(hash);
+      });
+    })
+    .error(function(data) {
+      $scope.error = $scope.build_error(data);
+    });
   };
 
   // Init

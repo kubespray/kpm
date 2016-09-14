@@ -1,4 +1,4 @@
-<div ng-if="organization">
+<div ng-if="organization" class="organization">
   <h2>{{organization.name}}</h2>
   <p>
     {{organization.description}}
@@ -6,6 +6,17 @@
   <p>
     Joined on {{organization.created_at | date}}
   </p>
+  <h3><i class="fa fa-users"></i> Members</h3>
+  <div class="organization-users">
+    <span ng-repeat="user in users" class="{{user.perms}}">
+      <a ui-sref="user({username: user.username})">
+        <img ng-src="{{user.gravatar}}s=50" />
+        <md-tooltip>
+        {{user.username}} ({{user.perms}})
+        </md-tooltip>
+      </a>
+    </span>
+  </div>
 </div>
 <p class="error-notice" ng-if="!organization">
   {{error}}
