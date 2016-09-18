@@ -1,9 +1,14 @@
 'use strict';
 
-app.controller('PackageDetailsController', function($scope, $stateParams,
+app.controller('PackageDetailsController', function($scope, $state, $stateParams,
       $mdDialog, KpmApi, Package) {
 
   // Methods
+
+  $scope.selectVersion = function() {
+    var name = $scope.package.name + '/' + $scope.package.version;
+    $state.go('package', {name: name});
+  };
 
   $scope.toggleResource = function(resource) {
     if (resource.content) {

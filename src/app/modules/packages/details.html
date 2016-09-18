@@ -21,9 +21,13 @@
   </p>
   <p>
     Available versions:
-    <code ng-repeat="version in package.available_versions">
-      <a ui-sref="package({name: package.name + '/' + version})">{{version}}</a>
-    </code>
+    <md-input-container>
+      <md-select ng-model="package.version" ng-change="selectVersion()" placeholder="version">
+        <md-option ng-repeat="version in package.available_versions">
+          {{version}}
+        </md-option>
+      </md-select>
+    </md-input-container>
   </p>
   <h3>Dependencies</h3>
   <ol>
