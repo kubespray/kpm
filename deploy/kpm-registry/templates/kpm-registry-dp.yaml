@@ -31,10 +31,6 @@ spec:
         - name: kpm-registry
           image: {{image}}
           imagePullPolicy: Always
-          resources:
-            limits:
-              cpu: 1
-#              memory: 6Gi
           env:
             - name: KPM_URI
               value: {{kpm_uri}}
