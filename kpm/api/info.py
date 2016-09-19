@@ -26,6 +26,23 @@ def pre_request_logging():
     )
 
 
+@info_app.route("/")
+def index_discovery():
+    host = request.url_root
+    domain = request.headers['Host']
+    return """<html lang="en">
+    <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="kpm-package" content="{domain}/{{name}} {host}/api/v1/packages/{{name}}/pull">
+    </head>
+    <body>
+    </body>
+    </html>""".format(domain=domain, host=host)
+
+    return jsonify({"kpm-api": kpm.__version__})
+
+
 @info_app.route("/version")
 def version():
     return jsonify({"kpm-api": kpm.__version__})
