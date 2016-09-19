@@ -5,7 +5,6 @@ from HTMLParser import HTMLParser
 
 package_regexp = "(.+?)/(.+)"
 
-
 class MetaHTMLParser(HTMLParser):
     def __init__(self, variables):
         self.meta = {}
@@ -32,7 +31,7 @@ class MetaHTMLParser(HTMLParser):
 def ishosted(package):
     m = re.search(package_regexp, package)
     host = m.group(1)
-    if "." in host:
+    if "." in host or 'localhost' in host:
         return True
     else:
         return False

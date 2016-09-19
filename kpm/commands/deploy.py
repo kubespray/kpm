@@ -21,7 +21,6 @@ class DeployCmd(CommandBase):
         self.version = options.version
         self.tmpdir = options.tmpdir
         self.variables = options.variables
-        self.offline = options.offline
         self.status = None
         super(DeployCmd, self).__init__(options)
 
@@ -45,14 +44,12 @@ class DeployCmd(CommandBase):
                             default=None)
         parser.add_argument("--force", action='store_true', default=False,
                             help="force upgrade, delete and recreate resources")
-        parser.add_argument("--offline", action='store_true', default=False,
-                            help="Deploy from a tarball")
-        parser.add_argument("-H", "--registry-host", nargs="?", default=kpm.registry.DEFAULT_REGISTRY,
-                            help='registry API url')
+        parser.add_argument("-H", "--registry-host", nargs="?", default=None,
+                            help='Generate resources server-side')
 
     def _packages(self):
         packages = None
-        if self.offline:
+        if self.registry_host is None:
             k = KubJsonnet(self.package,
                            endpoint=self.registry_host,
                            variables=self.variables,
