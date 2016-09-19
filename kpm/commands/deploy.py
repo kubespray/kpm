@@ -16,6 +16,7 @@ class DeployCmd(CommandBase):
         self.shards = options.shards
         self.force = options.force
         self.dry_run = options.dry_run
+        self.delegate = options.delegate
         self.namespace = options.namespace
         self.api_proxy = options.api_proxy
         self.version = options.version
@@ -31,6 +32,8 @@ class DeployCmd(CommandBase):
                             help="directory used to extract resources")
         parser.add_argument("--dry-run", action='store_true', default=False,
                             help="do not create the resources on kubernetes")
+        parser.add_argument("--delegate", action='store_true', default=False,
+                            help="Delegate resource generation to the server ")
         parser.add_argument("--namespace", nargs="?",
                             help="kubernetes namespace", default=None)
         parser.add_argument("--api-proxy", nargs="?",
@@ -49,7 +52,7 @@ class DeployCmd(CommandBase):
 
     def _packages(self):
         packages = None
-        if self.registry_host is None:
+        if self.delegate is False:
             k = KubJsonnet(self.package,
                            endpoint=self.registry_host,
                            variables=self.variables,
