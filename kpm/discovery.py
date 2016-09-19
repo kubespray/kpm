@@ -29,19 +29,23 @@ class MetaHTMLParser(HTMLParser):
                 self.meta[name].append(source)
 
 
-def ishosted(package):
+def split_package_name(package):
     m = re.search(package_regexp, package)
-    host = m.group(1)
-    if "." in host:
+    host, name = (m.group(1), m.group(2))
+    return (host, name)
+
+
+def ishosted(package):
+    host, _ = split_package_name(package)
+    if "." in host or 'localhost' in host:
         return True
     else:
         return False
 
 
 def discover_sources(package, version=None, secure=False):
-    m = re.search(package_regexp, package)
-    host, name = (m.group(1), m.group(2))
     schemes = ["https://", "http://"]
+    host, name = split_package_name(package)
     for scheme in schemes:
         url = scheme + host
         try:

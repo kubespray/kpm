@@ -12,7 +12,7 @@ import json
 import kpm.registry as registry
 import kpm.packager as packager
 from kpm.utils import mkdir_p
-
+from kpm.discovery import ishosted, split_package_name
 
 logger = logging.getLogger(__name__)
 
@@ -114,6 +114,10 @@ class KubBase(object):
         self._dependencies = []
         for dep in self.manifest.deploy:
             if dep['name'] != '$self':
+                # if the parent app has discovery but not child,
+                # use the same domain to the child
+                if ishosted(self._deploy_name) and not ishosted(dep['name']):
+                    dep['name'] = "%s/%s" % (split_package_name(self._deploy_name)[0], dep['name'])
                 variables = dep.get('variables', {})
                 variables['kpmparent'] = {'name': self.name,
                                           'shards': self.shards,

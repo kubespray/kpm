@@ -45,6 +45,7 @@ def test_error():
 @registry_app.route("/api/v1/packages/<path:package>/pull", methods=['GET'], strict_slashes=False)
 def pull(package):
     current_app.logger.info("pull %s", package)
+    current_app.logger.info("headers %s", request.headers)
     values = getvalues()
     version = values.get("version", 'latest')
     r = kpm.api.impl.registry.pull(package, version)

@@ -17,7 +17,7 @@ class Config(object):
 
 class ProductionConfig(Config):
     """ Production configuration """
-    KPM_URI = 'https://api.kpm.sh'
+    KPM_URI = "http://localhost:5000"
     KPM_BACKEND = 'false'
 
 
