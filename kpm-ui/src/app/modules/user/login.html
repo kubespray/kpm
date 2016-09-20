@@ -1,0 +1,23 @@
+<h2>Login</h2>
+<form class="app-form" ng-submit="submit()">
+  <p class="error-notice" ng-if="error">
+    {{error}}
+  </p>
+  <div class="row">
+    <label>
+      <span>Username</span>
+      <input type="text" name="username" ng-model="username" required />
+    </label>
+  </div>
+  <div class="row">
+    <label>
+      <span>Password</span>
+      <input type="password" name="password" ng-model="password" required />
+    </label>
+  </div>
+  <div class="row">
+    <md-button type="submit" class="md-primary md-raised">
+      Login
+    </md-button>
+  </div>
+</form>
