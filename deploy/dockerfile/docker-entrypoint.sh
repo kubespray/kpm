@@ -1,6 +1,4 @@
 #!/bin/sh
 
-gulp build $KPMUI_ENV
-
-gulp build --config $KPMUI_ENV
-gulp serve --dir build
+/opt/kpm-ui/node_modules/.bin/gulp build --dir build --config $KPMUI_ENV
+/opt/kpm-ui/node_modules/.bin/gulp serve --dir build
