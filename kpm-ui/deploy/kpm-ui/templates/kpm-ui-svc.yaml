@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: "Service"
+metadata:
+  name: kpm-ui
+  labels:
+    k8s-app: kpm-ui
+spec:
+  type: NodePort
+  selector:
+    k8s-app: kpm-ui
+  ports:
+    - name: kpm-ui
+      port: 80
+      targetPort: 8081
+      protocol: TCP

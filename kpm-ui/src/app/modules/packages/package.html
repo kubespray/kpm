@@ -1,0 +1,53 @@
+<div class="package" ng-if="package">
+  <ng-include src="'app/modules/packages/_actions.html'"></ng-include>
+  <img ng-src="{{package.icon_url}}" class="package-icon" />
+  <h2>
+    <a ui-sref="organization({name: package.organization})" class="organization-name">
+      {{package.organization}}</a> /
+    <a ui-sref="package({name: package.name})">{{package.appname}}</a>
+  </h2>
+  <p>
+    {{package.description}}
+  </p>
+  <p>
+    <code>v{{package.version}}</code> - Updated on {{package.updated_at | date}}
+  </p>
+  <p>
+    Available versions:
+    <md-input-container>
+      <md-select ng-model="package.version" ng-change="selectVersion()" placeholder="version">
+        <md-option ng-repeat="version in package.available_versions">
+          {{version}}
+        </md-option>
+      </md-select>
+    </md-input-container>
+  </p>
+  <h3>Dependencies</h3>
+  <ol>
+    <li ng-repeat="dependency in package.dependencies">
+      <a ui-sref="package({name: dependency})">{{dependency}}</a>
+    </li>
+  </ol>
+  <h3>Templates</h3>
+  <ol>
+    <li ng-repeat="resource in package.manifest.resources">
+      <code>{{resource.type}}</code>
+      {{resource.name}}
+      <a href ng-click="toggleResource(resource)">{{resource.file}}</a>
+      <pre ng-if="resource.content"><code prism="yaml">{{resource.content}}</code></pre>
+    </li>
+  </ol>
+  <a href ng-click="downloadTarball($event)" class="md-button md-raised">
+    <md-tooltip>
+      Generate templates in tarball
+    </md-tooltip>
+    Generate
+  </a>
+</div>
+
+<p class="error-notice" ng-if="error">
+  {{error}}
+</p>
+
+<md-button class="md-raised" ui-sref="packages">Back</md-button>
+

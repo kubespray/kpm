@@ -1,0 +1,10 @@
+<div class="package">
+  <ng-include src="'app/modules/packages/_actions.html'"></ng-include>
+  <img ng-src="{{package.icon_url}}" class="package-icon" />
+  <h2>
+    <a ui-sref="organization({name: package.organization})" class="organization-name">
+      {{package.organization}}</a> /
+    <a ui-sref="package({name: package.name})">{{package.appname}}</a>
+  </h2>
+  <code>v{{package.version}}</code> - Updated on {{package.updated_at | date}}
+</div>

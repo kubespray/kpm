@@ -1,0 +1,35 @@
+<h2>Create a new account</h2>
+<form class="app-form" ng-submit="submit()">
+  <ul class="error-notice" ng-if="errors">
+    <li ng-repeat="error in errors">{{error}}</li>
+  </ul>
+  <div class="row">
+    <label>
+      <span>Username</span>
+      <input type="text" ng-model="username" required />
+    </label>
+  </div>
+  <div class="row">
+    <label>
+      <span>E-mail</span>
+      <input type="email" ng-model="email" required />
+    </label>
+  </div>
+  <div class="row">
+    <label>
+      <span>Password</span>
+      <input type="password" ng-model="password" required />
+    </label>
+  </div>
+  <div class="row">
+    <label>
+      <span>Password confirmation</span>
+      <input type="password" ng-model="password_confirmation" required />
+    </label>
+  </div>
+  <div class="row">
+    <md-button type="submit" class="md-raised md-primary">
+      Sign-up
+    </md-button>
+  </div>
+</form>

@@ -1,0 +1,44 @@
+@import 'theme';
+
+div.settings {
+  display: flex;
+  .sidebar {
+    width: 25%;
+    border-top: 1px solid #eee;
+    a {
+      display: block;
+      line-height: 2em;
+      padding: 0 1em;
+      border-bottom: 1px solid #eee;
+      border-left: 4px solid transparent;
+      transition: all 0.2s;
+      &:hover {
+        background: #f0f0f0;
+      }
+      &.active {
+        border-left-color: $link_color;
+        text-indent: 1em;
+        cursor: default;
+      }
+    }
+  }
+  div.settings-content {
+    margin-left: 2em;
+    flex: 1;
+  }
+
+  table.tokens {
+    border-collapse: collapse;
+    width: 100%;
+    th, td {
+      text-align: left;
+      padding: 4px;
+    }
+    td {
+      code.current {
+        background: $link_color;
+        color: white;
+      }
+    }
+  }
+}

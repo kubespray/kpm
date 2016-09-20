@@ -1,0 +1,31 @@
+<h2>Tokens</h2>
+
+<table class="tokens">
+  <tr>
+    <th>Token</th>
+    <th>Created at</th>
+    <th>IP</th>
+    <!-- <th>Delete</th> -->
+  </tr>
+  <tr ng-repeat="token in tokens">
+    <td>
+      <code ng-class="{current: session.isCurrent(token)}">
+        {{token.authentication_token}}
+        <md-tooltip ng-if="session.isCurrent(token)">
+          This is your current token
+        </md-tooltip>
+      </code>
+    </td>
+    <td>{{token.created_at | date}}</td>
+    <td>{{token.ip}}</td>
+    <td>
+      <!--
+      <a href ng-click="deleteToken(token)" class="fa fa-times"></a>
+      -->
+    </td>
+  </tr>
+</table>
+
+<md-button class="md-raised" ng-click="loadTokens()">
+  Refresh
+</md-button>

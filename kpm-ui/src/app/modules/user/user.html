@@ -1,0 +1,31 @@
+<div class="user" ng-if="user">
+  <div class="user-profile">
+    <h2>{{user.username}}</h2>
+    <p>
+      <img ng-src="{{user.gravatar}}?s=200" />
+    </p>
+    <ul>
+      <li>{{user.email}}</li>
+      <li>Joined on {{user.created_at | date}}</li>
+    </ul>
+    <p ng-if="user.username == session.user.username">
+      <md-button ui-sref="settings.profile" class="md-raised">
+        Edit my profile
+      </md-button>
+    </p>
+  </div>
+  <div class="user-packages">
+    <div
+      ng-include="'app/modules/packages/preview.html'"
+      ng-repeat="package in user.packages"
+      ng-controller="PackageController"
+      ng-init="setPackage(package)">
+    </div>
+    <p ng-if="user.packages.length == 0" class="info-notice">
+      <strong>{{user.username}}</strong> hasn't published any packages yet.
+    </p>
+  </div>
+</div>
+<p class="error-notice" ng-if="error">
+  {{error}}
+</p>

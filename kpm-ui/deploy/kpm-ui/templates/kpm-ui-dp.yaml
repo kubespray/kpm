@@ -1,0 +1,33 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kpm-ui
+  labels: {'k8s-app': 'kpm-ui'}
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels: {'k8s-app': 'kpm-ui'}
+    spec:
+      containers:
+        - name: kpm-ui
+          image: {{image}}
+          resources:
+            limits:
+              cpu: 500m
+              memory: 300Mi
+          env:
+            - name: "KPMUI_ENV"
+              value: "{{env}}"
+          ports:
+            - name: kpm-ui
+              protocol: TCP
+              containerPort: 8081
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8081
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          command:
+            - /opt/kpm-ui/docker-entrypoint.sh
