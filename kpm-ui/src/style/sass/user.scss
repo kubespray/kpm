@@ -1,0 +1,9 @@
+div.user {
+  display: flex;
+  div.user-profile {
+    margin-right: 2em;
+  }
+  div.user-packages {
+    flex: 1;
+  }
+}
