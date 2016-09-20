@@ -1,0 +1,23 @@
+---
+package:
+  name: kpm/kpm-ui
+  author: Antoine Legrand
+  version: 0.9.0
+  description: kpm-ui
+  license: MIT
+
+variables:
+  image: registry.kubespray.io/kpm-ui:v0.9.0
+  env: prod
+
+resources:
+  - file: kpm-ui-dp.yaml
+    name: kpm-ui
+    type: deployment
+
+  - file: kpm-ui-svc.yaml
+    name: kpm-ui
+    type: svc
+
+deploy:
+  - name: $self
