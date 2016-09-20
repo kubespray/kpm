@@ -99,12 +99,9 @@ class KubBase(object):
                 packager.pack_kub(filepath)
             with open(filepath, "rb") as f:
                 return f.read()
-
-        elif parse.scheme == "":
+        else:
             self._registry = registry.Registry(endpoint=self.endpoint)
             return self._registry.pull(self._deploy_name, self._deploy_version)
-        else:
-            raise ValueError("Unknown package (%s) scheme: %s" % (self._deploy_name, parse.scheme))
 
     @property
     def kubClass(self):
