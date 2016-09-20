@@ -25,11 +25,12 @@ class PackageBase(object):
     def channels(self, channel_class):
         """ Returns all available channels for a package """
         channel_names = channel_class.all(self.package)
-        result = {}
+        result = []
         for channel in channel_names:
-            c = channel_class(channel, self.package, self.__class__)
+            c = channel_class(channel, self.package)
             releases = c.releases()
-            result[str(channel)] = {"releases": releases, "channel": channel, "current": c.current_release(releases)}
+            if self.version in releases:
+                result.append(channel)
         return result
 
     @property
@@ -87,6 +88,8 @@ class PackageBase(object):
     @classmethod
     def get_version(self, package, version_query, stable=False):
         versions = self.all_versions(package)
+        if not versions:
+            self._raise_not_found(package)
         if version_query is None or version_query == 'latest':
             return last_version(versions, stable)
         else:
@@ -138,8 +141,19 @@ class PackageBase(object):
         raise NotImplementedError
 
     @classmethod
-    def delete(self, package, version):
+    def _delete(self, package, version):
         raise NotImplementedError
+
+    @classmethod
+    def _delete_from_channels(self, package, version, channel_class):
+        raise NotImplementedError
+
+    @classmethod
+    def delete(self, package, version, channel_class):
+        self._delete_from_channels(package, version, channel_class)
+        self._delete(package, version)
+        if not self.all_versions(package):
+            self.remove_index(package)
 
     @classmethod
     def all_versions(self, package):

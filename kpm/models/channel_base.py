@@ -23,6 +23,17 @@ class ChannelBase(object):
         raise NotImplementedError
 
     @classmethod
+    def all_channels(self, package):
+        """ Returns all available channels for a package """
+        channel_names = self.all(package)
+        result = {}
+        for channel in channel_names:
+            c = self(channel, package)
+            releases = c.releases()
+            result[str(channel)] = {"releases": releases, "channel": channel, "current": c.current_release(releases)}
+        return result
+
+    @classmethod
     def all(self, package):
         raise NotImplementedError
 
@@ -57,9 +68,7 @@ class ChannelBase(object):
             self.save()
         return self._add_release(version)
 
-    def remove_release(self, version, package_class):
-        if self._check_release(version, package_class) is False:
-            raise ValueError("Release %s doesn't exist for package %s" % (version, self.package))
+    def remove_release(self, version):
         if not self.exists():
             self.save()
         return self._remove_release(version)

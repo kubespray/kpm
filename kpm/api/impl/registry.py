@@ -176,6 +176,7 @@ def show_package(package,
         * version (str)
         * name (str)
         * created_at (str)
+        * digest (str)
         * channels (list)
         * available_versions (list)
         * dependencies (list)
@@ -188,6 +189,7 @@ def show_package(package,
       "version": "3.2.0-rc",
       "name": "ns/mypackage",
       "created_at": "2016-08-25T10:16:16.366758",
+      "digest": "93de60f59238f9aebce5b9f8bc708e02a0d740364fcd4b185c6da7fc1cdfe1ba",
       "channels": [
        {
         "current": "3.1.0",
@@ -233,9 +235,11 @@ def show_package(package,
                 "version": packagemodel.version,
                 "name":  package,
                 "created_at": packagemodel.created_at,
+                "digest": packagemodel.digest,
                 "variables": manifest.variables,
                 "dependencies": manifest.dependencies,
                 "channels": packagemodel.channels(channel_class),
+                "all_channels": channel_class.all_channels(package).values(),
                 "available_versions": [str(x) for x in sorted(semver.versions(packagemodel.versions(), stable),
                                                               reverse=True)]}
     if pullmode:
@@ -244,14 +248,13 @@ def show_package(package,
 
 
 # CHANNELS
-def list_channels(package, channel_class=Channel, package_class=Package):
+def list_channels(package, channel_class=Channel):
     """
     List all channels for a given package
 
     Args:
       package (:obj:`str`): package name in the format "namespace/name" or "domain.com/name"
       channel_class (:obj:`kpm.models.channel_base:ChannelBase`): the implemented Channel class to use
-      package_class (:obj:`kpm.models.package_base:PackageBase`): the implemented Package class to use
 
     Returns:
       :obj:`list of dict`: list channels:
@@ -267,8 +270,7 @@ def list_channels(package, channel_class=Channel, package_class=Package):
     See Also:
        * :obj:`kpm.api.registry.list_channels`
     """
-    packagemodel = package_class(package)
-    channels = packagemodel.channels(channel_class).values()
+    channels = channel_class.all_channels(package).values()
     return channels
 
 
@@ -358,7 +360,7 @@ def delete_channel_release(package, name, release, channel_class=Channel, packag
     See Also:
        * :obj:`kpm.api.registry.delete_channel_release`
     """
-    channel = channel_class(name, package, package_class)
+    channel = channel_class(name, package)
     channel.remove_release(release)
     return channel.to_dict()
 
@@ -375,7 +377,7 @@ def delete_channel(package, name, channel_class=Channel):
     return {"channel": channel.name, "package": package, "action": 'delete'}
 
 
-def delete_package(package, version="latest", package_class=Package):
+def delete_package(package, version="latest", package_class=Package, channel_class=Channel):
     packagemodel = _get_package(package, version, package_class)
-    package_class.delete(packagemodel.package, packagemodel.version)
+    package_class.delete(packagemodel.package, packagemodel.version, channel_class)
     return {"status": "delete", "package": packagemodel.package, "version": packagemodel.version}

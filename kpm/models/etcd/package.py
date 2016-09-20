@@ -32,8 +32,11 @@ class Package(PackageBase):
             self._raise_not_found(package, None)
 
         versions = []
-        for p in r.children:
-            version = p.key.split("/")[-1]
+        for child in r.children:
+            m = re.match("^/%s(.+)/(.+)/releases/(.+)$" % ETCD_PREFIX, child.key)
+            if m is None:
+                continue
+            version = m.group(3)
             versions.append(version)
         return versions
 
@@ -72,7 +75,6 @@ class Package(PackageBase):
             if package not in r:
                 r[package] = {"name": package, 'available_versions': [], 'version': None}
             r[package]['available_versions'].append(version)
-
         for _, v in r.iteritems():
             v['available_versions'] = [str(x) for x in sorted(semver.versions(v['available_versions'], False),
                                                               reverse=True)]
