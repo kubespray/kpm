@@ -8,7 +8,7 @@ package:
 
 variables:
   image: registry.kubespray.io/kpm-ui:v0.9.0
-  env: {{namespace}}
+  env: "{{namespace}}"
 
 resources:
   - file: kpm-ui-dp.yaml
