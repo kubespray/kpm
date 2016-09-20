@@ -4,12 +4,15 @@ import etcd
 import re
 import kpm.semver as semver
 from kpm.models.package_base import PackageBase
-from kpm.exception import PackageAlreadyExists
+from kpm.exception import PackageAlreadyExists, ChannelNotFound
 from kpm.models.etcd import ETCD_PREFIX, etcd_client
 
 
 class Package(PackageBase):
+    index_path = "/kpm/search/index"
+
     def __init__(self, package_name, version=None, blob=None):
+
         super(Package, self).__init__(package_name,
                                       version=version,
                                       blob=blob)
@@ -32,8 +35,11 @@ class Package(PackageBase):
             self._raise_not_found(package, None)
 
         versions = []
-        for p in r.children:
-            version = p.key.split("/")[-1]
+        for child in r.children:
+            m = re.match("^/%s(.+)/(.+)/releases/(.+)$" % ETCD_PREFIX, child.key)
+            if m is None:
+                continue
+            version = m.group(3)
             versions.append(version)
         return versions
 
@@ -72,7 +78,6 @@ class Package(PackageBase):
             if package not in r:
                 r[package] = {"name": package, 'available_versions': [], 'version': None}
             r[package]['available_versions'].append(version)
-
         for _, v in r.iteritems():
             v['available_versions'] = [str(x) for x in sorted(semver.versions(v['available_versions'], False),
                                                               reverse=True)]
@@ -95,12 +100,52 @@ class Package(PackageBase):
             raise PackageAlreadyExists(e.message, {"package": self.package, "version": self.version})
 
     @classmethod
-    def delete(self, package, version):
-        path = self._etcdkey(package, version)
+    def search_index(self):
         try:
-            etcd_client.get(path)
+            r = json.loads(etcd_client.get(self.index_path).value)
+        except etcd.EtcdKeyNotFound:
+            r = []
+            self.write_index(r)
+        return r
+
+    @classmethod
+    def add_index(self, name):
+        r = set(self.search_index())
+        r.add(name)
+        self.write_index(r)
+
+    @classmethod
+    def write_index(self, r):
+        etcd_client.write(self.index_path, json.dumps(list(r)))
+
+    @classmethod
+    def remove_index(self, name):
+        r = set(self.search_index())
+        r.remove(name)
+        self.write_index(r)
+
+    @classmethod
+    def search(self, query):
+        r = '\n'.join(self.search_index())
+        return re.findall(r"(.*%s.*)" % query, r)
+
+    @classmethod
+    def _delete_from_channels(self, package, version, channel_class):
+        p = self(package, version)
+        for channel in p.channels(channel_class):
+            c = channel_class(channel, package)
+            try:
+                c.remove_release(version)
+            except ChannelNotFound:
+                pass
+
+    @classmethod
+    def _delete(self, package, version):
+        path = self._etcdkey(package, str(version))
+        try:
+            self._fetch(package, version)
             etcd_client.write(path.replace("releases", "deleted"),
-                              {"deleted_at": datetime.datetime.utcnow().isoformat()})
+                              json.dumps({"deleted_at": datetime.datetime.utcnow().isoformat()}))
             etcd_client.delete(path)
         except etcd.EtcdKeyNotFound:
             self._raise_not_found(package, version)

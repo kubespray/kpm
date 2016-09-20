@@ -56,12 +56,12 @@ def test_check_data_invalidversion():
 def getversions(monkeypatch):
     def read(path, recursive=True):
         assert path == "kpm/packages/ant31/rocketchat/releases"
-        return MockEtcdResults(["kpm/packages/ant31/rocketchat/releases/1.3.0",
-                                "kpm/packages/ant31/rocketchat/releases/1.3.2-rc2",
-                                "kpm/packages/ant31/rocketchat/releases/1.8.2-rc2",
-                                "kpm/packages/ant31/rocketchat/releases/1.4.2",
-                                "kpm/packages/ant31/rocketchat/releases/1.0.0",
-                                "kpm/packages/ant31/rocketchat/releases/1.2.0"])
+        return MockEtcdResults(["/kpm/packages/ant31/rocketchat/releases/1.3.0",
+                                "/kpm/packages/ant31/rocketchat/releases/1.3.2-rc2",
+                                "/kpm/packages/ant31/rocketchat/releases/1.8.2-rc2",
+                                "/kpm/packages/ant31/rocketchat/releases/1.4.2",
+                                "/kpm/packages/ant31/rocketchat/releases/1.0.0",
+                                "/kpm/packages/ant31/rocketchat/releases/1.2.0"])
     monkeypatch.setattr("kpm.models.etcd.etcd_client.read", read)
 
 

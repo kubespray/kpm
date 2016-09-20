@@ -731,7 +731,14 @@ definitions:
           description: Release name
       channels:
         title: channels
-        description: List channels
+        type: array
+        items:
+          type: string
+          title: channel-name
+          description: List channels for that release
+      all_channels:
+        title: all_channels
+        description: List all releases channels
         type: array
         items:
           $ref: "#/definitions/Channel"
