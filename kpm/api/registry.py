@@ -83,6 +83,20 @@ def list_packages():
     return resp
 
 
+@registry_app.route("/api/v1/packages/search", methods=['GET'], strict_slashes=False)
+def search_package():
+    values = getvalues()
+    query = values.get("q")
+    r = kpm.api.impl.registry.search(query)
+    return jsonify(r)
+
+
+@registry_app.route("/api/v1/packages/search_reindex", methods=['POST'], strict_slashes=False)
+def search_reindex():
+    r = kpm.api.impl.registry.search_reindex()
+    return jsonify(r)
+
+
 @registry_app.route("/api/v1/packages/<path:package>", methods=['GET'], strict_slashes=False)
 def show_package(package):
     values = getvalues()

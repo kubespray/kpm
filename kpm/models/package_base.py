@@ -114,12 +114,40 @@ class PackageBase(object):
     def isdeleted_release(self, package, version):
         raise NotImplementedError
 
+    @classmethod
+    def search_index(self):
+        raise NotImplementedError
+
+    @classmethod
+    def add_index(self, name):
+        raise NotImplementedError
+
+    @classmethod
+    def remove_index(self, name):
+        raise NotImplementedError
+
+    @classmethod
+    def write_index(self, index):
+        raise NotImplementedError
+
+    @classmethod
+    def search(self, query):
+        raise NotImplementedError
+
+    @classmethod
+    def reindex(self):
+        r = set()
+        for package in self.all():
+            r.add(package['name'])
+        self.write_index(r)
+
     def save(self, force=False):
         self.check_version(self.version)
         if self.isdeleted_release(self.package, self.version) and not force:
             raise PackageAlreadyExists("Package release %s existed" % self.package,
                                        {"package": self.package, "version": self.version})
         self._save(force)
+        self.add_index(self.package)
 
     def versions(self):
         return self.all_versions(self.package)

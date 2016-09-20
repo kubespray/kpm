@@ -111,6 +111,38 @@ def push(package, version, blob, force=False, package_class=Package):
     return {"status": "ok"}
 
 
+def search_reindex(package_class=Package):
+    Package.reindex()
+    return {"status": "ok"}
+
+
+def search(query, package_class=Package):
+    """
+    Search packages
+
+    Args:
+      package (:obj:`str`): package name in the format "namespace/name" or "domain.com/name"
+      package_class (:obj:`kpm.models.package_base:PackageBase`): the implemented Package class to use
+
+    Returns:
+      :obj:`list`: list of package names
+
+    Example:
+      >>> kpm.api.impl.registry.search("etcd")
+        [
+         'coreos/etcd',
+         'ant31/etcd',
+         'my-etcd/stable'
+        ]
+
+    See Also:
+       * :obj:`kpm.api.registry.search`
+
+    """
+    p = package_class.search(query)
+    return p
+
+
 def list_packages(organization=None, package_class=Package):
     """
     List all packages, filters can be applied
