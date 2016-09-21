@@ -52,7 +52,7 @@ app.controller('PackageController', function($scope, $state, $stateParams,
     $mdDialog.show(confirm).then(function(result) {
       // Trigger download from URL with FileSaver library
       var url = Config.backend_url + 'packages/' + $scope.package.name +
-        '/generate?tarball=true&namespace=' + result;
+        '/generate-tar?version=' + $scope.package.version + '&namespace=' + result;
       window.location = url;
     }, function() {
     });
@@ -64,17 +64,24 @@ app.controller('PackageController', function($scope, $state, $stateParams,
 
   // Init
 
-  var package_name = $stateParams.name;
-  if (package_name) {
-    $scope.ui.loading = true;
-    KpmApi.get('packages/' + package_name)
-    .success(function(data) {
-      $scope.ui.loading = false;
-      $scope.setPackage(data);
-    })
-    .error(function(data) {
-      $scope.ui.loading = false;
-      $scope.error = $scope.build_error(data);
-    });
-  }
+   var package_name = $stateParams.name;
+
+    if (package_name) {
+	var sp = package_name.split("/");
+	var version = null;
+	if (sp.length > 2) {
+    	    version = sp[2]
+    	    package_name = sp[0] + "/" + sp[1]
+	}
+	$scope.ui.loading = true;
+	KpmApi.get('packages/' + package_name, {version: version})
+	    .success(function(data) {
+		$scope.ui.loading = false;
+		$scope.setPackage(data);
+	    })
+	    .error(function(data) {
+		$scope.ui.loading = false;
+		$scope.error = $scope.build_error(data);
+	    });
+    }
 });

@@ -1,6 +1,8 @@
 from flask import (jsonify,
                    request,
                    Blueprint,
+                   redirect,
+                   render_template,
                    current_app,
                    url_for)
 import kpm
@@ -41,6 +43,18 @@ def index_discovery():
     </html>""".format(domain=domain, host=host)
 
     return jsonify({"kpm-api": kpm.__version__})
+
+
+@info_app.route("/dashboard",  strict_slashes=False)
+def index():
+    return redirect("/dashboard/index.html")
+
+
+@info_app.route('/dashboard/config/config.js')
+def configjs(name=None):
+    host = request.url_root
+    domain = request.headers['Host']
+    return render_template('config.js', domain=domain, host=host)
 
 
 @info_app.route("/version")

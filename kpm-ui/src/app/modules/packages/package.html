@@ -1,6 +1,6 @@
 <div class="package" ng-if="package">
   <ng-include src="'app/modules/packages/_actions.html'"></ng-include>
-  <img ng-src="{{package.icon_url}}" class="package-icon" />
+  <!-- <img ng-src="{{package.icon_url}}" class="package-icon" /> -->
   <h2>
     <a ui-sref="organization({name: package.organization})" class="organization-name">
       {{package.organization}}</a> /
@@ -10,7 +10,7 @@
     {{package.description}}
   </p>
   <p>
-    <code>v{{package.version}}</code> - Updated on {{package.updated_at | date}}
+    <code>v{{package.version}}</code> - {{package.created_at | date}}
   </p>
   <p>
     Available versions:
@@ -22,21 +22,31 @@
       </md-select>
     </md-input-container>
   </p>
-  <h3>Dependencies</h3>
+
+  <h3 ng-if="package.dependencies.length > 0" >Dependencies</h3>
   <ol>
     <li ng-repeat="dependency in package.dependencies">
       <a ui-sref="package({name: dependency})">{{dependency}}</a>
     </li>
   </ol>
-  <h3>Templates</h3>
-  <ol>
-    <li ng-repeat="resource in package.manifest.resources">
-      <code>{{resource.type}}</code>
-      {{resource.name}}
-      <a href ng-click="toggleResource(resource)">{{resource.file}}</a>
-      <pre ng-if="resource.content"><code prism="yaml">{{resource.content}}</code></pre>
-    </li>
-  </ol>
+  <!-- <h3>Variables and defaults</h3> -->
+  <!-- <div> -->
+  <!--   <table> -->
+  <!--     <tr ng-repeat="(name, default) in package.variables"> -->
+  <!-- 	<td>{{name}}</td> -->
+  <!-- 	<td>{{default}}</td> -->
+  <!--     </tr> -->
+  <!--   </table> -->
+  <!-- </div> -->
+  <!-- <h3>Templates</h3> -->
+  <!-- <ol> -->
+  <!--   <li ng-repeat="resource in package.manifest.resources"> -->
+  <!--     <code>{{resource.type}}</code> -->
+  <!--     {{resource.name}} -->
+  <!--     <a href ng-click="toggleResource(resource)">{{resource.file}}</a> -->
+  <!--     <pre ng-if="resource.content"><code prism="yaml">{{resource.content}}</code></pre> -->
+  <!--   </li> -->
+  <!-- </ol> -->
   <a href ng-click="downloadTarball($event)" class="md-button md-raised">
     <md-tooltip>
       Generate templates in tarball
@@ -50,4 +60,3 @@
 </p>
 
 <md-button class="md-raised" ui-sref="packages">Back</md-button>
-

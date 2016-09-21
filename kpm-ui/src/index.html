@@ -33,16 +33,16 @@
           placeholder="Search packages">
           <md-item-template>
             <div md-highlight-text="ctrl.searchText" md-highlight-flags="^i" class="item-title">
-              {{item.name}}
+              {{item}}
             </div>
-            <div class="item-info">
-              <span class="item-meta">
-                Last version: <strong>{{item.version}}</strong>
-              </span>
-              <span class="item-meta">
-                Downloads: <strong>{{item.downloads}}</strong>
-              </span>
-            </div>
+            <!-- <div class="item-info"> -->
+            <!--   <span class="item-meta"> -->
+            <!--     Last version: <strong>{{item.version}}</strong> -->
+            <!--   </span> -->
+            <!--   <span class="item-meta"> -->
+            <!--     Downloads: <strong>{{item.downloads}}</strong> -->
+            <!--   </span> -->
+            <!-- </div> -->
           </md-item-template>
           <md-not-found>
             No packages matching "{{ctrl.searchText}}" were found.
@@ -50,10 +50,10 @@
         </md-autocomplete>
       </form>
       <i class="fa fa-search"></i>
-      <div ng-if="!session.isAuthenticated()" class="navigation">
-        <a ui-sref="login">Login</a> |
-        <a ui-sref="signup">Sign-up</a>
-      </div>
+      <!-- <div ng-if="!session.isAuthenticated()" class="navigation"> -->
+      <!--   <a ui-sref="login">Login</a> | -->
+      <!--   <a ui-sref="signup">Sign-up</a> -->
+      <!-- </div> -->
       <md-menu
         ng-if="session.isAuthenticated()"
         md-position-mode="target-right bottom"

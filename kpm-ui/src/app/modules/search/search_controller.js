@@ -17,7 +17,7 @@ app.controller('SearchController', function($scope, $state, $q, KpmApi) {
    */
   this.itemSelected = function(item) {
     if (item) {
-      $state.go('package', {name: item.name});
+      $state.go('package', {name: item});
       this.searchText = null;
     }
   };
@@ -28,8 +28,8 @@ app.controller('SearchController', function($scope, $state, $q, KpmApi) {
    */
   this.querySearch = function(search) {
     var deferred = $q.defer();
-    KpmApi.get('packages', {
-      named_like: search
+    KpmApi.get('packages/search', {
+      q: search
     })
     .success(function(data) {
       deferred.resolve(data);
