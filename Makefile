@@ -77,16 +77,19 @@ docs: install
 servedocs: docs
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
-release: clean
+release: clean build-ui
 	python setup.py sdist upload
 	python setup.py bdist_wheel upload
 
-dist: clean
+build-ui:
+	cd kpm-ui && gulp build --config local  --dir ../kpm/api/ui/src
+
+dist: clean build-ui
 	python setup.py sdist
 	python setup.py bdist_wheel
 	ls -l dist
 
-install: clean
+install: clean build-ui
 	pip install -r requirements.txt
 	python setup.py install
 
