@@ -1,7 +1,9 @@
 import json
-import kpm.deploy
+import kpm.platforms.kubernetes
+
+
 import kpm.command
-from kpm.kub_jsonnet import KubJsonnet
+from kpm.formats.kub import Kub
 from kpm.commands.command_base import CommandBase
 
 
@@ -22,7 +24,10 @@ class DeployCmd(CommandBase):
         self.version = options.version
         self.tmpdir = options.tmpdir
         self.variables = options.variables
+        self.target = options.to
+        self.format = options.format
         self.status = None
+
         super(DeployCmd, self).__init__(options)
 
     @classmethod
@@ -49,33 +54,48 @@ class DeployCmd(CommandBase):
                             help="force upgrade, delete and recreate resources")
         parser.add_argument("-H", "--registry-host", nargs="?", default=None,
                             help='Generate resources server-side')
+        parser.add_argument("--format", nargs="?", default='kpm',
+                            help='package format')
+        parser.add_argument("--to", nargs="?", default='kubernetes',
+                            help='target platform to deploy the package')
 
-    def _packages(self):
+    def _k8s_packages(self):
         packages = None
         if self.delegate is False:
-            k = KubJsonnet(self.package,
-                           endpoint=self.registry_host,
-                           variables=self.variables,
-                           namespace=self.namespace,
-                           shards=self.shards,
-                           version=self.version)
+            k = Kub(self.package,
+                    endpoint=self.registry_host,
+                    variables=self.variables,
+                    namespace=self.namespace,
+                    shards=self.shards,
+                    version=self.version)
             packages = k.build()
         return packages
 
+    def _deploy_dockercompose(self):
+        pass
+
+    def _deploy_kubernetes(self):
+        if self.format == "kpm":
+            packages = self._k8s_packages()
+            self.status = kpm.platforms.kubernetes.deploy(self.package,
+                                                          version=self.version,
+                                                          dest=self.tmpdir,
+                                                          namespace=self.namespace,
+                                                          force=self.force,
+                                                          dry=self.dry_run,
+                                                          endpoint=self.registry_host,
+                                                          proxy=self.api_proxy,
+                                                          variables=self.variables,
+                                                          shards=self.shards,
+                                                          fmt=self.output,
+                                                          packages=packages)
+
     def _call(self):
-        packages = self._packages()
-        self.status = kpm.deploy.deploy(self.package,
-                                        version=self.version,
-                                        dest=self.tmpdir,
-                                        namespace=self.namespace,
-                                        force=self.force,
-                                        dry=self.dry_run,
-                                        endpoint=self.registry_host,
-                                        proxy=self.api_proxy,
-                                        variables=self.variables,
-                                        shards=self.shards,
-                                        fmt=self.output,
-                                        packages=packages)
+        if self.target == "kubernetes":
+            self._deploy_kubernetes()
+
+        elif self.target == "docker-compose":
+            self._deploy_dockercompose()
 
     def _render_json(self):
         print json.dumps(self.status)

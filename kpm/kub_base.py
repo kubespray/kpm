@@ -1,6 +1,5 @@
 from urlparse import urlparse
 import copy
-import hashlib
 import tarfile
 import shutil
 import logging
@@ -131,28 +130,16 @@ class KubBase(object):
             else:
                 self._dependencies.append(self)
 
-    def create_namespace(self, namespace):
-        value = {"apiVersion": "v1",
-                 "kind": "Namespace",
-                 "metadata": {"name": namespace}}
-
-        resource = {"file": "%s-ns.yaml" % namespace,
-                    "name": namespace,
-                    "generated": True,
-                    "order": -1,
-                    "hash": False,
-                    "protected": True,
-                    "value": value,
-                    "patch": [],
-                    "variables": {},
-                    "type": "namespace"}
-        return resource
-
     @property
     def dependencies(self):
         if self._dependencies is None:
             self._fetch_deps()
         return self._dependencies
+
+    def resources(self):
+        if self._resources is None:
+            self._resources = self.manifest.resources
+        return self._resources
 
     @property
     def shards(self):
@@ -188,17 +175,3 @@ class KubBase(object):
         tar.seek(0)
         shutil.rmtree(tempdir)
         return tar.read()
-
-    # @TODO do it in jsonnet
-    def _annotate_resource(self, kub, resource):
-        sha = None
-        if 'annotations' not in resource['value']['metadata']:
-            resource['value']['metadata']['annotations'] = {}
-        if resource.get('hash', True):
-            sha = hashlib.sha256(json.dumps(resource['value'])).hexdigest()
-            resource['value']['metadata']['annotations']['kpm.hash'] = sha
-        resource['value']['metadata']['annotations']['kpm.version'] = kub.version
-        resource['value']['metadata']['annotations']['kpm.package'] = kub.name
-        resource['value']['metadata']['annotations']['kpm.parent'] = self.name
-        resource['value']['metadata']['annotations']['kpm.protected'] = str(resource['protected']).lower()
-        return resource

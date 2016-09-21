@@ -1,4 +1,4 @@
-from kpm.kub_jsonnet import KubJsonnet
+from kpm.formats.kub import Kub
 
 
 DEFAULT_ENDPOINT = "http://localhost:5000"
@@ -23,9 +23,9 @@ def build(package,
       endpoint (:obj:`str`): the kpm-registry server
 
     Returns:
-      :obj:`kpm.kub_jsonnet.KubJsonnet`: the KubJsonnet object.
+      :obj:`kpm.kub_jsonnet.Kub`: the Kub object.
       To generate the build runs one of the following commands:
-        * :obj:`kpm.kub_jsonnet.KubJsonnet.build()`: create a `dict`
+        * :obj:`kpm.kub_jsonnet.Kub.build()`: create a `dict`
         * :obj:`kpm.kub_jsonnet.KubBase.build_tar()`: create a `tar.gz`
 
     Example:
@@ -48,12 +48,12 @@ def build(package,
 
     """
     variables['namespace'] = namespace
-    k = KubJsonnet(package,
-                   endpoint=endpoint,
-                   variables=variables,
-                   namespace=namespace,
-                   version=version_query,
-                   shards=shards)
+    k = Kub(package,
+            endpoint=endpoint,
+            variables=variables,
+            namespace=namespace,
+            version=version_query,
+            shards=shards)
     return k
 
 
@@ -75,7 +75,7 @@ def show_file(package, filepath, version_query=None, endpoint=DEFAULT_ENDPOINT):
        * :obj:`kpm.api.builder.show_file`
 
     """
-    k = KubJsonnet(package, version=version_query, endpoint=endpoint)
+    k = Kub(package, version=version_query, endpoint=endpoint)
     return k.package.file(filepath)
 
 
@@ -108,5 +108,5 @@ def tree(package, version_query=None, endpoint=DEFAULT_ENDPOINT):
 
     """
 
-    k = KubJsonnet(package, version=version_query, endpoint=endpoint)
+    k = Kub(package, version=version_query, endpoint=endpoint)
     return k.package.tree()

@@ -1,6 +1,6 @@
 from flask import jsonify, request, Blueprint, current_app
 import etcd
-import kpm.deploy
+import kpm.platforms.kubernetes
 from kpm.exception import (KpmException,
                            InvalidUsage,
                            InvalidVersion,
@@ -40,7 +40,7 @@ def _cmd(cmd, package):
               "proxy": current_app.config['KUBE_APIMASTER'],
               "fmt": "json"}
     current_app.logger.info("%s %s: %s", cmd, package, params)
-    return getattr(kpm.deploy, cmd)(package, **params)
+    return getattr(kpm.platforms.kubernetes, cmd)(package, **params)
 
 
 @deployment_app.route("/api/v1/deployments/<path:package>", methods=['DELETE'], strict_slashes=False)

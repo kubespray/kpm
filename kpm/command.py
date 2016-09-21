@@ -10,6 +10,7 @@ from kpm.commands import all_commands
 
 
 class LoadVariables(argparse.Action):
+
     def _parse_cmd(self, var):
         r = {}
         try:

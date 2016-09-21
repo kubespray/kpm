@@ -6,7 +6,7 @@ function(
 
 kpm.package({
   package: {
-    name: "stackanetes/horizon",
+    name: "ant31/wordpress",
     expander: "jinja2",
     format: 'docker-compose',
     author: "Antoine Legrand",

@@ -1,7 +1,7 @@
 import json
 import kpm.registry
 import kpm.command
-from kpm.kub_jsonnet import KubJsonnet
+from kpm.formats.kub import Kub
 from kpm.commands.command_base import CommandBase
 
 
@@ -35,9 +35,9 @@ class GenerateCmd(CommandBase):
         name = self.package
         version = self.version
         namespace = self.namespace
-        k = KubJsonnet(name, endpoint=self.registry_host,
-                       variables=self.variables,
-                       namespace=namespace, version=version)
+        k = Kub(name, endpoint=self.registry_host,
+                variables=self.variables,
+                namespace=namespace, version=version)
         filename = "%s_%s.tar.gz" % (k.name.replace("/", "_"), k.version)
         with open(filename, 'wb') as f:
             f.write(k.build_tar("."))
