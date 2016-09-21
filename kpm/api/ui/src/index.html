@@ -1,0 +1,138 @@
+<html lang="en" ng-app="kpm-ui">
+<head>
+  <title ng-bind-html="pageTitle"></title>
+  <!-- FontAwesome icons -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css" />
+
+  <!-- Angular Material CSS -->
+  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css" />
+
+  <!-- Vendor CSS -->
+  <link rel="stylesheet" href="style/vendor.min.css"/>
+
+  <!-- Application CSS -->
+  <link rel="stylesheet" href="style/app.min.css" />
+
+  <link rel="icon" type="image/png" href="images/favicon.png" />
+</head>
+<body ng-cloak ng-controller="AppController">
+  <header id="header">
+    <div class="inner">
+      <a ui-sref="packages">
+        <img src="images/kubespray-80px.png" alt="logo" />
+      </a>
+      <form ng-controller="SearchController as ctrl"
+        ng-submit="ctrl.submit()" class="search">
+        <md-autocomplete
+          md-search-text="ctrl.searchText"
+          md-items="item in ctrl.querySearch(ctrl.searchText)"
+          md-item-text="item.name"
+          md-selected-item-change="ctrl.itemSelected(item)"
+          placeholder="Search packages">
+          <md-item-template>
+            <div md-highlight-text="ctrl.searchText" md-highlight-flags="^i" class="item-title">
+              {{item}}
+            </div>
+            <!-- <div class="item-info"> -->
+            <!--   <span class="item-meta"> -->
+            <!--     Last version: <strong>{{item.version}}</strong> -->
+            <!--   </span> -->
+            <!--   <span class="item-meta"> -->
+            <!--     Downloads: <strong>{{item.downloads}}</strong> -->
+            <!--   </span> -->
+            <!-- </div> -->
+          </md-item-template>
+          <md-not-found>
+            No packages matching "{{ctrl.searchText}}" were found.
+          </md-not-found>
+        </md-autocomplete>
+      </form>
+      <i class="fa fa-search"></i>
+      <!-- <div ng-if="!session.isAuthenticated()" class="navigation"> -->
+      <!--   <a ui-sref="login">Login</a> | -->
+      <!--   <a ui-sref="signup">Sign-up</a> -->
+      <!-- </div> -->
+      <md-menu
+        ng-if="session.isAuthenticated()"
+        md-position-mode="target-right bottom"
+        class="navigation">
+        <a href ng-click="$mdOpenMenu($event)" class="menu-trigger">
+          {{session.user.username}}
+          <img ng-src="{{session.user.gravatar}}?s=50" class="gravatar" />
+          <i class="fa fa-chevron-down"></i>
+        </a>
+        <md-menu-content width="4">
+          <md-menu-item>
+            <md-button ui-sref="user({username: session.user.username})">
+              My profile
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ui-sref="settings.profile">
+              Settings
+            </md-button>
+          </md-menu-item>
+          <md-menu-item>
+            <md-button ng-click="session.logout()">
+              Logout
+            </md-button>
+          </md-menu-item>
+        </md-menu-content>
+      </md-menu>
+    </div>
+  </header>
+  <section id="banner-home" ng-if="stateName == 'home'">
+    <div class="inner">
+      <img src="images/kubespray-logo.png" class="logo" />
+      <h1>KPM, by Kubespray</h1>
+      <p class="description">Registry of kubernetes ready to use applications</p>
+    </div>
+  </section>
+  <section id="banner-small" ng-if="stateName != 'home'">
+    <div class="inner">
+      KPM
+    </div>
+  </section>
+  <section id="main">
+    <div ui-view class="inner"></div>
+    <div layout="row" class="loader" ng-if="ui.loading">
+      <md-progress-circular md-mode="indeterminate" md-diameter="200"></md-progress-circular>
+    </div>
+  </section>
+  <footer id="footer">
+    <div class="inner">
+      By <a href="http://kubespray.io">kubespray.io</a> |
+      <a href="https://twitter.com/kubespray" title="twitter">
+        <i class="fa fa-twitter"></i> twitter
+      </a> |
+      <a href="https://github.com/kubespray/kpm" title="github">
+        <i class="fa fa-github"></i> github
+      </a> |
+      <a ui-sref="about">About KPM</a>
+    </div>
+  </footer>
+
+  <!-- Angular.js Core libraries -->
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-cookies.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-messages.min.js"></script>
+
+  <!-- Angular Material -->
+  <script src="//ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.js"></script>
+
+  <!-- Angular UI Router -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.min.js"></script>
+
+  <!-- Vendor -->
+  <script src="js/vendor.min.js"></script>
+
+  <!-- App configuration -->
+  <script src="config/config.js"></script>
+
+  <script src="js/app.min.js"></script>
+
+  <script src="js/templates.js"></script>
+</body>
+</html>

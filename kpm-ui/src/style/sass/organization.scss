@@ -1,0 +1,28 @@
+
+$user: #8BC34A;
+$collaborator: #03A9F4;
+$owner: #9C27B0;
+
+div.organization {
+  div.organization-users {
+    background: #eee;
+    display: flex;
+    padding: 10px;
+    span {
+      margin-right: 10px;
+      border-bottom: 3px solid white;
+      img.gravatar {
+        border-radius: 2px;
+      }
+      &.user {
+        border-color: $user;
+      }
+      &.collaborator {
+        border-color: $collaborator;
+      }
+      &.owner {
+        border-color: $owner;
+      }
+    }
+  }
+}

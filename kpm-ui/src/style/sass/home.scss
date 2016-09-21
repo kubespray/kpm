@@ -1,0 +1,26 @@
+div.home {
+  p {
+    text-align: justify;
+  }
+  ul.columns {
+    display: flex;
+    padding: 0;
+    margin-left: -1em;
+    margin-right: -1em;
+    li {
+      flex: 1;
+      margin: 1em;
+      display: block;
+      h2 {
+        font-size: 20px;
+      }
+    }
+  }
+  p.explore {
+    text-align: center;
+    .md-button {
+      font-size: 30px;
+      padding: 0.5em;
+    }
+  }
+}

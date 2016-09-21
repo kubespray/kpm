@@ -1,0 +1,29 @@
+<div class="package-wrapper">
+  <p class="info-notice" ng-if="queryParams.named_like && packages.length > 0">
+    {{packages.length}} result(s) for <em>"{{queryParams.named_like}}"</em>
+  </p>
+  <p class="info-notice" ng-if="search && packages.length == 0">
+    Sorry, no results for <em>"{{queryParams.named_like}}"</em>
+  </p>
+  <p class="error-notice" ng-if="error">
+    {{error}}
+  </p>
+  <md-input-container>
+    <md-select
+      ng-model="selectedSort"
+      md-on-close="applySort(selectedSort)">
+      <md-option ng-repeat="(label, params) in availableSorts" ng-value="params">
+        <i class="fa fa-{{params.icon}}"></i> {{label}}
+      </md-option>
+    </md-select>
+    <md-tooltip>
+      Sort packages
+    </md-tooltip>
+  </md-input-container>
+  <div
+    ng-include="'app/modules/packages/preview.html'"
+    ng-repeat="package in packages"
+    ng-controller="PackageController"
+    ng-init="setPackage(package)">
+  </div>
+</div>
