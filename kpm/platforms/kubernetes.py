@@ -1,5 +1,4 @@
 import logging
-
 import os.path
 from collections import OrderedDict
 from kpm.kubernetes import Kubernetes

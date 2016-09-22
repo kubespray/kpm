@@ -8,6 +8,8 @@ class CommandBase(object):
     def render(self):
         if self.output == 'json':
             self._render_json()
+        if self.output == 'yaml':
+            self._render_yaml()
         else:
             self._render_console()
 
@@ -22,7 +24,9 @@ class CommandBase(object):
     @classmethod
     def add_parser(self, subparsers):
         parser = subparsers.add_parser(self.name, help=self.help_message)
-        parser.add_argument("--output", default="text",  choices=['text', 'json'],
+        parser.add_argument("--output", default="text",  choices=['text',
+                                                                  'json',
+                                                                  'yaml'],
                             help="output format")
         self._add_arguments(parser)
         parser.set_defaults(func=self.call)

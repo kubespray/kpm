@@ -16,7 +16,7 @@ logger = logging.getLogger(__name__)
 class DockerCompose(object):
     def __init__(self, compose_obj):
         self.obj = compose_obj
-        self.compose = yaml.dump(self.obj)
+        self.compose = yaml.safe_dump(self.obj)
         self.result = None
 
     def _create_compose_file(self):

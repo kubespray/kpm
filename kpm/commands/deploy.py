@@ -1,9 +1,9 @@
 import json
 import kpm.platforms.kubernetes
-
-
+from kpm.dockercompose import DockerCompose
 import kpm.command
 from kpm.formats.kub import Kub
+from kpm.formats.kubcompose import KubCompose
 from kpm.commands.command_base import CommandBase
 
 
@@ -72,7 +72,14 @@ class DeployCmd(CommandBase):
         return packages
 
     def _deploy_dockercompose(self):
-        pass
+        if self.format == "kpm":
+            k = KubCompose(self.package,
+                    endpoint=self.registry_host,
+                    variables=self.variables,
+                    namespace=self.namespace,
+                    shards=self.shards,
+                    version=self.version)
+            self.status = DockerCompose(k.resources()[0]['value']).create()
 
     def _deploy_kubernetes(self):
         if self.format == "kpm":
@@ -102,4 +109,5 @@ class DeployCmd(CommandBase):
 
     def _render_console(self):
         """ Handled by deploy """
-        pass
+        if self.target == "docker-compose":
+            print self.status

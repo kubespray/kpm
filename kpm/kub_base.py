@@ -12,6 +12,7 @@ import kpm.registry as registry
 import kpm.packager as packager
 from kpm.utils import mkdir_p
 from kpm.discovery import ishosted, split_package_name
+from kpm.utils import convert_utf8
 
 logger = logging.getLogger(__name__)
 
@@ -175,3 +176,15 @@ class KubBase(object):
         tar.seek(0)
         shutil.rmtree(tempdir)
         return tar.read()
+
+    def prepare_resources(self, dest="/tmp", index=0):
+        for resource in self.resources():
+            index += 1
+            path = os.path.join(dest, "%02d_%s_%s" % (index,
+                                                      self.version,
+                                                      resource['file']))
+            f = open(path, 'w')
+            f.write(yaml.safe_dump(convert_utf8(resource['value'])))
+            resource['filepath'] = f.name
+            f.close()
+        return index

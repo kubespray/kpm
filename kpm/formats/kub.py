@@ -2,7 +2,6 @@ import hashlib
 import logging
 import yaml
 import json
-from collections import OrderedDict
 import jsonpatch
 from kpm.kubernetes import get_endpoint
 from kpm.kub_jsonnet import KubJsonnet
@@ -17,15 +16,15 @@ _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 class Kub(KubJsonnet):
     def _resource_build(self, kub, resource):
         self._annotate_resource(kub, resource)
-        return OrderedDict({"file": resource['file'],
-                            "hash": resource['value']['metadata']['annotations'].get('kpm.hash', None),
-                            "protected": resource['protected'],
-                            "name": resource['name'],
-                            "kind": resource['value']['kind'].lower(),
-                            "endpoint": get_endpoint(
-                                resource['value']['kind'].lower()).
-                            format(namespace=self.namespace),
-                            "body": json.dumps(resource['value'])})
+        return {"file": resource['file'],
+                "hash": resource['value']['metadata']['annotations'].get('kpm.hash', None),
+                "protected": resource['protected'],
+                "name": resource['name'],
+                "kind": resource['value']['kind'].lower(),
+                "endpoint": get_endpoint(
+                    resource['value']['kind'].lower()).
+                format(namespace=self.namespace),
+                "body": json.dumps(resource['value'])}
 
     # @TODO do it in jsonnet
     def _annotate_resource(self, kub, resource):
@@ -35,10 +34,11 @@ class Kub(KubJsonnet):
         if resource.get('hash', True):
             sha = hashlib.sha256(json.dumps(resource['value'])).hexdigest()
             resource['value']['metadata']['annotations']['kpm.hash'] = sha
-        resource['value']['metadata']['annotations']['kpm.version'] = kub.version
-        resource['value']['metadata']['annotations']['kpm.package'] = kub.name
-        resource['value']['metadata']['annotations']['kpm.parent'] = self.name
-        resource['value']['metadata']['annotations']['kpm.protected'] = str(resource['protected']).lower()
+        annotation = resource['value']['metadata']['annotations']
+        annotation['kpm.version'] = kub.version
+        annotation['kpm.package'] = kub.name
+        annotation['kpm.parent'] = self.name
+        annotation['kpm.protected'] = str(resource['protected']).lower()
         return resource
 
     def _create_namespaces(self):
@@ -60,7 +60,9 @@ class Kub(KubJsonnet):
                     op = 'replace'
                 else:
                     op = 'add'
-                resource['patch'].append({"op": op, "path": "/metadata/namespace", "value": self.namespace})
+                resource['patch'].append({"op": op,
+                                          "path": "/metadata/namespace",
+                                          "value": self.namespace})
 
             if len(resource['patch']):
                 patch = jsonpatch.JsonPatch(resource['patch'])

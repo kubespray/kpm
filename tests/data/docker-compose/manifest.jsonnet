@@ -35,7 +35,7 @@ kpm.package({
 
   resources: [
     {
-      file: "compose-wordpress.yaml",
+      file: "docker-compose.yml",
       template: (importstr "templates/compose-wordpress.yaml"),
       name: "compose-wordpress",
       type: "docker-compose",
