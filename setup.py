@@ -60,6 +60,7 @@ setup(
         'kpm.commands',
         'kpm.platforms',
         'kpm.formats',
+        'kpm.convert',
         'kpm.models.etcd'
     ],
     scripts=[

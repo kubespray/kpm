@@ -112,7 +112,7 @@ def test_generate_with_params():
     r = Registry()
     with requests_mock.mock() as m:
         response = '{"packages": "true"}'
-        m.get(DEFAULT_REGISTRY + "/api/v1/packages/ant31/kube-ui/generate?tarball=true&version=1.3.4&namespace=testns", complete_qs=True, text=response)
+        m.get(DEFAULT_REGISTRY + "/api/v1/packages/ant31/kube-ui/generate?version=1.3.4&namespace=testns", complete_qs=True, text=response)
         assert json.dumps(r.generate(name="ant31/kube-ui", namespace="testns", variables={"a": "b", "c": "d"}, version="1.3.4", tarball=True)) == response
 
 

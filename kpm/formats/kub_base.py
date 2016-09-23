@@ -13,6 +13,7 @@ import kpm.packager as packager
 from kpm.utils import mkdir_p
 from kpm.discovery import ishosted, split_package_name
 from kpm.utils import convert_utf8
+from kpm.manifest_jsonnet import ManifestJsonnet
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +29,13 @@ class KubBase(object):
                  namespace=None,
                  endpoint=None,
                  resources=None):
+
+        if shards.__class__ in [str, unicode]:
+            shards = json.loads(shards)
+
         if variables is None:
             variables = {}
+
         self.endpoint = endpoint
 
         self._dependencies = None
@@ -43,9 +49,15 @@ class KubBase(object):
         self.package = packager.Package(result, b64_encoded=False)
         if self.namespace:
             variables["namespace"] = self.namespace
-        self.manifest = None
+
         self._deploy_vars = variables
         self._variables = None
+
+        self.tla_codes = {"variables": self._deploy_vars}
+        if shards is not None:
+            self.tla_codes["shards"] = shards
+
+        self.manifest = ManifestJsonnet(self.package, {"params": json.dumps(self.tla_codes)})
 
     def __unicode__(self):
         return ("(<{class_name}({name}=={version})>".format(class_name=self.__class__.__name__,
@@ -130,6 +142,8 @@ class KubBase(object):
                 self._dependencies.append(kub)
             else:
                 self._dependencies.append(self)
+        if not self._dependencies:
+            self._dependencies.append(self)
 
     @property
     def dependencies(self):

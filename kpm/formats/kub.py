@@ -4,7 +4,7 @@ import yaml
 import json
 import jsonpatch
 from kpm.kubernetes import get_endpoint
-from kpm.kub_jsonnet import KubJsonnet
+from kpm.formats.kub_base import KubBase
 
 
 logger = logging.getLogger(__name__)
@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
 
-class Kub(KubJsonnet):
+class Kub(KubBase):
     def _resource_build(self, kub, resource):
         self._annotate_resource(kub, resource)
         return {"file": resource['file'],
@@ -90,3 +90,19 @@ class Kub(KubJsonnet):
                     "variables": {},
                     "type": "namespace"}
         return resource
+
+    def build(self):
+        result = []
+        for kub in self.dependencies:
+            kubresources = {"package": kub.name,
+                            "version": kub.version,
+                            "namespace": kub.namespace,
+                            "resources": []}
+            for resource in kub.resources():
+                kubresources['resources'].\
+                    append(self._resource_build(kub, resource))
+
+            result.append(kubresources)
+        return {"deploy": result,
+                "package": {"name": self.name,
+                            "version": self.version}}

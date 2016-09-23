@@ -74,28 +74,37 @@ class DeployCmd(CommandBase):
     def _deploy_dockercompose(self):
         if self.format == "kpm":
             k = KubCompose(self.package,
-                    endpoint=self.registry_host,
-                    variables=self.variables,
-                    namespace=self.namespace,
-                    shards=self.shards,
-                    version=self.version)
-            self.status = DockerCompose(k.resources()[0]['value']).create()
+                           endpoint=self.registry_host,
+                           variables=self.variables,
+                           namespace=self.namespace,
+                           shards=self.shards,
+                           version=self.version)
+            self.status = DockerCompose(k).create()
 
     def _deploy_kubernetes(self):
         if self.format == "kpm":
             packages = self._k8s_packages()
-            self.status = kpm.platforms.kubernetes.deploy(self.package,
-                                                          version=self.version,
-                                                          dest=self.tmpdir,
-                                                          namespace=self.namespace,
-                                                          force=self.force,
-                                                          dry=self.dry_run,
-                                                          endpoint=self.registry_host,
-                                                          proxy=self.api_proxy,
-                                                          variables=self.variables,
-                                                          shards=self.shards,
-                                                          fmt=self.output,
-                                                          packages=packages)
+
+        elif self.format == "docker-compose":
+            k = KubCompose(self.package,
+                           endpoint=self.registry_host,
+                           variables=self.variables,
+                           namespace=self.namespace,
+                           shards=self.shards,
+                           version=self.version)
+            packages = k.convert_to_kub().build()
+        self.status = kpm.platforms.kubernetes.deploy(self.package,
+                                                      version=self.version,
+                                                      dest=self.tmpdir,
+                                                      namespace=self.namespace,
+                                                      force=self.force,
+                                                      dry=self.dry_run,
+                                                      endpoint=self.registry_host,
+                                                      proxy=self.api_proxy,
+                                                      variables=self.variables,
+                                                      shards=self.shards,
+                                                      fmt=self.output,
+                                                      packages=packages)
 
     def _call(self):
         if self.target == "kubernetes":
