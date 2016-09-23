@@ -1,9 +1,8 @@
 import pytest
-import requests
 import requests_mock
 import json
 from collections import OrderedDict
-from kpm.deploy import deploy, _process, delete
+from kpm.platforms.kubernetes import deploy, delete
 from kpm.registry import DEFAULT_REGISTRY
 
 @pytest.fixture(autouse=True)
