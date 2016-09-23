@@ -22,13 +22,11 @@ def rand_string(size=32, chars=(string.ascii_letters + string.digits), seed=None
 
 
 def rand_alphanum(size=32, seed=None):
-    size = int(size)
-    return rand_string(size=size, seed=seed)
+    return rand_string(size=int(size), seed=seed)
 
 
 def rand_alpha(size=32, seed=None):
-    size = int(size)
-    return rand_string(size=size, chars=string.ascii_letters, seed=seed)
+    return rand_string(size=int(size), chars=string.ascii_letters, seed=seed)
 
 
 def randint(size=32, seed=None):
@@ -84,24 +82,16 @@ def gen_privatekey(keytype='rsa', key='', seed=None):
     if seed is None:
         seed = rand_alphanum(128)
     k = seed + key
-
+    generators = {"ecdsa": gen_private_ecdsa,
+                  "rsa": gen_private_rsa,
+                  "dsa": gen_private_dsa
+                  }
     if k not in all_privates:
         all_privates[k] = {}
-
-    if keytype == "ecdsa":
-        if 'ecdsa' not in all_privates[k]:
-            all_privates[k][keytype] = gen_private_ecdsa()
-
-    elif keytype == "rsa":
-        if 'rsa' not in all_privates[k]:
-            all_privates[k][keytype] = gen_private_rsa()
-
-    elif keytype == "dsa":
-        if 'dsa' not in all_privates[k]:
-            all_privates[k][keytype] = gen_private_dsa()
-    else:
+    if keytype not in ["ecdsa", "dsa", "rsa"]:
         raise ValueError("Unknow private key type: %s" % keytype)
-
+    if keytype not in all_privates[k]:
+        all_privates[k][keytype] = generators[keytype]()
     return all_privates[k][keytype]
 
 

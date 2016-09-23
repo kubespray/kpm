@@ -1,11 +1,8 @@
 import tempfile
-import time
 import logging
 import yaml
-import json
 import subprocess
-import requests
-from urlparse import urlparse
+
 
 __all__ = ['DockerCompose']
 
@@ -26,35 +23,25 @@ class DockerCompose(object):
         return f
 
     def create(self, force=False):
-        f = self._create_compose_file()
-        cmd = ['--file', f.name,  'up', "-d"]
+        cmd = ['up', "-d"]
         if force:
             cmd.append("--force-recreate")
-        r = self._call(cmd)
-        f.close()
-        return r
+        return self._call(cmd)
 
     def get(self):
-        f = self._create_compose_file()
-        cmd = ['--file', f.name, 'ps']
-        r = self._call(cmd)
-        f.close()
-        return r
+        return self._call(['ps'])
 
     def delete(self):
-        f = self._create_compose_file()
-        cmd = ['--file', f.name, "down"]
-        r = self._call(cmd)
-        f.close()
-        return r
+        return self._call(["down"])
 
     def exists(self):
-        r = self.get()
-        if r is None:
-            return False
-        else:
-            return True
+        return (self.get() is None)
 
     def _call(self, cmd, dry=False):
-        command = ['docker-compose'] + cmd
-        return subprocess.check_output(command, stderr=subprocess.STDOUT)
+        f = self._create_compose_file()
+        command = ['docker-compose', "--file", f.name] + cmd
+        try:
+            r = subprocess.check_output(command, stderr=subprocess.STDOUT)
+        finally:
+            f.close()
+        return r

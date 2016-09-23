@@ -1,8 +1,30 @@
-languages:
-  Python: true
+---
+engines:
+  csslint:
+    enabled: true
+  duplication:
+    enabled: true
+    config:
+      languages:
+      - python
+  fixme:
+    enabled: false
+  radon:
+    enabled: true
+ratings:
+  paths:
+    - "kpm/**.py"
+  # - "**.inc"
+#   - "**.js"
+#   - "**.jsx"
+#   - "**.module"
+#   - "**.php"
+#   - "**.py"
+#   - "**.rb"
 exclude_paths:
-  - "migrations%2F001_migrate_0.19.0.py"
-  - "tests%2F"
-# engines:
-#   duplication:
-#     enabled: true
+  - "kpm/api/ui/**"
+  - "tests/**"
+  - "kpm/jsonnet/**"
+
+# - migrations%2F001_migrate_0.19.0.py
+# - tests%2F
