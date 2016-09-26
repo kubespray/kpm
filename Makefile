@@ -90,7 +90,6 @@ dist: clean build-ui
 	ls -l dist
 
 install: clean build-ui
-	pip install -r requirements.txt
 	python setup.py install
 
 flake8:

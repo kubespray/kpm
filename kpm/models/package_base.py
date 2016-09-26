@@ -108,7 +108,6 @@ class PackageBase(object):
                                          {"package": package, "version_query": version_query})
 
         self.data = self._fetch(package, version)
-        return self
 
     @classmethod
     def isdeleted_release(self, package, version):
