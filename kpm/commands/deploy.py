@@ -16,7 +16,6 @@ class DeployCmd(CommandBase):
         self.shards = options.shards
         self.force = options.force
         self.dry_run = options.dry_run
-        self.delegate = options.delegate
         self.namespace = options.namespace
         self.api_proxy = options.api_proxy
         self.version = options.version
