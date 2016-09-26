@@ -30,7 +30,7 @@ class ChannelBase(object):
         for channel in channel_names:
             c = self(channel, package)
             releases = c.releases()
-            result[str(channel)] = {"releases": releases, "channel": channel, "current": c.current_release(releases)}
+            result[str(channel)] = {"releases": releases, "name": channel, "current": c.current_release(releases)}
         return result
 
     @classmethod
@@ -106,5 +106,5 @@ class ChannelBase(object):
     def to_dict(self):
         r = self.releases()
         return ({"releases": r,
-                 "channel": self.name,
+                 "name": self.name,
                  "current": self.current_release(r)})

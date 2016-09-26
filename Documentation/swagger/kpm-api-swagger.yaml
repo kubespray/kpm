@@ -640,7 +640,7 @@ definitions:
     title: Channel
     description: 'Organize releases into channel, eg: dev/beta/stable'
     properties:
-      channel:
+      name:
         type: string
         title: Channel name
         description: Channel name
