@@ -740,12 +740,6 @@ definitions:
           type: string
           title: channel-name
           description: List channels for that release
-      all_channels:
-        title: all_channels
-        description: List all releases channels
-        type: array
-        items:
-          $ref: "#/definitions/Channel"
       created_at:
         type: string
         title: created_at

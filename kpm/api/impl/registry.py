@@ -222,16 +222,7 @@ def show_package(package,
       "name": "ns/mypackage",
       "created_at": "2016-08-25T10:16:16.366758",
       "digest": "93de60f59238f9aebce5b9f8bc708e02a0d740364fcd4b185c6da7fc1cdfe1ba",
-      "channels": [
-       {
-        "current": "3.1.0",
-        "channel": "stable",
-        "releases": [
-          "3.1.0"
-          "3.0.1"
-        ]
-       },
-      ],
+      "channels": ['stable', 'beta'],
       "available_versions": [
         "3.2.0-rc"
         "3.1.0",
@@ -271,7 +262,6 @@ def show_package(package,
                 "variables": manifest.variables,
                 "dependencies": manifest.dependencies,
                 "channels": packagemodel.channels(channel_class),
-                "all_channels": channel_class.all_channels(package).values(),
                 "available_versions": [str(x) for x in sorted(semver.versions(packagemodel.versions(), stable),
                                                               reverse=True)]}
     if pullmode:
