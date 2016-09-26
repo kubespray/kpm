@@ -733,6 +733,10 @@ definitions:
           type: string
           title: release-name
           description: Release name
+      variables:
+        type: object
+        title: variables
+        description: all variables
       channels:
         title: channels
         type: array
