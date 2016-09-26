@@ -713,6 +713,10 @@ definitions:
     title: Package
     description: Package object
     properties:
+      digest:
+        type: string
+        title: digest
+        description: Resource sha256 digest
       dependencies:
         type: array
         title: package-dependencies
