@@ -2,7 +2,7 @@ from kpm.formats.kubcompose import KubCompose
 from kpm.formats.kub import Kub
 
 kub_formats = [Kub, KubCompose]
-kub_by_name = {Kub.name: Kub, KubCompose.name: KubCompose}
+kub_by_name = {Kub.format_name: Kub, KubCompose.format_name: KubCompose}
 kub_by_platforms = {'kubernetes': [Kub], 'docker-compose': [KubCompose]}
 
 

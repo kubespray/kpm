@@ -14,7 +14,7 @@ _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
 
 class KubCompose(KubBase):
-    name = "docker-compose"
+    format_name = "docker-compose"
     target = "docker-compose"
 
     def prepare_resources(self, dest="/tmp", index=0):

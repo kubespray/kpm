@@ -18,7 +18,7 @@ _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
 
 class Kub(KubBase):
-    name = "kub"
+    format_name = "kub"
     target = "kubernetes"
 
     def _resource_build(self, kub, resource):
