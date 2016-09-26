@@ -3,7 +3,7 @@ import pytest
 import requests
 import requests_mock
 from conftest import get_response
-from kpm.kubernetes import get_endpoint, Kubernetes
+from kpm.platforms.kubernetes import get_endpoint, Kubernetes
 
 
 NAMESPACE="testns"
@@ -169,7 +169,7 @@ def test_call_dry(svc_resource):
 def test_create_cmd(svc_resource, subcall_cmd, monkeypatch):
     def get(*args):
         return None
-    monkeypatch.setattr("kpm.kubernetes.Kubernetes.get", get)
+    monkeypatch.setattr("kpm.platforms.kubernetes.Kubernetes.get", get)
     k = Kubernetes(body=svc_resource['body'])
     assert k.create() == "created"
 
@@ -180,7 +180,7 @@ def test_create_update(svc_resource, subcall_cmd, monkeypatch):
         svc2['metadata']['annotations']['kpm.hash'] = 'dummy'
         return svc2
 
-    monkeypatch.setattr("kpm.kubernetes.Kubernetes.get", get)
+    monkeypatch.setattr("kpm.platforms.kubernetes.Kubernetes.get", get)
     k = Kubernetes(body=svc_resource['body'])
     assert k.create() == "updated"
 
@@ -190,7 +190,7 @@ def test_create_ok(svc_resource, subcall_cmd, monkeypatch):
         svc2 = json.loads(svc_resource['body'])
         return svc2
 
-    monkeypatch.setattr("kpm.kubernetes.Kubernetes.get", get)
+    monkeypatch.setattr("kpm.platforms.kubernetes.Kubernetes.get", get)
     k = Kubernetes(body=svc_resource['body'])
     assert k.create() == "ok"
 
@@ -200,7 +200,7 @@ def test_create_force(svc_resource, subcall_cmd, monkeypatch):
         svc2 = json.loads(svc_resource['body'])
         return svc2
 
-    monkeypatch.setattr("kpm.kubernetes.Kubernetes.get", get)
+    monkeypatch.setattr("kpm.platforms.kubernetes.Kubernetes.get", get)
     k = Kubernetes(body=svc_resource['body'])
     assert k.create(force=True) == "updated"
 
@@ -210,7 +210,7 @@ def test_create_ok_nohash(ns_resource, subcall_cmd, monkeypatch):
         r = json.loads(ns_resource['body'])
         return r
 
-    monkeypatch.setattr("kpm.kubernetes.Kubernetes.get", get)
+    monkeypatch.setattr("kpm.platforms.kubernetes.Kubernetes.get", get)
     k = Kubernetes(body=ns_resource['body'])
     assert k.create() == "ok"
 
@@ -218,7 +218,7 @@ def test_create_ok_nohash(ns_resource, subcall_cmd, monkeypatch):
 def test_create_nohash(ns_resource, subcall_cmd, monkeypatch):
     def get(*args):
         return None
-    monkeypatch.setattr("kpm.kubernetes.Kubernetes.get", get)
+    monkeypatch.setattr("kpm.platforms.kubernetes.Kubernetes.get", get)
     k = Kubernetes(body=ns_resource['body'])
     assert k.create() == "created"
 
@@ -228,7 +228,7 @@ def test_create_force_protected(ns_resource, subcall_cmd, monkeypatch):
         svc2 = json.loads(ns_resource['body'])
         return svc2
 
-    monkeypatch.setattr("kpm.kubernetes.Kubernetes.get", get)
+    monkeypatch.setattr("kpm.platforms.kubernetes.Kubernetes.get", get)
     k = Kubernetes(body=ns_resource['body'])
     assert k.create(force=True) == "protected"
 

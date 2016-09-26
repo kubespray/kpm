@@ -8,7 +8,7 @@ builder_app = Blueprint('builder', __name__,)
 def _build(package):
     values = getvalues()
     version = values.get('version', None)
-    namespace = values.get('namespace', 'default')
+    namespace = values.get('namespace', None)
     variables = values.get('variables', {})
     shards = values.get('shards', None)
     variables['namespace'] = namespace

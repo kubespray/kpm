@@ -1,6 +1,5 @@
 from urlparse import urlparse
 import copy
-import hashlib
 import tarfile
 import shutil
 import logging
@@ -13,6 +12,8 @@ import kpm.registry as registry
 import kpm.packager as packager
 from kpm.utils import mkdir_p
 from kpm.discovery import ishosted, split_package_name
+from kpm.utils import convert_utf8
+from kpm.manifest_jsonnet import ManifestJsonnet
 
 logger = logging.getLogger(__name__)
 
@@ -28,8 +29,13 @@ class KubBase(object):
                  namespace=None,
                  endpoint=None,
                  resources=None):
+
+        if shards.__class__ in [str, unicode]:
+            shards = json.loads(shards)
+
         if variables is None:
             variables = {}
+
         self.endpoint = endpoint
 
         self._dependencies = None
@@ -38,18 +44,37 @@ class KubBase(object):
         self._deploy_version = version
         self._deploy_shards = shards
         self._deploy_resources = resources
+        self._package = None
+        self._manifest = None
         self.namespace = namespace
-        result = self._fetch_package()
-        self.package = packager.Package(result, b64_encoded=False)
         if self.namespace:
             variables["namespace"] = self.namespace
-        self.manifest = None
+
         self._deploy_vars = variables
         self._variables = None
 
+        self.tla_codes = {"variables": self._deploy_vars}
+        if shards is not None:
+            self.tla_codes["shards"] = shards
+
+    @property
+    def package(self):
+        if self._package is None:
+            result = self._fetch_package()
+            self._package = packager.Package(result, b64_encoded=False)
+        return self._package
+
+    @property
+    def manifest(self):
+        if self._manifest is None:
+            self._manifest = ManifestJsonnet(self.package,
+                                             {"params": json.dumps(self.tla_codes)})
+        return self._manifest
+
     def __unicode__(self):
         return ("(<{class_name}({name}=={version})>".format(class_name=self.__class__.__name__,
-                                                            name=self.name, version=self.version))
+                                                            name=self.name,
+                                                            version=self.version))
 
     def __str__(self):
         return unicode(self).encode('utf-8')
@@ -72,10 +97,6 @@ class KubBase(object):
     @property
     def name(self):
         return self.manifest.package['name']
-
-    @property
-    def deploy(self):
-        return self.manifest.deploy
 
     @property
     def variables(self):
@@ -130,29 +151,19 @@ class KubBase(object):
                 self._dependencies.append(kub)
             else:
                 self._dependencies.append(self)
-
-    def create_namespace(self, namespace):
-        value = {"apiVersion": "v1",
-                 "kind": "Namespace",
-                 "metadata": {"name": namespace}}
-
-        resource = {"file": "%s-ns.yaml" % namespace,
-                    "name": namespace,
-                    "generated": True,
-                    "order": -1,
-                    "hash": False,
-                    "protected": True,
-                    "value": value,
-                    "patch": [],
-                    "variables": {},
-                    "type": "namespace"}
-        return resource
+        if not self._dependencies:
+            self._dependencies.append(self)
 
     @property
     def dependencies(self):
         if self._dependencies is None:
             self._fetch_deps()
         return self._dependencies
+
+    def resources(self):
+        if self._resources is None:
+            self._resources = self.manifest.resources
+        return self._resources
 
     @property
     def shards(self):
@@ -166,9 +177,6 @@ class KubBase(object):
         with tarfile.open(fileobj=output, mode="w:gz") as tar:
             tar.add(source_dir, arcname=os.path.basename(source_dir))
         return output
-
-    def build(self):
-        raise NotImplementedError
 
     def build_tar(self, dest="/tmp"):
         package_json = self.build()
@@ -189,16 +197,29 @@ class KubBase(object):
         shutil.rmtree(tempdir)
         return tar.read()
 
-    # @TODO do it in jsonnet
-    def _annotate_resource(self, kub, resource):
-        sha = None
-        if 'annotations' not in resource['value']['metadata']:
-            resource['value']['metadata']['annotations'] = {}
-        if resource.get('hash', True):
-            sha = hashlib.sha256(json.dumps(resource['value'])).hexdigest()
-            resource['value']['metadata']['annotations']['kpm.hash'] = sha
-        resource['value']['metadata']['annotations']['kpm.version'] = kub.version
-        resource['value']['metadata']['annotations']['kpm.package'] = kub.name
-        resource['value']['metadata']['annotations']['kpm.parent'] = self.name
-        resource['value']['metadata']['annotations']['kpm.protected'] = str(resource['protected']).lower()
-        return resource
+    def prepare_resources(self, dest="/tmp", index=0):
+        for resource in self.resources():
+            index += 1
+            path = os.path.join(dest, "%02d_%s_%s" % (index,
+                                                      self.version,
+                                                      resource['file']))
+            f = open(path, 'w')
+            f.write(yaml.safe_dump(convert_utf8(resource['value'])))
+            resource['filepath'] = f.name
+            f.close()
+        return index
+
+    def build(self):
+        raise NotImplementedError
+
+    def convert_to(self):
+        raise NotImplementedError
+
+    def deploy(self):
+        raise NotImplementedError
+
+    def delete(self):
+        raise NotImplementedError
+
+    def status(self):
+        raise NotImplementedError

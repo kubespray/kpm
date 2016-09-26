@@ -80,8 +80,7 @@ class RenderJsonnet(object):
         try:
             json_str = _jsonnet.evaluate_snippet("snippet", manifeststr,
                                                  import_callback=self.import_callback,
-                                                 native_callbacks=filters.jsonnet_callbacks(), tla_codes=tla_codes,
-                                                 gc_min_objects=9999999, gc_growth_trigger=9999999)
+                                                 native_callbacks=filters.jsonnet_callbacks(), tla_codes=tla_codes)
 
         except RuntimeError as e:
             print "tla_codes: %s" % (str(tla_codes))

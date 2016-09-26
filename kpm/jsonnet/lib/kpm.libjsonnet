@@ -59,11 +59,13 @@ kpmstd {
    ),
 
    extra_resource_values(resource):: (
+   if resource.format == "kubernetes" then
       {
          namespace: resource.variables.namespace,
          value: { metadata: { name: resource.name,
                               namespace: resource.variables.namespace } },
       }
+      else {}
    ),
 
    resource_defaults(resource, package):: (
@@ -71,7 +73,12 @@ kpmstd {
          package.expander
       else
          'none';
+      local platform = if std.objectHas(package, 'format') then
+         package.format
+      else
+         'kubernetes';
       {
+         format: platform,
          expander: default_expander,
          protected: false,
       }

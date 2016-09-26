@@ -58,6 +58,9 @@ setup(
         'kpm.api.impl',
         'kpm.models',
         'kpm.commands',
+        'kpm.platforms',
+        'kpm.formats',
+        'kpm.convert',
         'kpm.models.etcd'
     ],
     scripts=[

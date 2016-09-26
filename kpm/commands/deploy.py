@@ -1,7 +1,7 @@
 import json
-import kpm.deploy
+import kpm.platforms.kubernetes
 import kpm.command
-from kpm.kub_jsonnet import KubJsonnet
+import kpm.formats
 from kpm.commands.command_base import CommandBase
 
 
@@ -22,7 +22,10 @@ class DeployCmd(CommandBase):
         self.version = options.version
         self.tmpdir = options.tmpdir
         self.variables = options.variables
+        self.target = options.to
+        self.format = options.format
         self.status = None
+        self._kub = None
         super(DeployCmd, self).__init__(options)
 
     @classmethod
@@ -32,8 +35,6 @@ class DeployCmd(CommandBase):
                             help="directory used to extract resources")
         parser.add_argument("--dry-run", action='store_true', default=False,
                             help="do not create the resources on kubernetes")
-        parser.add_argument("--delegate", action='store_true', default=False,
-                            help="Delegate resource generation to the server ")
         parser.add_argument("--namespace", nargs="?",
                             help="kubernetes namespace", default=None)
         parser.add_argument("--api-proxy", nargs="?",
@@ -49,37 +50,34 @@ class DeployCmd(CommandBase):
                             help="force upgrade, delete and recreate resources")
         parser.add_argument("-H", "--registry-host", nargs="?", default=None,
                             help='Generate resources server-side')
+        parser.add_argument("--format", nargs="?", default='kub',
+                            help='package format')
+        parser.add_argument("--to", nargs="?", default=None,
+                            help='target platform to deploy the package')
 
-    def _packages(self):
-        packages = None
-        if self.delegate is False:
-            k = KubJsonnet(self.package,
-                           endpoint=self.registry_host,
-                           variables=self.variables,
-                           namespace=self.namespace,
-                           shards=self.shards,
-                           version=self.version)
-            packages = k.build()
-        return packages
+    def kub(self):
+        if self._kub is None:
+            self._kub = kpm.formats.kub_factory(self.format,
+                                                self.package,
+                                                convert_to=self.target,
+                                                endpoint=self.registry_host,
+                                                variables=self.variables,
+                                                namespace=self.namespace,
+                                                shards=self.shards,
+                                                version=self.version)
+        return self._kub
 
     def _call(self):
-        packages = self._packages()
-        self.status = kpm.deploy.deploy(self.package,
-                                        version=self.version,
-                                        dest=self.tmpdir,
-                                        namespace=self.namespace,
+        self.status = self.kub().deploy(dest=self.tmpdir,
                                         force=self.force,
                                         dry=self.dry_run,
-                                        endpoint=self.registry_host,
                                         proxy=self.api_proxy,
-                                        variables=self.variables,
-                                        shards=self.shards,
-                                        fmt=self.output,
-                                        packages=packages)
+                                        fmt=self.output)
 
     def _render_json(self):
         print json.dumps(self.status)
 
     def _render_console(self):
         """ Handled by deploy """
-        pass
+        if self.kub().target == "docker-compose":
+            print self.status
