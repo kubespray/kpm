@@ -44,9 +44,9 @@ class KubBase(object):
         self._deploy_version = version
         self._deploy_shards = shards
         self._deploy_resources = resources
+        self._package = None
+        self._manifest = None
         self.namespace = namespace
-        result = self._fetch_package()
-        self.package = packager.Package(result, b64_encoded=False)
         if self.namespace:
             variables["namespace"] = self.namespace
 
@@ -57,11 +57,24 @@ class KubBase(object):
         if shards is not None:
             self.tla_codes["shards"] = shards
 
-        self.manifest = ManifestJsonnet(self.package, {"params": json.dumps(self.tla_codes)})
+    @property
+    def package(self):
+        if self._package is None:
+            result = self._fetch_package()
+            self._package = packager.Package(result, b64_encoded=False)
+        return self._package
+
+    @property
+    def manifest(self):
+        if self._manifest is None:
+            self._manifest = ManifestJsonnet(self.package,
+                                             {"params": json.dumps(self.tla_codes)})
+        return self._manifest
 
     def __unicode__(self):
         return ("(<{class_name}({name}=={version})>".format(class_name=self.__class__.__name__,
-                                                            name=self.name, version=self.version))
+                                                            name=self.name,
+                                                            version=self.version))
 
     def __str__(self):
         return unicode(self).encode('utf-8')
@@ -84,10 +97,6 @@ class KubBase(object):
     @property
     def name(self):
         return self.manifest.package['name']
-
-    @property
-    def deploy(self):
-        return self.manifest.deploy
 
     @property
     def variables(self):
@@ -169,9 +178,6 @@ class KubBase(object):
             tar.add(source_dir, arcname=os.path.basename(source_dir))
         return output
 
-    def build(self):
-        raise NotImplementedError
-
     def build_tar(self, dest="/tmp"):
         package_json = self.build()
 
@@ -202,3 +208,18 @@ class KubBase(object):
             resource['filepath'] = f.name
             f.close()
         return index
+
+    def build(self):
+        raise NotImplementedError
+
+    def convert_to(self):
+        raise NotImplementedError
+
+    def deploy(self):
+        raise NotImplementedError
+
+    def delete(self):
+        raise NotImplementedError
+
+    def status(self):
+        raise NotImplementedError

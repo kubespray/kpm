@@ -1,9 +1,13 @@
-import hashlib
 import logging
+import os.path
+from collections import OrderedDict
+import hashlib
 import yaml
 import json
 import jsonpatch
-from kpm.kubernetes import get_endpoint
+from kpm.platforms.kubernetes import Kubernetes, get_endpoint
+from kpm.utils import colorize, mkdir_p
+from kpm.display import print_deploy_result
 from kpm.formats.kub_base import KubBase
 
 
@@ -14,6 +18,9 @@ _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
 
 class Kub(KubBase):
+    name = "kub"
+    target = "kubernetes"
+
     def _resource_build(self, kub, resource):
         self._annotate_resource(kub, resource)
         return {"file": resource['file'],
@@ -94,15 +101,86 @@ class Kub(KubBase):
     def build(self):
         result = []
         for kub in self.dependencies:
-            kubresources = {"package": kub.name,
-                            "version": kub.version,
-                            "namespace": kub.namespace,
-                            "resources": []}
-            for resource in kub.resources():
-                kubresources['resources'].\
-                    append(self._resource_build(kub, resource))
-
-            result.append(kubresources)
+            result.append(self._dep_build(kub))
         return {"deploy": result,
                 "package": {"name": self.name,
                             "version": self.version}}
+
+    def _dep_build(self, kub):
+        package = {"package": kub.name,
+                   "version": kub.version,
+                   "namespace": kub.namespace,
+                   "resources": []}
+        for resource in kub.resources():
+                package['resources'].\
+                    append(self._resource_build(kub, resource))
+        return package
+
+    def _process_deploy(self,
+                        dry=False,
+                        force=False,
+                        fmt="txt",
+                        proxy=None,
+                        action="create",
+                        dest="/tmp/kpm"):
+        def output_progress(kubsource, status, fmt="text"):
+            if fmt == 'text':
+                print " --> %s (%s): %s" % (kubsource.name, kubsource.kind, colorize(status))
+
+        dest = os.path.join(dest, self.name, self.version)
+        mkdir_p(dest)
+        table = []
+        results = []
+        if fmt == "text":
+            print "%s %s " % (action, self.name)
+        i = 0
+        for kub in self.dependencies:
+            package = self._dep_build(kub)
+            i += 1
+            pname = package["package"]
+            version = package["version"]
+            namespace = package["namespace"]
+            if fmt == "text":
+                print "\n %02d - %s:" % (i, package["package"])
+            for resource in package["resources"]:
+                body = resource["body"]
+                endpoint = resource["endpoint"]
+                # Use API instead of kubectl
+                with open(os.path.join(dest, "%s-%s" % (resource['name'],
+                                                        resource['file'].replace("/", "_"))), 'wb') as f:
+                    f.write(body)
+                kubresource = Kubernetes(namespace=namespace,
+                                         body=body,
+                                         endpoint=endpoint,
+                                         proxy=proxy)
+                status = getattr(kubresource, action)(force=force, dry=dry)
+                if fmt == "text":
+                    output_progress(kubresource, status)
+                result_line = OrderedDict([("package", pname),
+                                           ("version", version),
+                                           ("kind", kubresource.kind),
+                                           ("dry", dry),
+                                           ("name", kubresource.name),
+                                           ("namespace", kubresource.namespace),
+                                           ("status", status)])
+
+                if status != 'ok' and action == 'create':
+                    kubresource.wait(3)
+                results.append(result_line)
+                if fmt == "text":
+                    header = ["package", "version", "kind", "name",  "namespace", "status"]
+                    display_line = []
+                    for k in header:
+                        display_line.append(result_line[k])
+                    table.append(display_line)
+        if fmt == "text":
+            print_deploy_result(table)
+        return results
+
+    def deploy(self, *args, **kwargs):
+        kwargs['action'] = 'create'
+        return self._process_deploy(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        kwargs['action'] = 'delete'
+        return self._process_deploy(*args, **kwargs)

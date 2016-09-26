@@ -6,8 +6,8 @@ class KubComposeToKub(Kub):
     def __init__(self, kubcompose):
         k8s_resources = Kompose(kubcompose).convert()
         self.namespace = kubcompose.namespace
-        self.manifest = kubcompose.manifest
-        self.manifest['resources'] = self.create_kub_resources(k8s_resources['items'])
+        self._manifest = kubcompose.manifest
+        self._manifest['resources'] = self.create_kub_resources(k8s_resources['items'])
         self._resources = None
         self._dependencies = None
 
