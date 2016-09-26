@@ -1,7 +1,7 @@
 import base64
 import pytest
 import etcd
-import kpm.models as models
+from kpm.models.etcd.package import Package
 from kpm.exception import (
     InvalidVersion,
     PackageAlreadyExists,
@@ -40,16 +40,16 @@ def test_showversion(client):
 
 
 def test_etcdkey():
-    assert models.Package._etcdkey("a/b", "1.4.3") == "kpm/packages/a/b/releases/1.4.3"
+    assert Package._etcdkey("a/b", "1.4.3") == "kpm/packages/a/b/releases/1.4.3"
 
 
 def test_check_data_validversion():
-    assert models.Package.check_version("1.4.5-alpha") is None
+    assert Package.check_version("1.4.5-alpha") is None
 
 
 def test_check_data_invalidversion():
     with pytest.raises(InvalidVersion):
-        assert models.Package.check_version("1.4.5a-alpha")
+        assert Package.check_version("1.4.5a-alpha")
 
 
 @pytest.fixture()
@@ -66,7 +66,7 @@ def getversions(monkeypatch):
 
 
 def test_getversions(getversions):
-    assert models.Package.all_versions("ant31/rocketchat") == ['1.3.0', '1.3.2-rc2', '1.8.2-rc2', '1.4.2', '1.0.0', '1.2.0']
+    assert Package.all_versions("ant31/rocketchat") == ['1.3.0', '1.3.2-rc2', '1.8.2-rc2', '1.4.2', '1.0.0', '1.2.0']
 
 
 def test_getversions_empty(monkeypatch):
@@ -74,24 +74,24 @@ def test_getversions_empty(monkeypatch):
         assert path == "kpm/packages/ant31/rocketchat/releases"
         return MockEtcdResults([])
     monkeypatch.setattr("kpm.models.etcd.etcd_client.read", read)
-    assert models.Package.all_versions("ant31/rocketchat") == []
+    assert Package.all_versions("ant31/rocketchat") == []
 
 
 def test_getversion_latest(getversions):
-    assert str(models.Package.get_version("ant31/rocketchat", "latest")) == "1.8.2-rc2"
+    assert str(Package.get_version("ant31/rocketchat", "latest")) == "1.8.2-rc2"
 
 
 def test_getversion_stable_none(getversions):
-    assert str(models.Package.get_version("ant31/rocketchat", None, True)) == "1.4.2"
+    assert str(Package.get_version("ant31/rocketchat", None, True)) == "1.4.2"
 
 
 def test_getversion_invalid(getversions):
     with pytest.raises(InvalidVersion):
-        str(models.Package.get_version("ant31/rocketchat", "==4.25a"))
+        str(Package.get_version("ant31/rocketchat", "==4.25a"))
 
 
 def test_getversion_prerelease(getversions):
-    str(models.Package.get_version("ant31/rocketchat", ">=0-")) == "1.8.2-rc2"
+    str(Package.get_version("ant31/rocketchat", ">=0-")) == "1.8.2-rc2"
 
 
 def test_push_etcd(monkeypatch, package_data):
@@ -100,7 +100,7 @@ def test_push_etcd(monkeypatch, package_data):
         assert data == "value"
         return True
     monkeypatch.setattr("kpm.models.etcd.etcd_client.write", write)
-    p = models.Package('a/b', 4, package_data)
+    p = Package('a/b', 4, package_data)
     p._push_etcd("a/b", 4, "value")
 
 
@@ -111,5 +111,5 @@ def test_push_etcd_exist(monkeypatch, package_data):
         raise etcd.EtcdAlreadyExist
     monkeypatch.setattr("kpm.models.etcd.etcd_client.write", write)
     with pytest.raises(PackageAlreadyExists):
-        p = models.Package('a/b', 4, package_data)
+        p = Package('a/b', 4, package_data)
         p._push_etcd("a/b", 4, "value")
