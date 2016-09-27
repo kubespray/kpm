@@ -159,7 +159,7 @@ def list_packages(organization=None, package_class=Package):
     Returns:
       :obj:`list of dict`: list packages
         * name: package name
-        * available_versions (list of str):  All releases
+        * available_releases (list of str):  All releases
         * created_at (datetime, optional): package creation date
         * downloads (int, optional): number of downloads
         * version: release name
@@ -168,14 +168,14 @@ def list_packages(organization=None, package_class=Package):
       >>> kpm.api.impl.registry.list_packages()
       [
        {
-        'available_versions': ['0.1.0'],
+        'available_releases': ['0.1.0'],
         'name': u'quentinm/rados-gateway',
         'version': '0.1.0',
         'created_at": "2016-04-22T11:58:34.103Z",
         'downloads': 41
        },
        {
-        'available_versions': ['0.1.0'],
+        'available_releases': ['0.1.0'],
         'name': u'quentinm/nova',
         'version': '0.1.0'
        },
@@ -210,7 +210,7 @@ def show_package(package,
         * created_at (str)
         * digest (str)
         * channels (list)
-        * available_versions (list)
+        * available_releases (list)
         * dependencies (list)
         * variables (dict)
         * manifest (str)
@@ -223,7 +223,7 @@ def show_package(package,
       "created_at": "2016-08-25T10:16:16.366758",
       "digest": "93de60f59238f9aebce5b9f8bc708e02a0d740364fcd4b185c6da7fc1cdfe1ba",
       "channels": ['stable', 'beta'],
-      "available_versions": [
+      "available_releases": [
         "3.2.0-rc"
         "3.1.0",
         "3.0.1"
@@ -262,7 +262,7 @@ def show_package(package,
                 "variables": manifest.variables,
                 "dependencies": manifest.dependencies,
                 "channels": packagemodel.channels(channel_class),
-                "available_versions": [str(x) for x in sorted(semver.versions(packagemodel.versions(), stable),
+                "available_releases": [str(x) for x in sorted(semver.versions(packagemodel.versions(), stable),
                                                               reverse=True)]}
     if pullmode:
         response['kub'] = packagemodel.blob

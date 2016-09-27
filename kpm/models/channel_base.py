@@ -58,9 +58,6 @@ class ChannelBase(object):
                                                    reverse=True)]
         return ordered_versions[0]
 
-    def activate_release(self, version):
-        raise NotImplementedError
-
     def add_release(self, version, package_class):
         if self._check_release(version, package_class) is False:
             raise ValueError("Release %s doesn't exist for package %s" % (version, self.package))
