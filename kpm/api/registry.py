@@ -3,6 +3,7 @@ from base64 import b64decode
 from flask import jsonify, request, Blueprint, current_app
 from kpm.api.app import getvalues
 import kpm.api.impl.registry
+
 from kpm.exception import (KpmException,
                            InvalidUsage,
                            InvalidVersion,

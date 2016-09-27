@@ -30,7 +30,7 @@ class ChannelBase(object):
         for channel in channel_names:
             c = self(channel, package)
             releases = c.releases()
-            result[str(channel)] = {"releases": releases, "channel": channel, "current": c.current_release(releases)}
+            result[str(channel)] = {"releases": releases, "name": channel, "current": c.current_release(releases)}
         return result
 
     @classmethod
@@ -57,9 +57,6 @@ class ChannelBase(object):
         ordered_versions = [str(x) for x in sorted(semver.versions(releases, False),
                                                    reverse=True)]
         return ordered_versions[0]
-
-    def activate_release(self, version):
-        raise NotImplementedError
 
     def add_release(self, version, package_class):
         if self._check_release(version, package_class) is False:
@@ -106,5 +103,5 @@ class ChannelBase(object):
     def to_dict(self):
         r = self.releases()
         return ({"releases": r,
-                 "channel": self.name,
+                 "name": self.name,
                  "current": self.current_release(r)})

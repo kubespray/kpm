@@ -131,10 +131,6 @@ class PackageBase(object):
         raise NotImplementedError
 
     @classmethod
-    def search(self, query):
-        raise NotImplementedError
-
-    @classmethod
     def reindex(self):
         r = set()
         for package in self.all():
@@ -185,4 +181,8 @@ class PackageBase(object):
 
     @classmethod
     def all_versions(self, package):
+        raise NotImplementedError
+
+    @classmethod
+    def search(self, query):
         raise NotImplementedError
