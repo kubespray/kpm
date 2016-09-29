@@ -640,7 +640,7 @@ definitions:
     title: Channel
     description: 'Organize releases into channel, eg: dev/beta/stable'
     properties:
-      channel:
+      name:
         type: string
         title: Channel name
         description: Channel name
@@ -733,6 +733,10 @@ definitions:
           type: string
           title: release-name
           description: Release name
+      variables:
+        type: object
+        title: variables
+        description: all variables
       channels:
         title: channels
         type: array
@@ -740,12 +744,6 @@ definitions:
           type: string
           title: channel-name
           description: List channels for that release
-      all_channels:
-        title: all_channels
-        description: List all releases channels
-        type: array
-        items:
-          $ref: "#/definitions/Channel"
       created_at:
         type: string
         title: created_at

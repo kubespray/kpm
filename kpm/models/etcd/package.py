@@ -76,12 +76,12 @@ class Package(PackageBase):
             organization, name, version = (m.group(1), m.group(2), m.group(3))
             package = "%s/%s" % (organization, name)
             if package not in r:
-                r[package] = {"name": package, 'available_versions': [], 'version': None}
-            r[package]['available_versions'].append(version)
+                r[package] = {"name": package, 'available_releases': [], 'version': None}
+            r[package]['available_releases'].append(version)
         for _, v in r.iteritems():
-            v['available_versions'] = [str(x) for x in sorted(semver.versions(v['available_versions'], False),
+            v['available_releases'] = [str(x) for x in sorted(semver.versions(v['available_releases'], False),
                                                               reverse=True)]
-            v['version'] = v['available_versions'][0]
+            v['version'] = v['available_releases'][0]
         return r.values()
 
     @classmethod
