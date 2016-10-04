@@ -9,7 +9,7 @@ function(
       name: "coreos/kpm-registry",
       expander: "jinja2",
       author: "Antoine Legrand",
-      version: "0.21.1-4",
+      version: "0.21.2-4",
       description: "kpm-registry",
       license: "Apache 2.0",
     },
@@ -17,7 +17,7 @@ function(
     variables: {
       etcd_cluster_size: 3,
       namespace: 'default',
-      image: "quay.io/kubespray/kpm:v0.21.1",
+      image: "quay.io/kubespray/kpm:v0.21.2",
       image_etcd: "quay.io/coreos/etcd:v3.0.6",
       kpm_uri: "http://kpm-registry.%s.svc.cluster.local" % $.variables.namespace,
       initial_cluster: "etcd=http://etcd.%s.svc.cluster.local:2380" % $.variables.namespace,
