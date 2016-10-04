@@ -5,10 +5,11 @@ from kpm.utils import mkdir_p
 class KpmAuth(object):
     """ Store Auth object """
 
-    def __init__(self):
-        path = ".kpm/auth_token"
+    def __init__(self, conf_directory=".kpm"):
+        self.conf_directory = conf_directory
+        path = "%s/auth_token" % conf_directory
         home = os.path.expanduser("~")
-        mkdir_p(os.path.join(home, ".kpm"))
+        mkdir_p(os.path.join(home, conf_directory))
         self.tokenfile = os.path.join(home, path)
         self._token = None
 
@@ -16,9 +17,8 @@ class KpmAuth(object):
     def token(self):
         if self._token is None:
             if os.path.exists(self.tokenfile):
-                f = open(self.tokenfile, 'r')
-                self._token = f.read()
-                f.close()
+                with open(self.tokenfile, 'r') as tokenfile:
+                    self._token = tokenfile.read()
             else:
                 return None
         return self._token
@@ -26,9 +26,8 @@ class KpmAuth(object):
     @token.setter
     def token(self, value):
         self._token = value
-        f = open(self.tokenfile, 'w')
-        f.write(value)
-        f.close()
+        with open(self.tokenfile, 'w') as tokenfile:
+            tokenfile.write(value)
 
     def delete_token(self):
         prev_token = self.token

@@ -109,3 +109,6 @@ dockerfile-canary: dist
 
 dockerfile-push: dockerfile
 	docker push quay.io/kubespray/kpm:v$(VERSION)
+
+pylint:
+	pylint --rcfile=~/.pylintrc kpm

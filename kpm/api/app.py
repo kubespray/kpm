@@ -23,8 +23,8 @@ def create_app():
         app.config.from_object('kpm.api.config.ProductionConfig')
     from kpm.api.builder import builder_app
     from kpm.api.info import info_app
-    from kpm.api.registry import registry_app
     from kpm.api.deployment import deployment_app
+    from cnr.api.registry import registry_app
 
     if app.config['KPM_API_BUILDER'] == "true":
         app.register_blueprint(builder_app)

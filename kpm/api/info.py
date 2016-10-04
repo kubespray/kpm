@@ -6,6 +6,7 @@ from flask import (jsonify,
                    current_app,
                    url_for)
 import kpm
+import cnr
 
 
 info_app = Blueprint('info', __name__,)
@@ -36,13 +37,11 @@ def index_discovery():
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="kpm-package" content="{domain}/{{name}} {host}/api/v1/packages/{{name}}/pull">
+    <meta name="cnr-package" content="{domain}/{{name}} {host}/api/v1/packages/{{name}}/pull">
     </head>
     <body>
     </body>
     </html>""".format(domain=domain, host=host)
-
-    return jsonify({"kpm-api": kpm.__version__})
 
 
 @info_app.route("/dashboard",  strict_slashes=False)
@@ -59,7 +58,8 @@ def configjs(name=None):
 
 @info_app.route("/version")
 def version():
-    return jsonify({"kpm-api": kpm.__version__})
+    return jsonify({"kpm-api": kpm.__version__,
+                    "cnr-api": cnr.__version__})
 
 
 @info_app.route("/routes")

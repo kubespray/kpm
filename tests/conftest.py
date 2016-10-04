@@ -11,7 +11,7 @@ def discovery_html():
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="kpm-package" content="kpm.sh/{name} https://api.kubespray.io/api/v1/packages/{name}/pull">
+    <meta name="cnr-package" content="cnr.sh/{name} https://api.kubespray.io/api/v1/packages/{name}/pull">
     </head>
     <body>
     <a href=https://github.com/coreos/kpm>coreos/kpm</a>

@@ -30,7 +30,7 @@ def test_default_endpoint():
 
 def test_url():
     r = Registry(endpoint="http://test.com")
-    assert r._url("/test") == "http://test.com/api/v1/test"
+    assert r._url("/test") == "http://test.com/test"
 
 
 def test_pull():
@@ -45,19 +45,19 @@ def test_pull_discovery_https(discovery_html):
     r = Registry()
     with requests_mock.mock() as m:
         response = 'package_data'
-        m.get("https://kpm.sh/?kpm-discovery=1", text=discovery_html, complete_qs=True)
+        m.get("https://cnr.sh/?cnr-discovery=1", text=discovery_html, complete_qs=True)
         m.get("https://api.kubespray.io/api/v1/packages/orga/p1/pull", text=response)
-        assert r.pull("kpm.sh/orga/p1") == response
+        assert r.pull("cnr.sh/orga/p1") == response
 
 
 def test_pull_discovery_http(discovery_html):
     r = Registry()
     with requests_mock.mock() as m:
         response = 'package_data'
-        m.get("https://kpm.sh/?kpm-discovery=1", text="<html/>", complete_qs=True)
-        m.get("http://kpm.sh/?kpm-discovery=1", text=discovery_html, complete_qs=True)
+        m.get("https://cnr.sh/?cnr-discovery=1", text="<html/>", complete_qs=True)
+        m.get("http://cnr.sh/?cnr-discovery=1", text=discovery_html, complete_qs=True)
         m.get("https://api.kubespray.io/api/v1/packages/orga/p1/pull", text=response)
-        assert r.pull("kpm.sh/orga/p1") == response
+        assert r.pull("cnr.sh/orga/p1") == response
 
 
 def test_pull_with_version():
@@ -113,15 +113,15 @@ def test_generate_with_params():
     with requests_mock.mock() as m:
         response = '{"packages": "true"}'
         m.get(DEFAULT_REGISTRY + "/api/v1/packages/ant31/kube-ui/generate?version=1.3.4&namespace=testns", complete_qs=True, text=response)
-        assert json.dumps(r.generate(name="ant31/kube-ui", namespace="testns", variables={"a": "b", "c": "d"}, version="1.3.4", tarball=True)) == response
+        assert json.dumps(r.generate(name="ant31/kube-ui", namespace="testns", variables={"a": "b", "c": "d"}, version="1.3.4")) == response
 
 
 def test_signup():
     r = Registry()
     with requests_mock.mock() as m:
-        response = '{"email": "al@kpm.sh", "token": "signup_token"}'
+        response = '{"email": "al@cnr.sh", "token": "signup_token"}'
         m.post(DEFAULT_REGISTRY + "/api/v1/users", complete_qs=True, text=response)
-        sign_r = r.signup("ant31", "plop", "plop", "al@kpm.sh")
+        sign_r = r.signup("ant31", "plop", "plop", "al@cnr.sh")
         assert json.dumps(sign_r) == json.dumps(json.loads(response))
         assert r.auth.token == "signup_token"
 
@@ -130,16 +130,16 @@ def test_signup():
 def test_signup_existing():
     r = Registry()
     with requests_mock.mock() as m:
-        response = '{"email": "al@kpm.sh", "token": "signup_token"}'
+        response = '{"email": "al@cnr.sh", "token": "signup_token"}'
         m.post(DEFAULT_REGISTRY + "/api/v1/users", complete_qs=True, text=response, status_code=401)
         with pytest.raises(requests.HTTPError):
-            sign_r = r.signup("ant31", "plop", "plop", "al@kpm.sh")
+            sign_r = r.signup("ant31", "plop", "plop", "al@cnr.sh")
 
 
 def test_login():
     r = Registry()
     with requests_mock.mock() as m:
-        response = '{"email": "al@kpm.sh", "token": "login_token"}'
+        response = '{"email": "al@cnr.sh", "token": "login_token"}'
         m.post(DEFAULT_REGISTRY + "/api/v1/users/login", complete_qs=True, text=response)
         login_r = r.login("ant31", "plop")
         assert json.dumps(login_r) == json.dumps(json.loads(response))
@@ -149,7 +149,7 @@ def test_login():
 def test_login_failed():
     r = Registry()
     with requests_mock.mock() as m:
-        response = '{"email": "al@kpm.sh", "token": "login_token"}'
+        response = '{"email": "al@cnr.sh", "token": "login_token"}'
         m.post(DEFAULT_REGISTRY + "/api/v1/users/login",
               complete_qs=True,
               text=response, status_code=401)

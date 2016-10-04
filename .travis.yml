@@ -7,7 +7,6 @@ addons:
 env:
   - TOXENV=py27
   - TOXENV=flake8
-#  - TOXENV=cli
 
 install:
   - pip install -U tox
@@ -17,4 +16,4 @@ language: python
 script: tox
 
 after_success:
-  - if [ "$TOXENV" == "py27" ] ; then coveralls ; fi
+  - if [ "$TOXENV" == "py27" ] ; then COVERALLS_REPO_TOKEN=P82AXkSpM5itk5JxGTAp8rGkun18v3xgx coveralls ; fi

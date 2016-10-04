@@ -15,6 +15,8 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
+    'cnr-server',
+    'cnrclient',
     'futures',
     'requests',
     'pyyaml',
@@ -56,12 +58,10 @@ setup(
         'kpm',
         'kpm.api',
         'kpm.api.impl',
-        'kpm.models',
         'kpm.commands',
         'kpm.platforms',
         'kpm.formats',
-        'kpm.convert',
-        'kpm.models.etcd'
+        'kpm.convert'
     ],
     scripts=[
         'bin/kpm'

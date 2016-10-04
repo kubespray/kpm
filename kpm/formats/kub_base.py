@@ -1,3 +1,6 @@
+import io
+import tempfile
+import json
 from urlparse import urlparse
 import copy
 import tarfile
@@ -5,20 +8,16 @@ import shutil
 import logging
 import os.path
 import yaml
-import io
-import tempfile
-import json
+
+from cnrclient.discovery import ishosted, split_package_name
+
 import kpm.registry as registry
 import kpm.packager as packager
 from kpm.utils import mkdir_p
-from kpm.discovery import ishosted, split_package_name
 from kpm.utils import convert_utf8
 from kpm.manifest_jsonnet import ManifestJsonnet
 
 logger = logging.getLogger(__name__)
-
-
-_mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
 
 class KubBase(object):
