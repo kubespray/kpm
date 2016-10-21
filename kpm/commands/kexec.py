@@ -19,12 +19,12 @@ class ExecCmd(CommandBase):
         super(ExecCmd, self).__init__(options)
 
     @classmethod
-    def _add_arguments(self, parser):
+    def _add_arguments(cls, parser):
         parser.add_argument('cmd', nargs='+', help="command to execute")
-        parser.add_argument("--namespace", nargs="?",
+        parser.add_argument("--namespace",
                             help="kubernetes namespace", default='default')
 
-        parser.add_argument('-k', '--kind', choices=['deployment', 'rs', 'rc'], nargs="?",
+        parser.add_argument('-k', '--kind', choices=['deployment', 'rs', 'rc'],
                             help="deployment, rc or rs", default='rc')
         parser.add_argument('-n', '--name', help="resource name", default='rs')
         parser.add_argument('-c', '--container', nargs='?', help="container name", default=None)

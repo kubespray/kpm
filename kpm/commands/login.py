@@ -20,9 +20,9 @@ class LoginCmd(CommandBase):
         super(LoginCmd, self).__init__(options)
 
     @classmethod
-    def _add_arguments(self, parser):
-        parser.add_argument("-H", "--registry-host", nargs="?", default=kpm.registry.DEFAULT_REGISTRY,
-                            help='registry API url')
+    def _add_arguments(cls, parser):
+        cls._add_registryhost_option(parser)
+
         parser.add_argument("-s", "--signup", action='store_true', default=False,
                             help="Create a new account and login")
         parser.add_argument("-u", "--user", nargs="?", default=None,

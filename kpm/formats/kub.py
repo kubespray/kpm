@@ -18,8 +18,8 @@ _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
 
 class Kub(KubBase):
-    format_name = "kub"
-    target = "kubernetes"
+    media_type = 'kpm'
+    platform = "kubernetes"
 
     def _resource_build(self, kub, resource):
         self._annotate_resource(kub, resource)

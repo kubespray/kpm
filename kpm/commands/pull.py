@@ -17,28 +17,25 @@ class PullCmd(CommandBase):
         self.registry_host = options.registry_host
         self.version = options.version
         self.dest = options.dest
+        self.media_type = options.media_type
         self.tarball = options.tarball
         self.path = None
         super(PullCmd, self).__init__(options)
 
     @classmethod
-    def _add_arguments(self, parser):
-        parser.add_argument('package', nargs=1, help="package-name")
-        parser.add_argument("--dest", nargs="?", default="/tmp/",
+    def _add_arguments(cls, parser):
+        cls._add_registryhost_option(parser)
+        cls._add_mediatype_option(parser)
+        cls._add_packagename_option(parser)
+        cls._add_packageversion_option(parser)
+        parser.add_argument("--dest", default="/tmp/",
                             help="directory used to extract resources")
-
         parser.add_argument("--tarball", action="store_true", default=False,
                             help="download the tar.gz")
-        parser.add_argument("-v", "--version", nargs="?",
-                            help="package VERSION", default=None)
-        parser.add_argument("-x", "--variables",
-                            help="variables", default={}, action=kpm.command.LoadVariables)
-        parser.add_argument("-H", "--registry-host", nargs="?", default=kpm.registry.DEFAULT_REGISTRY,
-                            help='registry API url')
 
     def _call(self):
         r = kpm.registry.Registry(self.registry_host)
-        result = r.pull(self.package, version=self.version)
+        result = r.pull(self.package, version=self.version, media_type=self.media_type)
         p = kpm.packager.Package(result, b64_encoded=False)
         self.path = os.path.join(self.dest, ManifestJsonnet(p).package_name())
         if self.tarball:
@@ -50,6 +47,8 @@ class PullCmd(CommandBase):
 
     def _render_json(self):
         print json.dumps({"pull": self.package,
+                          "media_type": self.media_type,
+                          "version": self.version,
                           "extrated": self.path})
 
     def _render_console(self):
