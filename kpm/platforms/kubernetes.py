@@ -111,7 +111,6 @@ class Kubernetes(object):
         f.flush()
         if r is None:
             self._call(cmd, dry=dry)
-
             return 'created'
         elif (self.kpmhash is None or self._get_kpmhash(r) == self.kpmhash) and force is False:
             return 'ok'
@@ -132,7 +131,7 @@ class Kubernetes(object):
         try:
             self.result = json.loads(self._call(cmd))
             return self.result
-        except subprocess.CalledProcessError:
+        except RuntimeError:
             return None
         except (requests.exceptions.HTTPError) as e:
             if e.response.status_code == 404:
@@ -174,7 +173,11 @@ class Kubernetes(object):
             if self.proxy is not None:
                 return self._request(cmd[0])
             else:
-                return subprocess.check_output(command, stderr=subprocess.STDOUT)
+                try:
+                    return subprocess.check_output(command, stderr=subprocess.STDOUT)
+                except subprocess.CalledProcessError as e:
+                    raise RuntimeError("Kubernetes failed to create %s (%s): "
+                                       "%s" % (self.name, self.kind, e.output))
         else:
             return True
 
