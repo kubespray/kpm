@@ -1,9 +1,10 @@
 from kpm.formats.kubcompose import KubCompose
 from kpm.formats.kub import Kub
 
+
 kub_formats = [Kub, KubCompose]
-kub_by_name = {Kub.format_name: Kub, KubCompose.format_name: KubCompose}
-kub_by_platforms = {'kubernetes': [Kub], 'docker-compose': [KubCompose]}
+kub_by_name = {k.media_type: k for k in kub_formats}
+kub_by_platforms = {k.platform: k for k in kub_formats}
 
 
 def kub_factory(name, *args, **kwargs):

@@ -15,21 +15,21 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'cnr-server',
-    'cnrclient',
+    'cnr-server>=0.2,<=0.3',
+    'cnrclient>=0.2,<=0.3',
     'futures',
-    'requests',
+    'requests==2.11.1',
     'pyyaml',
-    'jinja2',
+    'jinja2==2.8',
     'jsonpatch',
     'tabulate',
     'termcolor',
     'python-etcd',
-    'semantic_version',
+    'semantic_version==2.6.0',
     'flask',
     'Flask>=0.10.1',
     'flask-cors',
-    'jsonnet',
+    'jsonnet>=0.9.0',
 ]
 
 secure_requirements = [
@@ -48,7 +48,7 @@ test_requirements = [
 
 setup(
     name='kpm',
-    version='0.22.0-pre',
+    version='0.23.0',
     description="KPM cli",
     long_description=readme + '\n\n' + history,
     author="Antoine Legrand",
@@ -85,7 +85,5 @@ setup(
     extras_require={
         'secure': secure_requirements
     },
-    dependency_links=[
-        'https://github.com/google/jsonnet/archive/227079272a19d03adf34332e2a0c11906e081894.zip#egg=jsonnet'
-    ]
+
 )

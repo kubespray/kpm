@@ -6,16 +6,15 @@ logger = logging.getLogger(__name__)
 
 
 def print_packages(packages):
-    header = ['app', 'version', 'downloads']
+    header = ['app', 'release', 'downloads']
     table = []
-
     for p in packages:
-        table.append([p['name'], p['version'],  str(p.get('downloads', '-'))])
+        table.append([p['name'], p['default'], str(p.get('downloads', '-'))])
     print tabulate(table, header)
 
 
 def print_deploy_result(table):
-    header = ["package", "version", "type", "name",  "namespace", "status"]
+    header = ["package", "release", "type", "name",  "namespace", "status"]
     print "\n"
     for r in table:
         status = r.pop()

@@ -18,17 +18,17 @@ class ShowCmd(CommandBase):
         self.file = options.file
         self.tree = options.tree
         self.result = None
+        self.format = options.media_type
         super(ShowCmd, self).__init__(options)
 
     @classmethod
-    def _add_arguments(self, parser):
-        parser.add_argument('package', nargs=1, help="package-name")
+    def _add_arguments(cls, parser):
+        cls._add_registryhost_option(parser)
+        cls._add_mediatype_option(parser)
+        cls._add_packagename_option(parser)
+        cls._add_packageversion_option(parser)
         parser.add_argument('--tree', help="List files inside the package", action='store_true', default=False)
-        parser.add_argument('-f', '--file', nargs="?", help="Display a file", default=None)
-        parser.add_argument("-v", "--version", nargs="?", default=None,
-                            help="package version")
-        parser.add_argument("-H", "--registry-host", nargs="?", default=kpm.registry.DEFAULT_REGISTRY,
-                            help='registry API url')
+        parser.add_argument('-f', '--file', help="Display a file", default=None)
 
     def _call(self):
         r = kpm.registry.Registry(self.registry_host)

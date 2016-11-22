@@ -19,8 +19,8 @@ class JsonnetCmd(CommandBase):
         super(JsonnetCmd, self).__init__(options)
 
     @classmethod
-    def _add_arguments(self, parser):
-        parser.add_argument("--namespace", nargs="?",
+    def _add_arguments(cls, parser):
+        parser.add_argument("--namespace",
                             help="kubernetes namespace", default='default')
         parser.add_argument("-x", "--variables",
                             help="variables", default={}, action=kpm.command.LoadVariables)

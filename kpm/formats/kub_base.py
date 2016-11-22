@@ -17,12 +17,16 @@ from kpm.utils import mkdir_p
 from kpm.utils import convert_utf8
 from kpm.manifest_jsonnet import ManifestJsonnet
 
+
 logger = logging.getLogger(__name__)
 
 
 class KubBase(object):
+    media_type = "kpm-base"
+    target = "platform"
+
     def __init__(self, name,
-                 version=None,
+                 version='default',
                  variables=None,
                  shards=None,
                  namespace=None,
@@ -36,7 +40,7 @@ class KubBase(object):
             variables = {}
 
         self.endpoint = endpoint
-
+        self._registry = registry.Registry(endpoint=self.endpoint)
         self._dependencies = None
         self._resources = None
         self._deploy_name = name
@@ -120,8 +124,7 @@ class KubBase(object):
             with open(filepath, "rb") as f:
                 return f.read()
         else:
-            self._registry = registry.Registry(endpoint=self.endpoint)
-            return self._registry.pull(self._deploy_name, self._deploy_version)
+            return self._registry.pull(self._deploy_name, self._deploy_version, self.media_type)
 
     @property
     def kubClass(self):
@@ -142,7 +145,7 @@ class KubBase(object):
 
                 kub = self.kubClass(dep['name'],
                                     endpoint=self.endpoint,
-                                    version=dep.get('version', None),
+                                    version=dep.get('version', 'default'),
                                     variables=variables,
                                     resources=dep.get('resources', None),
                                     shards=dep.get('shards', None),

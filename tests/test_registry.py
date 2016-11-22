@@ -37,8 +37,8 @@ def test_pull():
     r = Registry()
     with requests_mock.mock() as m:
         response = 'package_data'
-        m.get(DEFAULT_REGISTRY + "/api/v1/packages/orga/p1/pull", text=response)
-        assert r.pull("orga/p1") == response
+        m.get(DEFAULT_REGISTRY + "/api/v1/packages/orga/p1/1.0.1/kpm/pull", text=response)
+        assert r.pull("orga/p1", "1.0.1", "kpm") == response
 
 
 def test_pull_discovery_https(discovery_html):
@@ -46,8 +46,8 @@ def test_pull_discovery_https(discovery_html):
     with requests_mock.mock() as m:
         response = 'package_data'
         m.get("https://cnr.sh/?cnr-discovery=1", text=discovery_html, complete_qs=True)
-        m.get("https://api.kubespray.io/api/v1/packages/orga/p1/pull", text=response)
-        assert r.pull("cnr.sh/orga/p1") == response
+        m.get("https://api.kubespray.io/api/v1/packages/orga/p1/1.0.1/kpm/pull", text=response)
+        assert r.pull("cnr.sh/orga/p1", "1.0.1", "kpm") == response
 
 
 def test_pull_discovery_http(discovery_html):
@@ -56,16 +56,16 @@ def test_pull_discovery_http(discovery_html):
         response = 'package_data'
         m.get("https://cnr.sh/?cnr-discovery=1", text="<html/>", complete_qs=True)
         m.get("http://cnr.sh/?cnr-discovery=1", text=discovery_html, complete_qs=True)
-        m.get("https://api.kubespray.io/api/v1/packages/orga/p1/pull", text=response)
-        assert r.pull("cnr.sh/orga/p1") == response
+        m.get("https://api.kubespray.io/api/v1/packages/orga/p1/1.0.1/kpm/pull", text=response)
+        assert r.pull("cnr.sh/orga/p1", "1.0.1", "kpm") == response
 
 
 def test_pull_with_version():
     r = Registry()
     with requests_mock.mock() as m:
         response = 'package_data'
-        m.get(DEFAULT_REGISTRY + "/api/v1/packages/orga/p1/pull?version=1.0.1", complete_qs=True, text=response)
-        assert r.pull("orga/p1", version="1.0.1") == response
+        m.get(DEFAULT_REGISTRY + "/api/v1/packages/orga/p1/1.0.1/kpm/pull", complete_qs=True, text=response)
+        assert r.pull("orga/p1", version="1.0.1", media_type="kpm") == response
 
 
 def test_list_packages():
@@ -161,28 +161,28 @@ def test_delete_package():
     r = Registry()
     with requests_mock.mock() as m:
         response = '{"packages": "true"}'
-        m.delete(DEFAULT_REGISTRY + "/api/v1/packages/ant31/kube-ui", complete_qs=True, text=response)
-        assert r.delete_package(name="ant31/kube-ui") == {"packages": "true"}
+        m.delete(DEFAULT_REGISTRY + "/api/v1/packages/ant31/kube-ui/default/kpm", complete_qs=True, text=response)
+        assert r.delete_package("ant31/kube-ui", "default", "kpm") == {"packages": "true"}
 
 
 def test_delete_package_version():
     r = Registry()
     with requests_mock.mock() as m:
         response = '{"packages": "true"}'
-        m.delete(DEFAULT_REGISTRY + "/api/v1/packages/ant31/kube-ui?version=1.4.3", complete_qs=True, text=response)
-        assert r.delete_package(name="ant31/kube-ui", version="1.4.3") == {"packages": "true"}
+        m.delete(DEFAULT_REGISTRY + "/api/v1/packages/ant31/kube-ui/1.4.3/kpm", complete_qs=True, text=response)
+        assert r.delete_package(name="ant31/kube-ui", version="1.4.3", media_type="kpm") == {"packages": "true"}
 
 
 def test_delete_package_unauthorized():
     r = Registry()
     with requests_mock.mock() as m:
         response = '{"packages": "true"}'
-        m.delete(DEFAULT_REGISTRY + "/api/v1/packages/ant31/kube-ui",
+        m.delete(DEFAULT_REGISTRY + "/api/v1/packages/ant31/kube-ui/1.2.0/kpm",
                  complete_qs=True,
                  text=response,
                  status_code=401)
         with pytest.raises(requests.HTTPError):
-            r.delete_package(name="ant31/kube-ui")
+            r.delete_package(name="ant31/kube-ui", version="1.2.0", media_type="kpm")
 
 
 def test_push_unauthorized(kubeui_blob):

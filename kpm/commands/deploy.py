@@ -21,25 +21,27 @@ class DeployCmd(CommandBase):
         self.version = options.version
         self.tmpdir = options.tmpdir
         self.variables = options.variables
-        self.target = options.to
-        self.format = options.format
+        self.target = options.platform
+        self.format = options.media_type
         self.status = None
         self._kub = None
         super(DeployCmd, self).__init__(options)
 
     @classmethod
-    def _add_arguments(self, parser):
-        parser.add_argument('package', nargs=1, help="package-name")
-        parser.add_argument("--tmpdir", nargs="?", default="/tmp/",
+    def _add_arguments(cls, parser):
+        cls._add_registryhost_option(parser)
+        cls._add_mediatype_option(parser)
+        cls._add_packagename_option(parser)
+        cls._add_packageversion_option(parser)
+
+        parser.add_argument("--tmpdir", default="/tmp/",
                             help="directory used to extract resources")
         parser.add_argument("--dry-run", action='store_true', default=False,
                             help="do not create the resources on kubernetes")
-        parser.add_argument("--namespace", nargs="?",
+        parser.add_argument("--namespace",
                             help="kubernetes namespace", default=None)
-        parser.add_argument("--api-proxy", nargs="?",
-                            help="kubectl proxy url", const="http://localhost:8001")
-        parser.add_argument("-v", "--version", nargs="?",
-                            help="package VERSION", default=None)
+        parser.add_argument("--api-proxy",
+                            help="kubectl proxy url", nargs="?", const="http://localhost:8001")
         parser.add_argument("-x", "--variables",
                             help="variables", default={}, action=kpm.command.LoadVariables)
         parser.add_argument("--shards",
@@ -47,12 +49,9 @@ class DeployCmd(CommandBase):
                             default=None)
         parser.add_argument("--force", action='store_true', default=False,
                             help="force upgrade, delete and recreate resources")
-        parser.add_argument("-H", "--registry-host", nargs="?", default=None,
-                            help='Generate resources server-side')
-        parser.add_argument("--format", nargs="?", default='kub',
-                            help='package format')
-        parser.add_argument("--to", nargs="?", default=None,
-                            help='target platform to deploy the package')
+
+        parser.add_argument("--platform", default=None,
+                            help='[experimental] target platform to deploy the package: [kubernetes, docker-compose]')
 
     def kub(self):
         if self._kub is None:

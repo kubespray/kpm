@@ -20,13 +20,13 @@ class ListPackageCmd(CommandBase):
         super(ListPackageCmd, self).__init__(options)
 
     @classmethod
-    def _add_arguments(self, parser):
+    def _add_arguments(cls, parser):
+        cls._add_registryhost_option(parser)
+
         parser.add_argument("-u", "--user", nargs="?", default=None,
                             help="list packages owned by USER")
         parser.add_argument("-o", "--organization", nargs="?", default=None,
                             help="list ORGANIZATION packages")
-        parser.add_argument("-H", "--registry-host", nargs="?", default=kpm.registry.DEFAULT_REGISTRY,
-                            help='registry API url')
 
     def _call(self):
         r = kpm.registry.Registry(self.registry_host)

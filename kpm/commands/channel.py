@@ -12,7 +12,6 @@ class ChannelCmd(CommandBase):
         self.output = options.output
         self.package = options.package[0]
         self.registry_host = options.registry_host
-        self.create = options.create
         self.delete = options.delete
         self.channel = options.name
         self.remove = options.remove_release
@@ -23,22 +22,20 @@ class ChannelCmd(CommandBase):
         super(ChannelCmd, self).__init__(options)
 
     @classmethod
-    def _add_arguments(self, parser):
-        parser.add_argument("-n", "--name", nargs="?", default=None,
+    def _add_arguments(cls, parser):
+        cls._add_registryhost_option(parser)
+        cls._add_packagename_option(parser)
+
+        parser.add_argument("-n", "--name", default=None,
                             help="channel name")
-        parser.add_argument("--add-release", nargs="?", default=None,
+        parser.add_argument("--add-release", default=None,
                             help="Add a release to the channel")
-        parser.add_argument("--create", default=False, action='store_true',
-                            help="Create the channel")
         parser.add_argument("--list", default=False, action='store_true',
                             help="Create the channel")
         parser.add_argument("--delete", default=False, action='store_true',
                             help="delete the channel")
-        parser.add_argument("--remove-release", nargs="?", default=None,
+        parser.add_argument("--remove-release", default=None,
                             help="Remove a release from the channel")
-        parser.add_argument("-H", "--registry-host", nargs="?", default=kpm.registry.DEFAULT_REGISTRY,
-                            help='registry API url')
-        parser.add_argument('package', nargs=1, help="package-name")
 
     def _call(self):
         r = kpm.registry.Registry(self.registry_host)
@@ -46,11 +43,7 @@ class ChannelCmd(CommandBase):
         name = self.channel
         if name is None and not self.list:
             raise argparse.ArgumentError(self.channel, "missing channel name")
-
-        if self.create is True:
-            self.channels = r.create_channel(package, name)
-            self.status = "Channel '%s' on '%s' created" % (name, package)
-        elif self.delete is True:
+        if self.delete is True:
             self.channels = r.delete_channel(package, name)
             self.status = "Channel '%s' on '%s' deleted" % (name, package)
         elif self.list:

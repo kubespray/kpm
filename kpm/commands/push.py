@@ -16,15 +16,16 @@ class PushCmd(CommandBase):
         self.registry_host = options.registry_host
         self.force = options.force
         self.manifest = None
+        self.media_type = options.media_type
 
         super(PushCmd, self).__init__(options)
 
     @classmethod
-    def _add_arguments(self, parser):
-        parser.add_argument("-H", "--registry-host", nargs="?", default=kpm.registry.DEFAULT_REGISTRY,
-                            help='registry API url')
-        parser.add_argument("-o", "--organization", nargs="?", default=None,
-                            help="push to another organization")
+    def _add_arguments(cls, parser):
+        cls._add_registryhost_option(parser)
+        cls._add_mediatype_option(parser)
+        cls._add_packagename_option(parser)
+        cls._add_packageversion_option(parser)
         parser.add_argument("-f", "--force", action='store_true', default=False,
                             help="force push")
 
@@ -36,15 +37,18 @@ class PushCmd(CommandBase):
         kubepath = os.path.join(".", self.manifest.package_name() + "kub.tar.gz")
         pack_kub(kubepath)
         f = open(kubepath, 'rb')
-        r.push(self.manifest.package['name'], {"name": self.manifest.package['name'],
-                                               "version": self.manifest.package['version'],
-                                               "blob": base64.b64encode(f.read())}, self.force)
+        body = {"name": self.manifest.package['name'],
+                "release": self.manifest.package['version'],
+                "media_type": self.media_type,
+                "blob": base64.b64encode(f.read())}
+        r.push(self.manifest.package['name'], body, self.force)
         f.close()
         os.remove(kubepath)
 
     def _render_json(self):
         print json.dumps({"package": self.manifest.package['name'],
-                          "version": self.manifest.package['version']})
+                          "version": self.manifest.package['version'],
+                          "media_type": self.media_type})
 
     def _render_console(self):
         print "package: %s (%s) pushed" % (self.manifest.package['name'],
