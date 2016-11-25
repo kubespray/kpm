@@ -30,6 +30,7 @@ AUTHORIZED_FILES = ["*.libjsonnet",
                     "LICENSE",
                     "AUTHORS",
                     "NOTICE",
+                    "manifests",
                     "deps/*.kub"]
 
 
@@ -52,10 +53,23 @@ def authorized_files():
     return files
 
 
-def pack_kub(kub):
+def all_files():
+    files = []
+    for root, _, filenames in os.walk('.'):
+        for filename in filenames:
+            files.append(os.path.join(root, filename))
+    return files
+
+
+def pack_kub(kub, filter_files=True):
     tar = tarfile.open(kub, "w:gz")
-    for f in authorized_files():
-        tar.add(f)
+    if filter_files:
+        files = authorized_files()
+    else:
+        files = all_files()
+    for filepath in files:
+        tar.add(filepath)
+
     tar.close()
 
 

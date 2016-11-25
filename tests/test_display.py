@@ -7,9 +7,11 @@ def package_list():
     h = [{"name": "o1/p1",
           "default": "1.4.0",
           "downloads": 45,
+          "manifests": ['kpm'],
           "releases": ["1.3.0", "1.2.0"]},
          {"name": "o1/p2",
           "default": "1.4.0",
+          "manifests": ['kpm'],
           "downloads": 45,
           "releases": ["1.3.0", "1.2.0"]}]
     return h
@@ -38,18 +40,19 @@ def deploy_result():
 def test_empty_list(capsys):
     print_packages([])
     out, err = capsys.readouterr()
-    res = unicode("\n".join(["app    release    downloads",
-                     "-----  ---------  -----------",""]))
+
+    res = unicode("\n".join(["app    release    downloads    manifests",
+                     "-----  ---------  -----------  -----------",""]))
     assert out == res
 
 
 def test_print_packages(package_list, capsys):
     print_packages(package_list)
     out, err = capsys.readouterr()
-    res = unicode("\n".join(["app    release      downloads",
-                             "-----  ---------  -----------",
-                             "o1/p1  1.4.0               45",
-                             "o1/p2  1.4.0               45", ""]))
+
+    res = unicode("\n".join(["app    release      downloads  manifests",
+                             "-----  ---------  -----------  -----------",
+                             "o1/p1  1.4.0               45  kpm\no1/p2  1.4.0               45  kpm", ""]))
 
     assert out == res
 

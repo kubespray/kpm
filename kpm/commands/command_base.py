@@ -1,3 +1,4 @@
+import kpm.command
 import kpm.registry
 
 
@@ -6,6 +7,7 @@ class CommandBase(object):
     help_message = 'describe the command'
 
     def __init__(self, args_options):
+        self.args_options = args_options
         self.output = "text"
 
     def render(self):
@@ -62,11 +64,11 @@ class CommandBase(object):
     @classmethod
     def _add_mediatype_option(cls, parser):
         parser.add_argument("-t", "--media-type", default='kpm',
-                            help='package format: [kpm, kpm-compose]')
+                            help='package format: [kpm, kpm-compose, helm]')
 
     @classmethod
     def _add_packagename_option(cls, parser):
-        parser.add_argument('package', nargs=1, help="package-name")
+        parser.add_argument('package', nargs=1, action=kpm.command.PackageName, help="package-name")
 
     @classmethod
     def _add_packageversion_option(cls, parser):

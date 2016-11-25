@@ -1,9 +1,9 @@
 import os
 import json
+import kpm.utils
 import kpm.registry
 import kpm.packager
 import kpm.command
-from kpm.manifest_jsonnet import ManifestJsonnet
 from kpm.commands.command_base import CommandBase
 
 
@@ -37,7 +37,8 @@ class PullCmd(CommandBase):
         r = kpm.registry.Registry(self.registry_host)
         result = r.pull(self.package, version=self.version, media_type=self.media_type)
         p = kpm.packager.Package(result, b64_encoded=False)
-        self.path = os.path.join(self.dest, ManifestJsonnet(p).package_name())
+        filename = kpm.utils.package_filename(self.package, self.version, self.media_type)
+        self.path = os.path.join(self.dest, filename)
         if self.tarball:
             self.path = self.path + ".tar.gz"
             with open(self.path, 'wb') as f:
