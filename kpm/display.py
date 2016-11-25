@@ -6,10 +6,12 @@ logger = logging.getLogger(__name__)
 
 
 def print_packages(packages):
-    header = ['app', 'release', 'downloads']
+    header = ['app', 'release', 'downloads', 'manifests']
     table = []
     for p in packages:
-        table.append([p['name'], p['default'], str(p.get('downloads', '-'))])
+        release = p["default"]
+        manifests = ", ".join(p['manifests'])
+        table.append([p['name'], release, str(p.get('downloads', '-')), manifests])
     print tabulate(table, header)
 
 

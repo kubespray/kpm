@@ -17,6 +17,7 @@ class ShowCmd(CommandBase):
         self.version = options.version
         self.file = options.file
         self.tree = options.tree
+        self.media_type = options.media_type
         self.result = None
         self.format = options.media_type
         super(ShowCmd, self).__init__(options)
@@ -32,7 +33,7 @@ class ShowCmd(CommandBase):
 
     def _call(self):
         r = kpm.registry.Registry(self.registry_host)
-        result = r.pull(self.package, version=self.version)
+        result = r.pull(self.package, version=self.version, media_type=self.media_type)
         p = kpm.packager.Package(result, b64_encoded=False)
         if self.tree:
             self.result = "\n".join(p.tree())

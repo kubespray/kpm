@@ -5,8 +5,22 @@ import yaml
 import json
 import copy
 import re
+from kpm.utils import check_package_name
 from kpm.render_jsonnet import RenderJsonnet
 from kpm.commands import all_commands
+
+
+class PackageName(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        try:
+            if isinstance(values, list):
+                name = values[0]
+            else:
+                name = values
+            check_package_name(name)
+        except ValueError as e:
+            raise parser.error(e.message)
+        setattr(namespace, self.dest, values)
 
 
 class LoadVariables(argparse.Action):
@@ -34,7 +48,7 @@ class LoadVariables(argparse.Action):
                 r = RenderJsonnet()
                 return r.render_jsonnet(f.read())
             else:
-                raise ValueError("File extension is not in [yaml, json, jsonnet], %s" % filename)
+                raise ValueError("File extension is not in [yaml, json, jsonnet]: %s" % filename)
 
     def load_variables(self, var):
         _, ext = os.path.splitext(var)
@@ -45,7 +59,10 @@ class LoadVariables(argparse.Action):
 
     def __call__(self, parser, namespace, values, option_string=None):
         items = copy.copy(argparse._ensure_value(namespace, self.dest, {}))
-        items.update(self.load_variables(values))
+        try:
+            items.update(self.load_variables(values))
+        except ValueError as e:
+            raise parser.error(option_string + ": " + e.message)
         setattr(namespace, self.dest, items)
 
 
@@ -58,9 +75,9 @@ def get_parser():
 
 
 def cli():
-    parser = get_parser()
-    args = parser.parse_args()
     try:
+        parser = get_parser()
+        args = parser.parse_args()
         args.func(args)
     except (argparse.ArgumentTypeError, argparse.ArgumentError) as e:
         parser.error(e.message)

@@ -1,6 +1,6 @@
 import os.path
 import logging
-import utils
+import kpm.utils
 import re
 
 __all__ = ['new_package']
@@ -73,15 +73,10 @@ kpm deploy {name}
 
 
 def new_package(name, dest=".", with_comments=False):
-    if re.match(r"^[a-z0-9_-]+/[a-z0-9_-]+$", name) is None:
-        if re.match(r"^.+?/.+?$", name) is not None:
-            raise ValueError("Package names are restricted to [a-z0-9_-] ")
-        else:
-            raise ValueError("Package '%s' does not match format 'namespace/name'" % (name))
-
+    kpm.utils.check_package_name(name)
     _, app = name.split("/")
     path = os.path.join(dest, name)
-    utils.mkdir_p(path)
+    kpm.utils.mkdir_p(path)
     readme = open(os.path.join(path, 'README.md'), 'w')
     readme.write(README.format(name=name))
     readme.close()
@@ -93,5 +88,5 @@ def new_package(name, dest=".", with_comments=False):
     manifest.write(m.format(app=app, name=name))
     manifest.close()
     for directory in DIRECTORIES:
-        utils.mkdir_p(os.path.join(path, directory))
+        kpm.utils.mkdir_p(os.path.join(path, directory))
     return path
