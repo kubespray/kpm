@@ -77,19 +77,19 @@ docs: install
 servedocs: docs
 	watchmedo shell-command -p '*.rst' -c '$(MAKE) -C docs html' -R -D .
 
-release: clean build-ui
+release: clean
 	python setup.py sdist upload
 	python setup.py bdist_wheel upload
 
 build-ui:
 	cd kpm-ui && gulp build --config local  --dir ../kpm/api/ui/src
 
-dist: clean build-ui
+dist: clean
 	python setup.py sdist
 	python setup.py bdist_wheel
 	ls -l dist
 
-install: clean build-ui
+install: clean
 	python setup.py install
 
 flake8:
