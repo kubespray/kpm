@@ -73,7 +73,7 @@ kpm deploy {name}
 
 
 def new_package(name, dest=".", with_comments=False):
-    kpm.utils.check_package_name(name)
+    kpm.utils.check_package_name(name, force_check=True)
     _, app = name.split("/")
     path = os.path.join(dest, name)
     kpm.utils.mkdir_p(path)

@@ -5,15 +5,17 @@ import sys
 import errno
 import os
 import collections
+from cnrclient.client import ishosted
 from termcolor import colored
 
 
-def check_package_name(name):
-    if re.match(r"^[a-z0-9_-]+/[a-z0-9_-]+$", name) is None:
-        if re.match(r"^.+?/.+?$", name) is not None:
-            raise ValueError("Package names are restricted to [a-z0-9_-] ")
-        else:
-            raise ValueError("Package '%s' does not match format 'namespace/name'" % (name))
+def check_package_name(name, force_check=False):
+    if not force_check and not ishosted(name):
+        if re.match(r"^[a-z0-9_-]+/[a-z0-9_-]+$", name) is None:
+            if re.match(r"^.+?/.+?$", name) is not None:
+                raise ValueError("Package names are restricted to [a-z0-9_-] ")
+            else:
+                raise ValueError("Package '%s' does not match format 'namespace/name'" % (name))
 
 
 def package_filename(name, version, media_type):
