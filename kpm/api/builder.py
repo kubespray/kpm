@@ -2,6 +2,7 @@ from flask import jsonify, Blueprint, current_app
 import kpm.api.impl.builder
 from kpm.api.app import getvalues
 
+
 builder_app = Blueprint('builder', __name__,)
 
 

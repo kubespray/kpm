@@ -12,7 +12,7 @@ import cnr
 info_app = Blueprint('info', __name__,)
 
 
-@info_app.before_request
+@info_app.before_app_request
 def pre_request_logging():
     jsonbody = request.get_json(force=True, silent=True)
     values = request.values.to_dict()

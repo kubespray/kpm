@@ -22,6 +22,7 @@ class PushCmd(CommandBase):
         self.version = options.version
         self.package_name = options.name
         self.filter_files = True
+        self.metadata = None
         super(PushCmd, self).__init__(options)
 
     @classmethod
@@ -41,6 +42,7 @@ class PushCmd(CommandBase):
                 self.package_name = self.manifest.package['name']
             if not self.version or self.version == "default":
                 self.version = self.manifest.package['version']
+            self.metadata = self.manifest.metadata()
         else:
             self.filter_files = False
 
@@ -56,6 +58,7 @@ class PushCmd(CommandBase):
         f = open(kubepath, 'rb')
         body = {"name": self.package_name,
                 "release": self.version,
+                "metadata": self.metadata,
                 "media_type": self.media_type,
                 "blob": base64.b64encode(f.read())}
         r.push(self.package_name, body, self.force)

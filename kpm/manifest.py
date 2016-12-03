@@ -45,4 +45,11 @@ class ManifestBase(dict):
             "package": self.package,
             "variables": self.variables,
             "resources": self.resources,
+            "shards": self.shards,
             "deploy": self.deploy})
+
+    def metadata(self):
+        return {'variables': self.variables,
+                'resources': self.resources,
+                "shards": self.shards,
+                'dependencies': self.dependencies}
