@@ -7,14 +7,14 @@ from conftest import get_response
 from kpm.registry import Registry, DEFAULT_REGISTRY
 import kpm
 
-def test_headers_without_auth():
+def test_headers_without_auth(fake_home):
     r = Registry()
     assert sorted(r.headers.keys()) == ['Content-Type', 'User-Agent']
     assert r.headers["Content-Type"] == "application/json"
     assert r.headers["User-Agent"] == "kpmpy-cli: %s" % kpm.__version__
 
 
-def test_headers_with_auth():
+def test_headers_with_auth(fake_home):
     r = Registry()
     r.auth.token = "titi"
     assert sorted(r.headers.keys()) == ["Authorization", 'Content-Type', 'User-Agent']
@@ -116,7 +116,7 @@ def test_generate_with_params():
         assert json.dumps(r.generate(name="ant31/kube-ui", namespace="testns", variables={"a": "b", "c": "d"}, version="1.3.4")) == response
 
 
-def test_signup():
+def test_signup(fake_home):
     r = Registry()
     with requests_mock.mock() as m:
         response = '{"email": "al@cnr.sh", "token": "signup_token"}'
@@ -136,7 +136,7 @@ def test_signup_existing():
             sign_r = r.signup("ant31", "plop", "plop", "al@cnr.sh")
 
 
-def test_login():
+def test_login(fake_home):
     r = Registry()
     with requests_mock.mock() as m:
         response = '{"email": "al@cnr.sh", "token": "login_token"}'
@@ -146,7 +146,7 @@ def test_login():
         assert r.auth.token == "login_token"
 
 
-def test_login_failed():
+def test_login_failed(fake_home):
     r = Registry()
     with requests_mock.mock() as m:
         response = '{"email": "al@cnr.sh", "token": "login_token"}'
@@ -173,7 +173,7 @@ def test_delete_package_version():
         assert r.delete_package(name="ant31/kube-ui", version="1.4.3", media_type="kpm") == {"packages": "true"}
 
 
-def test_delete_package_unauthorized():
+def test_delete_package_unauthorized(fake_home):
     r = Registry()
     with requests_mock.mock() as m:
         response = '{"packages": "true"}'
