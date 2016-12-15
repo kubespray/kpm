@@ -1,5 +1,3 @@
-import json
-import yaml
 from kpm.commands.deploy import DeployCmd
 
 
@@ -19,11 +17,8 @@ class GenerateCmd(DeployCmd):
         with open(filename, 'wb') as f:
             f.write(k.build_tar("."))
 
-    def _render_json(self):
-        print json.dumps(self.kub().build(), indent=2, separators=(',', ': '))
-
-    def _render_yaml(self):
-        print yaml.safe_dump(self.kub().build())
+    def _render_dict(self):
+        return self.kub().build()
 
     def _render_console(self):
         self._render_json()

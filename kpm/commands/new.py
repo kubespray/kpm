@@ -1,7 +1,7 @@
-import json
-import kpm.new
 import argparse
+
 from kpm.commands.command_base import CommandBase
+import kpm.new
 
 
 class NewCmd(CommandBase):
@@ -9,12 +9,11 @@ class NewCmd(CommandBase):
     help_message = "initiate a new package"
 
     def __init__(self, options):
-        self.output = options.output
+        super(NewCmd, self).__init__(options)
         self.package = options.package[0]
         self.with_comments = options.with_comments
         self.directory = options.directory
         self.path = None
-        super(NewCmd, self).__init__(options)
 
     @classmethod
     def _add_arguments(self, parser):
@@ -30,9 +29,9 @@ class NewCmd(CommandBase):
         except ValueError as e:
             argparse.ArgumentTypeError(e.message)
 
-    def _render_json(self):
-        print json.dumps({"new": self.package,
-                          "path": self.path})
+    def _render_dict(self):
+        return {"new": self.package,
+                "path": self.path}
 
     def _render_console(self):
         print "New package created in %s" % self.path

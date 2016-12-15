@@ -1,4 +1,3 @@
-import json
 import argparse
 import kpm.registry
 from kpm.commands.command_base import CommandBase
@@ -9,7 +8,7 @@ class ChannelCmd(CommandBase):
     help_message = "Manage package channels"
 
     def __init__(self, options):
-        self.output = options.output
+        super(ChannelCmd, self).__init__(options)
         self.package = options.package[0]
         self.registry_host = options.registry_host
         self.delete = options.delete
@@ -19,7 +18,6 @@ class ChannelCmd(CommandBase):
         self.list = options.list
         self.status = None
         self.channels = {}
-        super(ChannelCmd, self).__init__(options)
 
     @classmethod
     def _add_arguments(cls, parser):
@@ -58,8 +56,8 @@ class ChannelCmd(CommandBase):
                 self.channels = r.delete_channel_release(package, name, self.remove)
                 self.status = ">>> Release '%s' removed from '%s'" % (self.remove, name)
 
-    def _render_json(self):
-        print json.dumps(self.channels)
+    def _render_dict(self):
+        return self.channels
 
     def _render_console(self):
         print " >>> %s" % self.status

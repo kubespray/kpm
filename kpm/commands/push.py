@@ -1,6 +1,5 @@
 import argparse
 import os
-import json
 import base64
 import kpm.utils
 import kpm.registry
@@ -14,7 +13,7 @@ class PushCmd(CommandBase):
     help_message = "push a package to the registry"
 
     def __init__(self, options):
-        self.output = options.output
+        super(PushCmd, self).__init__(options)
         self.registry_host = options.registry_host
         self.force = options.force
         self.manifest = None
@@ -23,7 +22,7 @@ class PushCmd(CommandBase):
         self.package_name = options.name
         self.filter_files = True
         self.metadata = None
-        super(PushCmd, self).__init__(options)
+        self.prefix = None
 
     @classmethod
     def _add_arguments(cls, parser):
@@ -45,7 +44,7 @@ class PushCmd(CommandBase):
             self.metadata = self.manifest.metadata()
         else:
             self.filter_files = False
-
+            _, self.prefix = self.package_name.split("/")
         if self.version is None or self.version == "default":
             raise argparse.ArgumentTypeError("Missing option: --version")
         if self.package_name is None:
@@ -54,7 +53,7 @@ class PushCmd(CommandBase):
         filename = kpm.utils.package_filename(self.package_name, self.version, self.media_type)
         # @TODO: Pack in memory
         kubepath = os.path.join(".", filename + ".tar.gz")
-        pack_kub(kubepath)
+        pack_kub(kubepath, filter_files=self.filter_files, prefix=self.prefix)
         f = open(kubepath, 'rb')
         body = {"name": self.package_name,
                 "release": self.version,
@@ -65,10 +64,10 @@ class PushCmd(CommandBase):
         f.close()
         os.remove(kubepath)
 
-    def _render_json(self):
-        print json.dumps({"package": self.package_name,
-                          "version": self.version,
-                          "media_type": self.media_type})
+    def _render_dict(self):
+        return {"package": self.package_name,
+                "version": self.version,
+                "media_type": self.media_type}
 
     def _render_console(self):
         print "package: %s (%s) pushed" % (self.package_name, self.version)

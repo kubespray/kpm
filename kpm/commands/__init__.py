@@ -31,5 +31,4 @@ all_commands = {
     ExecCmd.name: ExecCmd,
     JsonnetCmd.name: JsonnetCmd,
     GenerateCmd.name: GenerateCmd,
-
 }

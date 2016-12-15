@@ -1,4 +1,3 @@
-import json
 import kpm.platforms.kubernetes
 import kpm.command
 import kpm.formats
@@ -10,7 +9,7 @@ class DeployCmd(CommandBase):
     help_message = "deploy a package on kubernetes"
 
     def __init__(self, options):
-        self.output = options.output
+        super(DeployCmd, self).__init__(options)
         self.package = options.package[0]
         self.registry_host = options.registry_host
         self.shards = options.shards
@@ -25,7 +24,6 @@ class DeployCmd(CommandBase):
         self.format = options.media_type
         self.status = None
         self._kub = None
-        super(DeployCmd, self).__init__(options)
 
     @classmethod
     def _add_arguments(cls, parser):
@@ -72,8 +70,8 @@ class DeployCmd(CommandBase):
                                         proxy=self.api_proxy,
                                         fmt=self.output)
 
-    def _render_json(self):
-        print json.dumps(self.status)
+    def _render_dict(self):
+        return self.status
 
     def _render_console(self):
         """ Handled by deploy """

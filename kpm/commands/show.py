@@ -1,4 +1,3 @@
-import json
 import kpm.registry
 import kpm.packager
 import kpm.manifest
@@ -11,7 +10,7 @@ class ShowCmd(CommandBase):
     help_message = "print the package manifest"
 
     def __init__(self, options):
-        self.output = options.output
+        super(ShowCmd, self).__init__(options)
         self.package = options.package[0]
         self.registry_host = options.registry_host
         self.version = options.version
@@ -20,7 +19,6 @@ class ShowCmd(CommandBase):
         self.media_type = options.media_type
         self.result = None
         self.format = options.media_type
-        super(ShowCmd, self).__init__(options)
 
     @classmethod
     def _add_arguments(cls, parser):
@@ -42,9 +40,9 @@ class ShowCmd(CommandBase):
         else:
             self.result = p.manifest
 
-    def _render_json(self):
-        print json.dumps({"show": self.package,
-                          "output": self.result})
+    def _render_dict(self):
+        return {"show": self.package,
+                "output": self.result}
 
     def _render_console(self):
         print self.result

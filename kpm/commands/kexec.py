@@ -8,15 +8,13 @@ class ExecCmd(CommandBase):
     It executes the command on the first matching pod'"
 
     def __init__(self, options):
-        self.output = options.output
+        super(ExecCmd, self).__init__(options)
         self.kind = options.kind
         self.container = options.container
         self.namespace = options.namespace
         self.resource = options.name
         self.cmd = options.cmd
         self.result = None
-
-        super(ExecCmd, self).__init__(options)
 
     @classmethod
     def _add_arguments(cls, parser):
@@ -37,8 +35,8 @@ class ExecCmd(CommandBase):
                            kind=self.kind)
         self.result = c.call()
 
-    def _render_json(self):
-        pass
+    def _render_dict(self):
+        return {'stdout': self.result}
 
     def _render_console(self):
         print self.result

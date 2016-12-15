@@ -61,14 +61,17 @@ def all_files():
     return files
 
 
-def pack_kub(kub, filter_files=True):
+def pack_kub(kub, filter_files=True, prefix=None):
     tar = tarfile.open(kub, "w:gz")
     if filter_files:
         files = authorized_files()
     else:
         files = all_files()
     for filepath in files:
-        tar.add(filepath)
+        arcname = None
+        if prefix:
+            arcname = os.path.join(prefix, filepath.replace("./", ""))
+        tar.add(filepath, arcname=arcname)
 
     tar.close()
 

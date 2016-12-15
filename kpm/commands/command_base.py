@@ -1,3 +1,5 @@
+import json
+import yaml
 import kpm.command
 import kpm.registry
 
@@ -11,9 +13,11 @@ class CommandBase(object):
         self.output = "text"
 
     def render(self):
-        if self.output == 'json':
+        if self.output == 'none':
+            return
+        elif self.output == 'json':
             self._render_json()
-        if self.output == 'yaml':
+        elif self.output == 'yaml':
             self._render_yaml()
         else:
             self._render_console()
@@ -34,13 +38,16 @@ class CommandBase(object):
         parser.set_defaults(func=cls.call)
 
     def _render_json(self):
+        print json.dumps(self._render_dict(), indent=2, separators=(',', ': '))
+
+    def _render_dict(self):
         raise NotImplementedError
 
     def _render_console(self):
         raise NotImplementedError
 
     def _render_yaml(self):
-        raise NotImplementedError
+        print yaml.safe_dump(self._render_dict())
 
     def _call(self):
         raise NotImplementedError
@@ -57,6 +64,7 @@ class CommandBase(object):
     @classmethod
     def _add_output_option(cls, parser):
         parser.add_argument("--output", default="text",  choices=['text',
+                                                                  'none',
                                                                   'json',
                                                                   'yaml'],
                             help="output format")

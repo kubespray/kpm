@@ -9,14 +9,12 @@ class JsonnetCmd(CommandBase):
     help_message = "Resolve a jsonnet file with the kpmstd available"
 
     def __init__(self, options):
-        self.output = options.output
+        super(JsonnetCmd, self).__init__(options)
         self.shards = options.shards
         self.namespace = options.namespace
         self.variables = options.variables
         self.filepath = options.filepath[0]
         self.result = None
-
-        super(JsonnetCmd, self).__init__(options)
 
     @classmethod
     def _add_arguments(cls, parser):
@@ -38,8 +36,8 @@ class JsonnetCmd(CommandBase):
         p = open(self.filepath).read()
         self.result = r.render_jsonnet(p, tla_codes={"params": json.dumps(tla_codes)})
 
-    def _render_json(self):
-        print json.dumps(self.result, indent=2, separators=(',', ': '))
+    def _render_dict(self):
+        return self.result
 
     def _render_console(self):
         self._render_json()
