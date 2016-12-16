@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'Antoine Legrand'
 __email__ = '2t.antoine@gmail.com'
-__version__ = '0.23.2'
+__version__ = '0.23.3'
 
 
 def version(registry_host=None):
