@@ -39,12 +39,19 @@ def parse_package_name(name):
 
 
 def check_package_name(name, force_check=False):
-    if not force_check and not ishosted(name):
+    hosted = False
+    try:
+        hosted = ishosted(name)
+    except AttributeError:
+        pass
+
+    if not force_check and not hosted:
         if re.match(r"^[a-z0-9_-]+/[a-z0-9_-]+$", name) is None:
             if re.match(r"^.+?/.+?$", name) is not None:
                 raise ValueError("Package names are restricted to [a-z0-9_-] ")
             else:
                 raise ValueError("Package '%s' does not match format 'namespace/name'" % (name))
+    return True
 
 
 def package_filename(name, version, media_type):

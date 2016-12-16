@@ -3,6 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+
 class ManifestBase(dict):
     def __init__(self):
         super(ManifestBase, self).__init__()

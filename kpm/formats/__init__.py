@@ -1,5 +1,6 @@
 from kpm.formats.kubcompose import KubCompose
 from kpm.formats.kub import Kub
+from kpm.formats.chart import Chart
 
 
 kub_formats = [Kub, KubCompose]
