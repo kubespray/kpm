@@ -111,6 +111,11 @@ def jinja_template(val, env=None):
     return template.render(variables)
 
 
+def readfile(val):
+    with open(val, 'r') as f:
+        return f.read()
+
+
 def jsonnet(val, env=None):
     from kpm.render_jsonnet import RenderJsonnet
     from kpm.utils import convert_utf8
@@ -184,6 +189,7 @@ def jinja_filters():
 
 def jsonnet_callbacks():
     filters = {
+        'read': (('filepath',), readfile),
         'hash': (('data', 'hashtype'), get_hash),
         'to_yaml': (('value',), json_to_yaml),
         'rand_alphanum': (('size', 'seed'), rand_alphanum),

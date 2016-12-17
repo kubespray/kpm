@@ -12,6 +12,11 @@
       std.native("to_yaml")(std.toString(data))
    ),
 
+   # Read a file
+   readfile(filepath):: (
+      std.native("read")(filepath)
+   ),
+
    # Random alpha-numeric string of length `size`
    randAlphaNum(size=32, seed=""):: (
       std.native("rand_alphanum")(std.toString(size), seed=seed)
