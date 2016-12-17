@@ -27,8 +27,8 @@ function(
 
     resources: [
       {
-        file: "kpm-registry-dp.yaml",
-        template: (importstr "templates/kpm-registry-dp.yaml"),
+        file: "templates/kpm-registry-dp.yaml",
+        template: (kpm.readfile(self.file)),
         name: "kpm-registry",
         type: "deployment",
       },
