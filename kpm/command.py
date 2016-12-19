@@ -52,7 +52,7 @@ class LoadVariables(argparse.Action):
 
     def load_variables(self, var):
         _, ext = os.path.splitext(var)
-        if ext == '':
+        if ext not in ['.yaml', '.yml', '.json', '.jsonnet']:
             return self._parse_cmd(var)
         else:
             return self._load_from_file(var, ext)
