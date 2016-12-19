@@ -1,3 +1,4 @@
+import re
 import json
 import logging
 import requests
@@ -18,7 +19,13 @@ DEFAULT_PREFIX = ""
 
 
 class Registry(CnrClient):
-    def __init__(self, endpoint=DEFAULT_REGISTRY, api_prefix=DEFAULT_PREFIX):
+    def __init__(self, endpoint=DEFAULT_REGISTRY, api_prefix=DEFAULT_PREFIX, insecure=False):
+        if not re.match("https?://", endpoint):
+            if insecure or str.startswith(endpoint, "localhost"):
+                scheme = "http://"
+            else:
+                scheme = "https://"
+            endpoint = scheme + endpoint
         super(Registry, self).__init__(endpoint, api_prefix)
         self._headers = {'Content-Type': 'application/json',
                          'User-Agent': "kpmpy-cli: %s" % kpm.__version__}
