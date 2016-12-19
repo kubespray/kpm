@@ -17,7 +17,6 @@ class LoginCmd(CommandBase):
         self.user = options.user
         self.status = None
 
-
     @classmethod
     def _add_arguments(cls, parser):
         cls._add_registryhost_option(parser)

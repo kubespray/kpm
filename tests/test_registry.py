@@ -24,7 +24,7 @@ def test_headers_with_auth(fake_home):
 
 
 def test_default_endpoint():
-    r = Registry(endpoint=None)
+    r = Registry()
     assert r.endpoint.geturl() == DEFAULT_REGISTRY
 
 
