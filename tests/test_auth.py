@@ -1,3 +1,4 @@
+import yaml
 import pytest
 import os.path
 from kpm.auth import KpmAuth
@@ -19,54 +20,58 @@ def test_init_token_empty(fake_home):
 
 def test_get_empty_token(fake_home):
     k = KpmAuth()
-    assert k.token is None
+    assert k.token('*') is None
+    assert k.tokens is None
 
 
 def test_delete_empty_token(fake_home):
     """ Should not fail if there is no token """
     k = KpmAuth()
-    assert k.delete_token() is None
+    assert k.delete_token('*') is None
 
 
 def test_delete_token(fake_home):
     """ Should not fail if there is no token """
     k = KpmAuth()
-    k.token = "titid"
-    assert k.delete_token() == "titid"
-    assert os.path.exists(k.tokenfile) is False
-
+    k.add_token('*', "titid")
+    assert k.token('*') == "titid"
+    assert k.delete_token('*') == "titid"
+    assert k.token('*') is None
 
 def test_create_token_value(fake_home):
     """ Should not fail if there is no token """
     k = KpmAuth()
-    k.token = "titic"
-    assert k.token == "titic"
+    k.add_token('a', "titic")
+    k.add_token('b', "titib")
+    assert k.token('a') == "titic"
+    assert k.token('a') == "titic"
+    assert k.token('c') is None
 
 
 def test_create_token_file(fake_home):
     """ Should not fail if there is no token """
     k = KpmAuth()
-    k.token = "titib"
+    k.add_token('a', "titib")
     assert os.path.exists(k.tokenfile) is True
     f = open(k.tokenfile, 'r')
     r = f.read()
-    f.close()
-    assert r == "titib"
+    assert  {'auths': {'a': 'titib'}} == yaml.load(r)
+
 
 
 def test_create_delete_get_token(fake_home):
     """ Should not fail if there is no token """
     k = KpmAuth()
-    k.token = "titia"
-    assert k.token == "titia"
-    k.delete_token()
-    assert k.token is None
+    k.add_token('a', "titia")
+    assert k.token('a') == "titia"
+    k.delete_token('a')
+    assert k.token('a') is None
 
 
 def test_get_token_from_file(fake_home):
     """ Should not fail if there is no token """
     k = KpmAuth()
     f = open(k.tokenfile, 'w')
-    f.write("mytoken")
+    f.write("{'auths': {'a': 'titib'}}")
     f.close()
-    assert k.token == "mytoken"
+    assert k.token('a') == "titib"

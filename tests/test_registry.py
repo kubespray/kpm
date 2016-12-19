@@ -16,7 +16,7 @@ def test_headers_without_auth(fake_home):
 
 def test_headers_with_auth(fake_home):
     r = Registry()
-    r.auth.token = "titi"
+    r.auth.add_token(DEFAULT_REGISTRY, "titi")
     assert sorted(r.headers.keys()) == ["Authorization", 'Content-Type', 'User-Agent']
     assert r.headers["Authorization"] == "titi"
     assert r.headers["Content-Type"] == "application/json"
@@ -123,7 +123,7 @@ def test_signup(fake_home):
         m.post(DEFAULT_REGISTRY + "/api/v1/users", complete_qs=True, text=response)
         sign_r = r.signup("ant31", "plop", "plop", "al@cnr.sh")
         assert json.dumps(sign_r) == json.dumps(json.loads(response))
-        assert r.auth.token == "signup_token"
+        assert r.auth.token(DEFAULT_REGISTRY) == "signup_token"
 
 
 # @TODO
@@ -143,7 +143,7 @@ def test_login(fake_home):
         m.post(DEFAULT_REGISTRY + "/api/v1/users/login", complete_qs=True, text=response)
         login_r = r.login("ant31", "plop")
         assert json.dumps(login_r) == json.dumps(json.loads(response))
-        assert r.auth.token == "login_token"
+        assert r.auth.token(DEFAULT_REGISTRY) == "login_token"
 
 
 def test_login_failed(fake_home):

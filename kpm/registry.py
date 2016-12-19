@@ -23,10 +23,11 @@ class Registry(CnrClient):
         self._headers = {'Content-Type': 'application/json',
                          'User-Agent': "kpmpy-cli: %s" % kpm.__version__}
         self.auth = KpmAuth(".kpm")
+        self.host = self.endpoint.geturl()
 
     def auth_token(self):
         """ Override auth_token """
-        return self.auth.token
+        return self.auth.token(self.host)
 
     def generate(self, name, namespace=None,
                  variables={}, version=None,
@@ -51,18 +52,16 @@ class Registry(CnrClient):
 
     def login(self, username, password):
         path = "/api/v1/users/login"
-        self.auth.delete_token()
         resp = requests.post(self._url(path),
                              data=json.dumps({"user": {"username": username, "password": password}}),
                              headers=self.headers)
         resp.raise_for_status()
         result = resp.json()
-        self.auth.token = result['token']
+        self.auth.add_token(self.host, result['token'])
         return result
 
     def signup(self, username, password, password_confirmation, email):
         path = "/api/v1/users"
-        self.auth.delete_token()
         resp = requests.post(self._url(path),
                              data=json.dumps({"user": {"username": username,
                                                        "password": password,
@@ -71,5 +70,5 @@ class Registry(CnrClient):
                              headers=self.headers)
         resp.raise_for_status()
         result = resp.json()
-        self.auth.token = result['token']
+        self.auth.add_token(self.host, result['token'])
         return result

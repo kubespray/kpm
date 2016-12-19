@@ -17,10 +17,10 @@ class LoginCmd(CommandBase):
         self.user = options.user
         self.status = None
 
+
     @classmethod
     def _add_arguments(cls, parser):
         cls._add_registryhost_option(parser)
-
         parser.add_argument("-s", "--signup", action='store_true', default=False,
                             help="Create a new account and login")
         parser.add_argument("-u", "--user", nargs="?", default=None,
@@ -59,7 +59,7 @@ class LoginCmd(CommandBase):
             self.status = "Login succeeded"
 
     def _render_dict(self):
-        return {"user": self.user, "status": self.status}
+        return {"user": self.user, "status": self.status, "host": self.host}
 
     def _render_console(self):
         print " >>> %s" % self.status
