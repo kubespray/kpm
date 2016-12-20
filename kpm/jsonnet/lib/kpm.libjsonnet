@@ -62,7 +62,7 @@ kpmstd {
    if resource.format == "kubernetes" then
       {
          namespace: resource.variables.namespace,
-         value: { metadata: { name: resource.name,
+         value: { metadata: { [ if std.objectHas(resource, 'name') then 'name' ]: resource.name,
                               namespace: resource.variables.namespace } },
       }
       else {}
@@ -123,7 +123,8 @@ kpmstd {
          local result = if std.objectHas(resource, "sharded") then
             kpm.sharded_resource(r, shards, variables)
          else
-            [kpm.template(r { variables: { name: r.name } + variables })];
+            [kpm.template(r { variables: {
+              [ if std.objectHas(r, 'name') then 'name' ]: r.name } + variables })];
          result for resource in resources if resource != null])
    ),
 

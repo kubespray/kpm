@@ -18,8 +18,7 @@ def test_endpoints():
 
 
 def test_endpoints_missing():
-    with pytest.raises(KeyError):
-        get_endpoint("bad")
+    assert get_endpoint("bad") is None
 
 
 def test_protected_is_true_when_annoted(ns_resource):

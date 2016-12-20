@@ -52,7 +52,7 @@ def get_endpoint(kind):
     elif kind + "s" in resource_endpoints:
         name = kind + "s"
     else:
-        raise KeyError("Resource name %s not in [%s]" % (kind, resource_endpoints.keys()))
+        return None
     return resource_endpoints[name]
 
 

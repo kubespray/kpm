@@ -21,12 +21,15 @@ class Kub(KubBase):
     media_type = 'kpm'
     platform = "kubernetes"
 
+    def _resource_name(self, resource):
+        return resource.get('name', resource['value']['metadata']['name'])
+
     def _resource_build(self, kub, resource):
         self._annotate_resource(kub, resource)
         return {"file": resource['file'],
                 "hash": resource['value']['metadata']['annotations'].get('kpm.hash', None),
                 "protected": resource['protected'],
-                "name": resource['name'],
+                "name": self._resource_name(resource),
                 "kind": resource['value']['kind'].lower(),
                 "endpoint": get_endpoint(
                     resource['value']['kind'].lower()).
