@@ -35,10 +35,11 @@ def mkdir_p(path):
 def colorize(status):
     msg = {'ok': 'green',
            'created': 'yellow',
-           'updated': 'yellow',
+           'updated': 'cyan',
+           'replaced': 'yellow',
            'absent': 'green',
            'deleted': 'red',
-           'protected': 'blue'}
+           'protected': 'magenta'}
     return colored(status, msg[status])
 
 

@@ -20,13 +20,13 @@ def package_list():
 @pytest.fixture()
 def deploy_result():
     from collections import OrderedDict
-    h = [OrderedDict([("name", "o1/p1"),
+    h = [OrderedDict([("package", "o1/p1"),
                       ("release", "1.4.0"),
                       ("type", "replicationcontroller"),
                       ("name", "p1"),
                       ("namespace", "testns"),
                       ("status", "ok")]).values(),
-         OrderedDict([("name", "o1/p1"),
+         OrderedDict([("package", "o1/p1"),
                       ("release", "1.4.0"),
                       ("type", "svc"),
                       ("name", "p1"),
@@ -69,9 +69,10 @@ def test_print_deploy_result(deploy_result, capsys):
     print_deploy_result(deploy_result)
     out, err = capsys.readouterr()
     res = "\n".join(["\n",
-                     "package    release    type                   name    namespace",
-                     "---------  ---------  ---------------------  ------  -----------",
-                     "p1         1.4.0      replicationcontroller  testns  \x1b[32mok\x1b[0m",
-                     "p1         1.4.0      svc                    testns  \x1b[33mupdated\x1b[0m",
+                     "package    release    type                   name    namespace    status",
+                     "---------  ---------  ---------------------  ------  -----------  --------",
+                     "o1/p1      1.4.0      replicationcontroller  p1      testns       \x1b[32mok\x1b[0m",
+                     "o1/p1      1.4.0      svc                    p1      testns       \x1b[36mupdated\x1b[0m",
                      ""])
+
     assert out == res
