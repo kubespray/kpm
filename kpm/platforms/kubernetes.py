@@ -96,7 +96,7 @@ class Kubernetes(object):
         else:
             return 'default'
 
-    def create(self, force=False, dry=False):
+    def create(self, force=False, dry=False, strategy='update'):
         """
           - Check if resource name exists
           - if it exists check if the kpmhash is the same
@@ -106,7 +106,12 @@ class Kubernetes(object):
         """
         r = self.get()
         f = tempfile.NamedTemporaryFile()
-        cmd = ['create', '-f', f.name]
+        method = "apply"
+        if self.proxy:
+            method = "create"
+            strategy = "replace"
+
+        cmd = [method, '-f', f.name]
         f.write(self.body)
         f.flush()
         if r is None:
@@ -115,10 +120,16 @@ class Kubernetes(object):
         elif (self.kpmhash is None or self._get_kpmhash(r) == self.kpmhash) and force is False:
             return 'ok'
         elif self._get_kpmhash(r) != self.kpmhash or force is True:
-            if self.delete(dry=dry) == 'protected':
-                return 'protected'
+            if strategy == 'replace' or force:
+                if self.delete(dry=dry) == 'protected':
+                    return 'protected'
+                action = "replaced"
+            elif strategy == "update":
+                action = "updated"
+            else:
+                raise ValueError("Unknown action %s" % action)
             self._call(cmd, dry=dry)
-            return 'updated'
+            return action
 
     def _get_kpmhash(self, r):
         if 'annotations' in r['metadata'] and 'kpm.hash' in r['metadata']['annotations']:

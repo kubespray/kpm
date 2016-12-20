@@ -73,11 +73,18 @@ kpmstd {
          package.expander
       else
          'none';
+      local default_update = if std.objectHas(package, 'update_mode') then
+         package.update_mode
+      else
+         'update';
+
       local platform = if std.objectHas(package, 'format') then
          package.format
       else
          'kubernetes';
+
       {
+         update_mode: default_update,
          format: platform,
          expander: default_expander,
          protected: false,
