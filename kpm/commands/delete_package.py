@@ -8,7 +8,7 @@ class DeletePackageCmd(CommandBase):
 
     def __init__(self, options):
         super(DeletePackageCmd, self).__init__(options)
-        self.package = options.package[0]
+        self.package = options.package
         self.registry_host = options.registry_host
         self.version = options.version
         self.media_type = options.media_type

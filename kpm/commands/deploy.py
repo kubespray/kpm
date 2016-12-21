@@ -10,7 +10,7 @@ class DeployCmd(CommandBase):
 
     def __init__(self, options):
         super(DeployCmd, self).__init__(options)
-        self.package = options.package[0]
+        self.package = options.package
         self.registry_host = options.registry_host
         self.shards = options.shards
         self.force = options.force

@@ -10,7 +10,7 @@ class CommandBase(object):
 
     def __init__(self, args_options):
         self.args_options = args_options
-        self.output = "text"
+        self.output = args_options.output
 
     def render(self):
         if self.output == 'none':

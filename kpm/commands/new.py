@@ -10,7 +10,7 @@ class NewCmd(CommandBase):
 
     def __init__(self, options):
         super(NewCmd, self).__init__(options)
-        self.package = options.package[0]
+        self.package = options.package
         self.with_comments = options.with_comments
         self.directory = options.directory
         self.path = None

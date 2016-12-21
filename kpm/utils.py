@@ -1,3 +1,5 @@
+# coding: utf-8
+
 from __future__ import absolute_import
 import re
 import importlib
@@ -7,6 +9,33 @@ import os
 import collections
 from cnrclient.client import ishosted
 from termcolor import colored
+
+
+def parse_version(version):
+    if str.startswith(version, "@sha256:"):
+        return {'key': 'digest',
+                'value': version.split("@sha256:")[1]}
+    elif version[0] == "@":
+        return {'key': 'version',
+                'value': version[1:]}
+    elif version[0] == ":":
+        return {'key': 'channel',
+                'value': version[1:]}
+
+
+def parse_package_name(name):
+    package_regexp = r"^(.*?)?\/?([a-z0-9_-]+\/[a-z0-9_-]+?)([:@].*)?$"
+    match = re.match(package_regexp, name)
+    if match is None:
+        raise ValueError("Package '%s' does not match format '[registry/]namespace/name[@version|:channel]'" % (name))
+    host, package, version = match.groups()
+    if version:
+        version = parse_version(version)
+    if not host:
+        host = None
+    return {'host': host,
+            'package': package,
+            'version': version}
 
 
 def check_package_name(name, force_check=False):
@@ -35,10 +64,11 @@ def mkdir_p(path):
 def colorize(status):
     msg = {'ok': 'green',
            'created': 'yellow',
-           'updated': 'yellow',
+           'updated': 'cyan',
+           'replaced': 'yellow',
            'absent': 'green',
            'deleted': 'red',
-           'protected': 'blue'}
+           'protected': 'magenta'}
     return colored(status, msg[status])
 
 

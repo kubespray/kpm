@@ -27,6 +27,7 @@ class Kub(KubBase):
     def _resource_build(self, kub, resource):
         self._annotate_resource(kub, resource)
         return {"file": resource['file'],
+                "update_mode": resource.get('update_mode', 'update'),
                 "hash": resource['value']['metadata']['annotations'].get('kpm.hash', None),
                 "protected": resource['protected'],
                 "name": self._resource_name(resource),
@@ -95,6 +96,7 @@ class Kub(KubBase):
                     "order": -1,
                     "hash": False,
                     "protected": True,
+                    "update_mode": 'update',
                     "value": value,
                     "patch": [],
                     "variables": {},
@@ -115,8 +117,8 @@ class Kub(KubBase):
                    "namespace": kub.namespace,
                    "resources": []}
         for resource in kub.resources():
-                package['resources'].\
-                    append(self._resource_build(kub, resource))
+            package['resources'].\
+                append(self._resource_build(kub, resource))
         return package
 
     def _process_deploy(self,
@@ -156,7 +158,8 @@ class Kub(KubBase):
                                          body=body,
                                          endpoint=endpoint,
                                          proxy=proxy)
-                status = getattr(kubresource, action)(force=force, dry=dry)
+                status = getattr(kubresource, action)(force=force, dry=dry,
+                                                      strategy=resource.get('update_mode', 'update'))
                 if fmt == "text":
                     output_progress(kubresource, status)
                 result_line = OrderedDict([("package", pname),

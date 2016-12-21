@@ -201,7 +201,7 @@ def test_create_force(svc_resource, subcall_cmd, monkeypatch):
 
     monkeypatch.setattr("kpm.platforms.kubernetes.Kubernetes.get", get)
     k = Kubernetes(body=svc_resource['body'])
-    assert k.create(force=True) == "updated"
+    assert k.create(force=True) == "replaced"
 
 
 def test_create_ok_nohash(ns_resource, subcall_cmd, monkeypatch):

@@ -12,7 +12,7 @@ class PullCmd(CommandBase):
 
     def __init__(self, options):
         super(PullCmd, self).__init__(options)
-        self.package = options.package[0]
+        self.package = options.package
         self.registry_host = options.registry_host
         self.version = options.version
         self.dest = options.dest
