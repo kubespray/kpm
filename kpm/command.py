@@ -17,8 +17,8 @@ class PackageName(argparse.Action):
             package_parts = parse_package_name(name)
             if package_parts['host'] is not None:
                 setattr(namespace, "registry_host", package_parts['host'])
-            if package_parts['version']:
-                setattr(namespace, package_parts['version']['key'], package_parts['version']['value'])
+            if package_parts['version'] is not None:
+                setattr(namespace, 'version', package_parts['version'])
             package = package_parts['package']
         except ValueError as e:
             raise parser.error(e.message)

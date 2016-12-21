@@ -16,7 +16,7 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'cnr-server>=0.2,<=0.3',
-    'cnrclient>=0.2,<=0.3',
+    'cnrclient>=0.2.5,<=0.3',
     'futures',
     'requests==2.11.1',
     'pyyaml',
@@ -48,7 +48,7 @@ test_requirements = [
 
 setup(
     name='kpm',
-    version='0.24.0',
+    version='0.24.1',
     description="KPM cli",
     long_description=readme + '\n\n' + history,
     author="Antoine Legrand",

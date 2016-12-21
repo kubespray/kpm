@@ -29,8 +29,8 @@ def parse_package_name(name):
     if match is None:
         raise ValueError("Package '%s' does not match format '[registry/]namespace/name[@version|:channel]'" % (name))
     host, package, version = match.groups()
-    if version:
-        version = parse_version(version)
+    if not version:
+        version = 'default'
     if not host:
         host = None
     return {'host': host,
