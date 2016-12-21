@@ -23,3 +23,11 @@ def print_deploy_result(table):
         r.append(colorize(status))
 
     print tabulate(table, header)
+
+
+def print_channels(channels):
+    header = ['channel', 'release']
+    table = []
+    for channel in channels:
+        table.append([channel['name'], channel['current']])
+    return tabulate(table, header)

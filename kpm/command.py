@@ -5,22 +5,24 @@ import yaml
 import json
 import copy
 import re
-from kpm.utils import check_package_name
+from kpm.utils import parse_package_name
 from kpm.render_jsonnet import RenderJsonnet
 from kpm.commands import all_commands
 
 
 class PackageName(argparse.Action):
-    def __call__(self, parser, namespace, values, option_string=None):
+    def __call__(self, parser, namespace, value, option_string=None):
         try:
-            if isinstance(values, list):
-                name = values[0]
-            else:
-                name = values
-            check_package_name(name)
+            name = value[0]
+            package_parts = parse_package_name(name)
+            if package_parts['host'] is not None:
+                setattr(namespace, "registry_host", package_parts['host'])
+            if package_parts['version']:
+                setattr(namespace, package_parts['version']['key'], package_parts['version']['value'])
+            package = package_parts['package']
         except ValueError as e:
             raise parser.error(e.message)
-        setattr(namespace, self.dest, values)
+        setattr(namespace, self.dest, package)
 
 
 class LoadVariables(argparse.Action):
