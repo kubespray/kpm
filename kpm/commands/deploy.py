@@ -1,7 +1,6 @@
 import kpm.platforms.kubernetes
-import kpm.command
 import kpm.formats
-from kpm.commands.command_base import CommandBase
+from kpm.commands.command_base import CommandBase, LoadVariables
 
 
 class DeployCmd(CommandBase):
@@ -41,7 +40,7 @@ class DeployCmd(CommandBase):
         parser.add_argument("--api-proxy",
                             help="kubectl proxy url", nargs="?", const="http://localhost:8001")
         parser.add_argument("-x", "--variables",
-                            help="variables", default={}, action=kpm.command.LoadVariables)
+                            help="variables", default={}, action=LoadVariables)
         parser.add_argument("--shards",
                             help="Shards list/dict/count: eg. --shards=5 ; --shards='[{\"name\": 1, \"name\": 2}]'",
                             default=None)

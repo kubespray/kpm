@@ -37,6 +37,7 @@ class PushCmd(CommandBase):
                             help="force push")
 
     def _manifest_type(self):
+        pass
 
     def _chart(self):
         self.manifest = ManifestChart()
