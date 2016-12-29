@@ -1,7 +1,6 @@
 import json
-import kpm.command
 from kpm.render_jsonnet import RenderJsonnet
-from kpm.commands.command_base import CommandBase
+from kpm.commands.command_base import CommandBase, LoadVariables
 
 
 class JsonnetCmd(CommandBase):
@@ -21,7 +20,7 @@ class JsonnetCmd(CommandBase):
         parser.add_argument("--namespace",
                             help="kubernetes namespace", default='default')
         parser.add_argument("-x", "--variables",
-                            help="variables", default={}, action=kpm.command.LoadVariables)
+                            help="variables", default={}, action=LoadVariables)
         # @TODO shards
         parser.add_argument("--shards",
                             help="Shards list/dict/count: eg. --shards=5 ; --shards='[{\"name\": 1, \"name\": 2}]'",
