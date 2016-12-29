@@ -1,11 +1,19 @@
+import re
+import os
+import copy
 import argparse
 import json
+
 import yaml
+
 from cnrclient.commands.command_base import CommandBase as CnrCommandBase
+
+from kpm.registry import Registry
+from kpm.render_jsonnet import RenderJsonnet
 
 
 class CommandBase(CnrCommandBase):
-    pass
+    RegistryClient = Registry
 
 
 class LoadVariables(argparse.Action):

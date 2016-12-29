@@ -27,7 +27,7 @@ class DeployCmd(CommandBase):
     @classmethod
     def _add_arguments(cls, parser):
         cls._add_registryhost_option(parser)
-        cls._add_mediatype_option(parser)
+        cls._add_mediatype_option(parser, default='kpm')
         cls._add_packagename_option(parser)
         cls._add_packageversion_option(parser)
 

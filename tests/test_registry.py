@@ -68,38 +68,6 @@ def test_pull_with_version():
         assert r.pull("orga/p1", version="1.0.1", media_type="kpm") == response
 
 
-def test_list_packages():
-    r = Registry()
-    with requests_mock.mock() as m:
-        response = '{"packages": "true"}'
-        m.get(DEFAULT_REGISTRY + "/api/v1/packages", text=response)
-        assert json.dumps(r.list_packages()) == response
-
-
-def test_list_packages_username():
-    r = Registry()
-    with requests_mock.mock() as m:
-        response = '{"packages": "true"}'
-        m.get(DEFAULT_REGISTRY + "/api/v1/packages?username=ant31", complete_qs=True, text=response)
-        assert json.dumps(r.list_packages(user="ant31")) == response
-
-
-def test_list_packages_orga():
-    r = Registry()
-    with requests_mock.mock() as m:
-        response = '{"packages": "true"}'
-        m.get(DEFAULT_REGISTRY + "/api/v1/packages?organization=ant31", complete_qs=True, text=response)
-        assert json.dumps(r.list_packages(organization="ant31")) == response
-
-
-def test_list_packages_orga_and_user():
-    r = Registry()
-    with requests_mock.mock() as m:
-        response = '{"packages": "true"}'
-        m.get(DEFAULT_REGISTRY + "/api/v1/packages?username=titi&organization=ant31", complete_qs=True, text=response)
-        assert json.dumps(r.list_packages(user="titi", organization="ant31")) == response
-
-
 def test_generate():
     r = Registry()
     with requests_mock.mock() as m:

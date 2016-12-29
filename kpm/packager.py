@@ -81,7 +81,6 @@ def pack_kub(kub, filter_files=True, prefix=None):
         if prefix:
             arcname = os.path.join(prefix, filepath.replace("./", ""))
         tar.add(filepath, arcname=arcname)
-
     tar.close()
 
 

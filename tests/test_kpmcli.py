@@ -1,11 +1,11 @@
+import os
 import json
 import subprocess
 import pytest
-import os
-import pytest
 import requests
+
 from kpm.utils import colorize
-from kpm.command import get_parser
+from kpm.commands.cli import get_parser
 
 
 # 1. signup with uniq-test-id account

@@ -1,9 +1,3 @@
-import logging
-
-logger = logging.getLogger(__name__)
-
-
-
 class ManifestBase(dict):
     def __init__(self):
         super(ManifestBase, self).__init__()
@@ -33,8 +27,8 @@ class ManifestBase(dict):
         return self.get("shards", [])
 
     def kubname(self):
-        sp = self.package['name'].split('/')
-        name = "%s_%s" % (sp[0], sp[1])
+        spl = self.package['name'].split('/')
+        name = "%s_%s" % (spl[0], spl[1])
         return name
 
     def package_name(self):
