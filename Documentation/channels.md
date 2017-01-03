@@ -18,6 +18,12 @@ version  date       digest
 ##### Create a new channel
 ```
 $ kpm channel ant31/rocketchat -n beta --create
+# alt:
+$ kpm push ant31/rocketchat:stable
+$ kpm push kpm.sh/ant31/rocketchat  --channel stable
+$ kpm delete-package kpm.sh/ant31/rocketchat:stable
+$ kpm channel --delete kpm.sh/ant31/rocketchat:stable
+
 ```
 ##### Add/Remove releases
 ```
