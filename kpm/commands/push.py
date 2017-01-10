@@ -9,7 +9,12 @@ class PushCmd(CnrPushCmd):
     def _kpm(self):
         self.filter_files = True
         self.manifest = ManifestJsonnet()
-        if not self.package_name:
-            self.package_name = self.manifest.package['name']
+        ns, name = self.manifest.package['name'].split("/")
+        if not self.namespace:
+            self.namespace = ns
+        if not self.name:
+            self.name = name
+        self.package_name = "%s/%s" % (self.namespace, self.name)
+
         if not self.version or self.version == "default":
             self.version = self.manifest.package['version']
