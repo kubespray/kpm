@@ -2,13 +2,23 @@
 
 You may want to run a kpm registry locally, and then deploy your kpm registry to k8s from this "bootstrapping registry" if-you-will.
 
-It requires etcd to be present, so get up etcd first.
+## Run local registry with filesystem backend
+
+You can run a local registry simply with the local filesystem backend using the `run-server.sh` script.
+
+```
+$ PORT=5000 DATABASE_URL="$HOME/.kpm/packages"  STORAGE=filesystem ./run-server.sh
+```
+
+## Run local registry with default etcd backend
+
+If you're using the default backend, etcd needs be present:
 
 ```
 $ docker run --name tempetcd -dt -p 2379:2379 -p 2380:2380 quay.io/coreos/etcd:v3.0.6 /usr/local/bin/etcd -listen-client-urls http://0.0.0.0:2379,http://0.0.0.0:4001 -advertise-client-urls http://$127.0.0.1:2379,http://127.0.0.1:4001
 ```
 
-Now you can run the registry API server with gunicorn, a la:
+And with etcd in place, you can now run the registry API server with gunicorn, a la:
 
 ```
 $ pwd
@@ -17,6 +27,8 @@ $ gunicorn kpm.api.wsgi:app -b :5555
 ```
 
 And then you can push the kpm-registry packages. Double check the image tag in the `manifest.jsonnet` to make sure it's a tag available from the Docker registry.
+
+## Pushing kpm-registry packages and etcd dependency
 
 ```
 $ pwd
