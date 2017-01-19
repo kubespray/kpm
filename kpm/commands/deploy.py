@@ -75,4 +75,5 @@ class DeployCmd(CommandBase):
     def _render_console(self):
         """ Handled by deploy """
         if self.kub().target == "docker-compose":
-            print self.status
+            return self.status
+        return ''

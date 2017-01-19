@@ -64,7 +64,7 @@ class KubBase(object):
     def package(self):
         if self._package is None:
             result = self._fetch_package()
-            self._package = packager.Package(result, b64_encoded=False)
+            self._package = packager.Package(result, b64_encoded=True)
         return self._package
 
     @property
@@ -124,7 +124,7 @@ class KubBase(object):
             with open(filepath, "rb") as f:
                 return f.read()
         else:
-            return self._registry.pull(self._deploy_name, self._deploy_version, self.media_type)
+            return self._registry.pull_json(self._deploy_name, self._deploy_version, self.media_type)['blob']
 
     @property
     def kubClass(self):
