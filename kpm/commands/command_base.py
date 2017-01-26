@@ -14,6 +14,7 @@ from kpm.render_jsonnet import RenderJsonnet
 
 class CommandBase(CnrCommandBase):
     RegistryClient = Registry
+    default_media_type = 'kpm'
 
 
 class LoadVariables(argparse.Action):

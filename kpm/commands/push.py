@@ -12,9 +12,9 @@ class PushCmd(CnrPushCmd):
         ns, name = self.manifest.package['name'].split("/")
         if not self.namespace:
             self.namespace = ns
-        if not self.name:
-            self.name = name
-        self.package_name = "%s/%s" % (self.namespace, self.name)
-
+        if not self.pname:
+            self.pname = name
+        self.package_name = "%s/%s" % (self.namespace, self.pname)
         if not self.version or self.version == "default":
             self.version = self.manifest.package['version']
+        self.metadata = self.manifest.metadata()
