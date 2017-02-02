@@ -28,6 +28,8 @@ resource_endpoints = {
     "configmaps": "api/v1/namespaces/{namespace}/configmaps",
     "replicationcontrollers": "api/v1/namespaces/{namespace}/replicationcontrollers",
     "pods": "api/v1/namespaces/{namespace}/pods",
+    "statefulset": "apis/apps/v1beta1/namespaces/{namespace}/statefulsets",
+    "storageclass": "apis/storage.k8s.io/v1beta1/statefulsets",
 }
 
 
@@ -36,6 +38,8 @@ resources_alias = {"ds": "daemonsets",
                    "ing": "ingresses",
                    "ingress": "ingresses",
                    "ns": "namespaces",
+                   "sc": "storageclasses",
+                   "sfs": "statefulsets",
                    "po": "pods",
                    "pv": "persistentvolumes",
                    "pvc": "persistentvolumeclaims",
