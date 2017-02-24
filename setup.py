@@ -15,17 +15,17 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'cnr-server>=0.2,<=0.3',
+    'cnr-server>=0.2.6.post1,<=0.3',
     'cnrclient>=0.3.0,<=0.4',
     'futures',
-    'requests==2.11.1',
+    'requests>=2.11.1',
     'pyyaml',
-    'jinja2==2.8',
+    'jinja2>=2.8',
     'jsonpatch',
     'tabulate',
     'termcolor',
     'python-etcd',
-    'semantic_version==2.6.0',
+    'semantic_version>=2.6.0',
     'flask',
     'Flask>=0.10.1',
     'flask-cors',
@@ -48,7 +48,7 @@ test_requirements = [
 
 setup(
     name='kpm',
-    version='0.24.3',
+    version='0.24.4',
     description="KPM cli",
     long_description=readme + '\n\n' + history,
     author="Antoine Legrand",

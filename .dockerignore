@@ -1,0 +1,48 @@
+.git
+!.git/HEAD
+.gitignore
+ROADMAP.md
+.DS_Store
+
+# Byte-compiled / optimized / DLL files
+**/*.pyc
+**/*.pyo
+**/*~
+**/__pycache__
+
+# C extensions
+*.so
+deploy
+# Distribution / packaging
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+./lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info
+*.egg
+linux-amd64
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+*.log
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*,cover
+.hypothesis/
+node_modules/
