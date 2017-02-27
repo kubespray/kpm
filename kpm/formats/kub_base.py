@@ -26,7 +26,7 @@ class KubBase(object):
     target = "platform"
 
     def __init__(self, name,
-                 version='default',
+                 version=None,
                  variables=None,
                  shards=None,
                  namespace=None,
@@ -38,6 +38,9 @@ class KubBase(object):
 
         if variables is None:
             variables = {}
+
+        if version is None:
+            {"key": "version", "values": 'default'}
 
         self.endpoint = endpoint
         self._registry = registry.Registry(endpoint=self.endpoint)
@@ -145,7 +148,7 @@ class KubBase(object):
 
                 kub = self.kubClass(dep['name'],
                                     endpoint=self.endpoint,
-                                    version=dep.get('version', 'default'),
+                                    version={"key": "version", "value": dep.get('version', 'default')},
                                     variables=variables,
                                     resources=dep.get('resources', None),
                                     shards=dep.get('shards', None),

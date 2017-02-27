@@ -17,6 +17,7 @@ class DeployCmd(CommandBase):
         self.namespace = options.namespace
         self.api_proxy = options.api_proxy
         self.version = options.version
+        self.version_parts = options.version_parts
         self.tmpdir = options.tmpdir
         self.variables = options.variables
         self.target = options.platform
@@ -59,7 +60,7 @@ class DeployCmd(CommandBase):
                                                 variables=self.variables,
                                                 namespace=self.namespace,
                                                 shards=self.shards,
-                                                version=self.version)
+                                                version=self.version_parts)
         return self._kub
 
     def _call(self):
