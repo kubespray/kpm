@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 PORT=${PORT:-5000}
 storage="${STORAGE:-filesystem}"
 echo $storage

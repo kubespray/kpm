@@ -18,8 +18,8 @@ DEFAULT_PREFIX = ""
 
 
 class Registry(CnrClient):
-    def __init__(self, endpoint=DEFAULT_REGISTRY, api_prefix=DEFAULT_PREFIX):
-        super(Registry, self).__init__(endpoint, api_prefix=api_prefix)
+    def __init__(self, endpoint=DEFAULT_REGISTRY):
+        super(Registry, self).__init__(endpoint)
         self._headers = {'Content-Type': 'application/json',
                          'User-Agent': "kpmpy-cli: %s" % kpm.__version__}
         self.auth = CnrAuth(".kpm")
