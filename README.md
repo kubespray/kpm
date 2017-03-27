@@ -10,7 +10,7 @@ KPM provides the glue between kubernetes resources (ReplicaSet, DaemonSet, Secre
 
 ##### Versioning and rollbacks
 
-KPM uses a global registry, packages are immediately accessible and visible to the community. Versioning is strong and was easy to implement: https://kpm.kubespray.io
+KPM uses a global registry, packages are immediately accessible and visible to the community. Versioning is strong and was easy to implement: https://cnr.kubespray.com
 
 
 ##### Clustered applications and persistent-storage !
