@@ -27,12 +27,12 @@ def create_app():
     from cnr.api.registry import registry_app
 
     if app.config['KPM_API_BUILDER'] == "true":
-        app.register_blueprint(builder_app)
-    app.register_blueprint(info_app)
+        app.register_blueprint(builder_app, url_prefix="/cnr")
+    app.register_blueprint(info_app, url_prefix="/cnr")
     if app.config['KPM_API_REGISTRY'] == "true":
-        app.register_blueprint(registry_app)
+        app.register_blueprint(registry_app, url_prefix="/cnr")
     if app.config['KPM_API_BACKEND'] == "true":
-        app.register_blueprint(deployment_app)
+        app.register_blueprint(deployment_app, url_prefix="/cnr")
     init_logging(app.logger, loglevel='INFO')
     app.logger.info("Start service")
     return app

@@ -15,8 +15,8 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'cnr-server>=0.2.6.post1,<=0.3',
-    'cnr>=0.3.0,<=0.4',
+    'cnr-server>=0.2.7.post2,<=0.3',
+    'cnr>=0.3.8,<=0.4',
     'futures',
     'requests>=2.11.1',
     'pyyaml',
