@@ -1,0 +1,67 @@
+stages:
+  - tests
+  - build
+  - release
+
+variables:
+  IMAGE: quay.io/kubespray/kpm
+  PIP_CACHE_DIR: pip-cache
+
+cache:
+  paths:
+    - cache
+    - pip-cache
+  key: "$CI_PROJECT_ID"
+
+
+.job: &job
+  before_script:
+  - pip install -e .
+  - pip install -r requirements_dev.txt -U
+  script:
+    - make test
+  tags:
+    - kubernetes
+  image: python:2.7
+
+unit-test:
+  <<: *job
+  stage: tests
+  image: python:2.7
+  script:
+    - pip install -U python-coveralls
+    - make test
+    - coveralls
+
+flake8:
+  <<: *job
+  image: python:2.7
+  stage: tests
+  script:
+    - make flake8
+
+# pylint:
+#   <<: *job
+#   image: python:2.7
+#   stage: code-style
+#   script:
+#     - pip install pylint
+#     - make pylint
+
+.docker: &docker
+  variables:
+    DOCKER_HOST: tcp://localhost:2375
+  image: docker:git
+  before_script:
+    - docker login -u $DOCKER_USER -p $DOCKER_PASS quay.io
+  services:
+     - docker:dind
+  tags:
+    - kubernetes
+
+docker-build:
+  <<: *docker
+  stage: build
+  script:
+    - docker build --no-cache -t $IMAGE:$CI_BUILD_REF_NAME .
+    - docker push $IMAGE:$CI_BUILD_REF_NAME

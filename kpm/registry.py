@@ -14,16 +14,16 @@ __all__ = ['Registry']
 logger = logging.getLogger(__name__)
 DEFAULT_REGISTRY = 'http://localhost:5000'
 API_PREFIX = '/api/v1'
-DEFAULT_PREFIX = ""
+DEFAULT_PREFIX = "/cnr"
 
 
 class Registry(CnrClient):
     def __init__(self, endpoint=DEFAULT_REGISTRY):
         super(Registry, self).__init__(endpoint)
         self._headers = {'Content-Type': 'application/json',
-                         'User-Agent': "kpmpy-cli: %s" % kpm.__version__}
-        self.auth = CnrAuth(".kpm")
+                         'User-Agent': "kpmpy-cli/%s" % kpm.__version__}
         self.host = self.endpoint.geturl()
+        self.auth = CnrAuth(".kpm")
 
     def generate(self, name, namespace=None,
                  variables={}, version=None,
