@@ -5,12 +5,12 @@ stages:
 
 variables:
   IMAGE: quay.io/kubespray/kpm
-  PIP_CACHE_DIR: pip-cache
+  PIP_CACHE_DIR: /pip-cache
 
 cache:
   paths:
     - cache
-    - pip-cache
+    - /pip-cache
   key: "$CI_PROJECT_ID"
 
 
@@ -22,12 +22,12 @@ cache:
     - make test
   tags:
     - kubernetes
-  image: python:2.7
+  image: quay.io/kubespray/kpm:build
 
 unit-test:
   <<: *job
   stage: tests
-  image: python:2.7
+  image: quay.io/kubespray/kpm:build
   script:
     - pip install -U python-coveralls
     - make test
@@ -35,7 +35,7 @@ unit-test:
 
 flake8:
   <<: *job
-  image: python:2.7
+  image: quay.io/kubespray/kpm:build
   stage: tests
   script:
     - make flake8

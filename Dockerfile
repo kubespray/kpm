@@ -1,4 +1,5 @@
-FROM alpine:3.3
+FROM quay.io/kubespray/kpm:build
+#FROM alpine:3.3
 
 ARG workdir=/opt
 ARG with_tests=true
