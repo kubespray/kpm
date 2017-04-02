@@ -1,0 +1,8 @@
+---
+server.name: kibana
+server.host: "0"
+xpack.security.enabled: false
+xpack.security.encryptionKey: "abfdsfdsfklfkdls34"
+elasticsearch.url: http://elasticsearch.elk.svc.cluster.local:9200
+elasticsearch.username: elastic
+elasticsearch.password: changeme
