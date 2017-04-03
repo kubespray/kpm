@@ -43,7 +43,8 @@ test_requirements = [
     "pytest-cov",
     'pytest-flask',
     "pytest-ordering",
-    "requests-mock"
+    "requests-mock",
+    "yapf"
 ]
 
 setup(

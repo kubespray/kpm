@@ -17,14 +17,13 @@ class JsonnetCmd(CommandBase):
 
     @classmethod
     def _add_arguments(cls, parser):
-        parser.add_argument("--namespace",
-                            help="kubernetes namespace", default='default')
-        parser.add_argument("-x", "--variables",
-                            help="variables", default={}, action=LoadVariables)
+        parser.add_argument("--namespace", help="kubernetes namespace", default='default')
+        parser.add_argument("-x", "--variables", help="variables", default={}, action=LoadVariables)
         # @TODO shards
-        parser.add_argument("--shards",
-                            help="Shards list/dict/count: eg. --shards=5 ; --shards='[{\"name\": 1, \"name\": 2}]'",
-                            default=None)
+        parser.add_argument(
+            "--shards",
+            help="Shards list/dict/count: eg. --shards=5 ; --shards='[{\"name\": 1, \"name\": 2}]'",
+            default=None)
         parser.add_argument('filepath', nargs=1, help="Fetch package from the registry")
 
     def _call(self):

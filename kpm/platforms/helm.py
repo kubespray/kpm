@@ -1,10 +1,10 @@
 import subprocess
 
-
 __all__ = ['Helm']
 
 
 class Helm(object):
+
     def __init__(self, chart):
         self.chart = chart
         self.result = None

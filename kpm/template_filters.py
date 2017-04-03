@@ -45,16 +45,11 @@ def gen_private_rsa():
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives.asymmetric import rsa
 
-    private_key = rsa.generate_private_key(
-        public_exponent=65537,
-        key_size=2048,
-        backend=default_backend()
-    )
-    pem = private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption()
-    )
+    private_key = rsa.generate_private_key(public_exponent=65537, key_size=2048,
+                                           backend=default_backend())
+    pem = private_key.private_bytes(encoding=serialization.Encoding.PEM,
+                                    format=serialization.PrivateFormat.TraditionalOpenSSL,
+                                    encryption_algorithm=serialization.NoEncryption())
     return pem
 
 
@@ -63,15 +58,10 @@ def gen_private_dsa():
     from cryptography.hazmat.backends import default_backend
     from cryptography.hazmat.primitives.asymmetric import dsa
 
-    private_key = dsa.generate_private_key(
-        key_size=1024,
-        backend=default_backend()
-    )
-    pem = private_key.private_bytes(
-        encoding=serialization.Encoding.PEM,
-        format=serialization.PrivateFormat.TraditionalOpenSSL,
-        encryption_algorithm=serialization.NoEncryption()
-    )
+    private_key = dsa.generate_private_key(key_size=1024, backend=default_backend())
+    pem = private_key.private_bytes(encoding=serialization.Encoding.PEM,
+                                    format=serialization.PrivateFormat.TraditionalOpenSSL,
+                                    encryption_algorithm=serialization.NoEncryption())
     return pem
 
 
@@ -82,10 +72,7 @@ def gen_privatekey(keytype='rsa', key='', seed=None):
     if seed is None:
         seed = rand_alphanum(128)
     k = seed + key
-    generators = {"ecdsa": gen_private_ecdsa,
-                  "rsa": gen_private_rsa,
-                  "dsa": gen_private_dsa
-                  }
+    generators = {"ecdsa": gen_private_ecdsa, "rsa": gen_private_rsa, "dsa": gen_private_dsa}
     if k not in all_privates:
         all_privates[k] = {}
     if keytype not in ["ecdsa", "dsa", "rsa"]:
@@ -147,7 +134,7 @@ def yaml_dumps(value):
     Serializes an object as YAML. Optionally given keyword arguments
     are passed to yaml.dumps(), ensure_ascii however defaults to False.
     """
-    return yaml.dump(value,  default_flow_style=True)
+    return yaml.dump(value, default_flow_style=True)
 
 
 def json_loads(value):
@@ -183,7 +170,7 @@ def jinja_filters():
         'gen_privatekey': gen_privatekey,
         'rand_alphanum': rand_alphanum,
         'rand_alpha': rand_alpha
-        }
+    }
     return filters
 
 

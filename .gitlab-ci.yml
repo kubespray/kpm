@@ -40,6 +40,12 @@ flake8:
   script:
     - make flake8
 
+yapf:
+  <<: *job
+  stage: tests
+  script:
+    - make yapf-test
+
 # pylint:
 #   <<: *job
 #   image: python:2.7

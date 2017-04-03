@@ -1,4 +1,5 @@
 class ManifestBase(dict):
+
     def __init__(self):
         super(ManifestBase, self).__init__()
 
@@ -41,10 +42,13 @@ class ManifestBase(dict):
             "variables": self.variables,
             "resources": self.resources,
             "shards": self.shards,
-            "deploy": self.deploy})
+            "deploy": self.deploy
+        })
 
     def metadata(self):
-        return {'variables': self.variables,
-                'resources': self.resources,
-                "shards": self.shards,
-                'dependencies': self.dependencies}
+        return {
+            'variables': self.variables,
+            'resources': self.resources,
+            "shards": self.shards,
+            'dependencies': self.dependencies
+        }

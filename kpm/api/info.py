@@ -1,15 +1,8 @@
-from flask import (jsonify,
-                   request,
-                   Blueprint,
-                   redirect,
-                   render_template,
-                   current_app,
-                   url_for)
+from flask import (jsonify, request, Blueprint, redirect, render_template, current_app, url_for)
 import kpm
 import cnr
 
-
-info_app = Blueprint('info', __name__,)
+info_app = Blueprint('info', __name__)  # pylint: disable=C0103
 
 
 @info_app.before_app_request
@@ -24,9 +17,9 @@ def pre_request_logging():
         "http_method": request.method,
         "original_url": request.url,
         "path": request.path,
-        "data":  values,
-        "headers": dict(request.headers.to_list())}
-    )
+        "data": values,
+        "headers": dict(request.headers.to_list())
+    })
 
 
 @info_app.route("/")
@@ -44,7 +37,7 @@ def index_discovery():
     </html>""".format(domain=domain, host=host)
 
 
-@info_app.route("/dashboard",  strict_slashes=False)
+@info_app.route("/dashboard", strict_slashes=False)
 def index():
     return redirect("/dashboard/index.html")
 
@@ -58,8 +51,7 @@ def configjs(name=None):
 
 @info_app.route("/version")
 def version():
-    return jsonify({"kpm-api": kpm.__version__,
-                    "cnr-api": cnr.__version__})
+    return jsonify({"kpm-api": kpm.__version__, "cnr-api": cnr.__version__})
 
 
 @info_app.route("/routes")

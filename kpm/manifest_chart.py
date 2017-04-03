@@ -3,15 +3,14 @@ import os.path
 import yaml
 from kpm.manifest import ManifestBase
 
-
 __all__ = ['ManifestChart']
 logger = logging.getLogger(__name__)
-
 
 MANIFEST_FILES = ["Chart.yaml", "Chart.yml"]
 
 
 class ManifestChart(ManifestBase):
+
     def __init__(self, package=None, values=None):
         self.values = values
         if package is None:
@@ -26,7 +25,7 @@ class ManifestChart(ManifestBase):
             print "Error in configuration file:"
             if hasattr(exc, 'problem_mark'):
                 mark = exc.problem_mark
-                print "Error position: (%s:%s)" % (mark.line+1, mark.column+1)
+                print "Error position: (%s:%s)" % (mark.line + 1, mark.column + 1)
             raise exc
 
     def _load_from_path(self):
@@ -70,5 +69,4 @@ class ManifestChart(ManifestBase):
         return self.get("name", [])
 
     def metadata(self):
-        return {"maintainers": self.maintainers,
-                "source": self.sources}
+        return {"maintainers": self.maintainers, "source": self.sources}

@@ -17,7 +17,6 @@ from kpm.utils import mkdir_p
 from kpm.utils import convert_utf8
 from kpm.manifest_jsonnet import ManifestJsonnet
 
-
 logger = logging.getLogger(__name__)
 
 
@@ -25,13 +24,8 @@ class KubBase(object):
     media_type = "kpm-base"
     target = "platform"
 
-    def __init__(self, name,
-                 version=None,
-                 variables=None,
-                 shards=None,
-                 namespace=None,
-                 endpoint=None,
-                 resources=None):
+    def __init__(self, name, version=None, variables=None, shards=None, namespace=None,
+                 endpoint=None, resources=None):
 
         if shards.__class__ in [str, unicode]:
             shards = json.loads(shards)
@@ -73,14 +67,12 @@ class KubBase(object):
     @property
     def manifest(self):
         if self._manifest is None:
-            self._manifest = ManifestJsonnet(self.package,
-                                             {"params": json.dumps(self.tla_codes)})
+            self._manifest = ManifestJsonnet(self.package, {"params": json.dumps(self.tla_codes)})
         return self._manifest
 
     def __unicode__(self):
         return ("(<{class_name}({name}=={version})>".format(class_name=self.__class__.__name__,
-                                                            name=self.name,
-                                                            version=self.version))
+                                                            name=self.name, version=self.version))
 
     def __str__(self):
         return unicode(self).encode('utf-8')
@@ -127,7 +119,8 @@ class KubBase(object):
             with open(filepath, "rb") as f:
                 return f.read()
         else:
-            return self._registry.pull_json(self._deploy_name, self._deploy_version, self.media_type)['blob']
+            return self._registry.pull_json(self._deploy_name, self._deploy_version,
+                                            self.media_type)['blob']
 
     @property
     def kubClass(self):
@@ -142,17 +135,17 @@ class KubBase(object):
                 if ishosted(self._deploy_name) and not ishosted(dep['name']):
                     dep['name'] = "%s/%s" % (split_package_name(self._deploy_name)[0], dep['name'])
                 variables = dep.get('variables', {})
-                variables['kpmparent'] = {'name': self.name,
-                                          'shards': self.shards,
-                                          'variables': self.variables}
+                variables['kpmparent'] = {
+                    'name': self.name,
+                    'shards': self.shards,
+                    'variables': self.variables
+                }
 
-                kub = self.kubClass(dep['name'],
-                                    endpoint=self.endpoint,
-                                    version={"key": "version", "value": dep.get('version', 'default')},
-                                    variables=variables,
-                                    resources=dep.get('resources', None),
-                                    shards=dep.get('shards', None),
-                                    namespace=self.namespace)
+                kub = self.kubClass(dep['name'], endpoint=self.endpoint, version={
+                    "key": "version",
+                    "value": dep.get('version', 'default')
+                }, variables=variables, resources=dep.get('resources', None), shards=dep.get(
+                    'shards', None), namespace=self.namespace)
                 self._dependencies.append(kub)
             else:
                 self._dependencies.append(self)
@@ -205,9 +198,7 @@ class KubBase(object):
     def prepare_resources(self, dest="/tmp", index=0):
         for resource in self.resources():
             index += 1
-            path = os.path.join(dest, "%02d_%s_%s" % (index,
-                                                      self.version,
-                                                      resource['file']))
+            path = os.path.join(dest, "%02d_%s_%s" % (index, self.version, resource['file']))
             f = open(path, 'w')
             f.write(yaml.safe_dump(convert_utf8(resource['value'])))
             resource['filepath'] = f.name

@@ -18,8 +18,7 @@ class NewCmd(CommandBase):
     @classmethod
     def _add_arguments(self, parser):
         parser.add_argument('package', nargs=1, help="package-name")
-        parser.add_argument("--directory",  nargs="?", default=".",
-                            help="destionation directory")
+        parser.add_argument("--directory", nargs="?", default=".", help="destionation directory")
         parser.add_argument("--with-comments", action='store_true', default=False,
                             help="Add 'help' comments to manifest")
 
@@ -30,8 +29,7 @@ class NewCmd(CommandBase):
             argparse.ArgumentTypeError(e.message)
 
     def _render_dict(self):
-        return {"new": self.package,
-                "path": self.path}
+        return {"new": self.package, "path": self.path}
 
     def _render_console(self):
         print "New package created in %s" % self.path

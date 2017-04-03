@@ -16,9 +16,8 @@ def _default_json_default(obj):
     Coerce everything to strings.
     All objects representing time get output as ISO8601.
     """
-    if (isinstance(obj, datetime.datetime) or
-       isinstance(obj, datetime.date) or
-       isinstance(obj, datetime.time)):
+    if (isinstance(obj, datetime.datetime) or isinstance(obj, datetime.date) or
+            isinstance(obj, datetime.time)):
         return obj.isoformat()
     else:
         return str(obj)
@@ -29,11 +28,7 @@ class JsonFormatter(logging.Formatter):
     A custom formatter to prepare logs to be in json format
     """
 
-    def __init__(self,
-                 fmt=None,
-                 datefmt=None,
-                 json_cls=None,
-                 json_default=_default_json_default):
+    def __init__(self, fmt=None, datefmt=None, json_cls=None, json_default=_default_json_default):
         """
         :param source_host: override source host name
         :param extra: provide extra fields always present in logs
@@ -97,9 +92,11 @@ class JsonFormatter(logging.Formatter):
         fields.pop('threadName')
         if 'logstash' in fields:
             fields.pop('logstash')
-        base_log = {'message': msg,
-                    '@timestamp': datetime.datetime.utcnow(),
-                    'source_host': self.source_host}
+        base_log = {
+            'message': msg,
+            '@timestamp': datetime.datetime.utcnow(),
+            'source_host': self.source_host
+        }
         base_log.update(fields)
 
         logr = self.defaults.copy()

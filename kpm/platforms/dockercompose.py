@@ -1,14 +1,13 @@
 import logging
 import subprocess
 
-
 __all__ = ['DockerCompose']
-
 
 logger = logging.getLogger(__name__)
 
 
 class DockerCompose(object):
+
     def __init__(self, kubcompose):
         self.kubcompose = kubcompose
         self.result = None

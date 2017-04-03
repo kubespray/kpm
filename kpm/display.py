@@ -16,7 +16,7 @@ def print_packages(packages):
 
 
 def print_deploy_result(table):
-    header = ["package", "release", "type", "name",  "namespace", "status"]
+    header = ["package", "release", "type", "name", "namespace", "status"]
     print "\n"
     for r in table:
         status = r.pop()

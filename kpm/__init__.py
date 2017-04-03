@@ -10,11 +10,10 @@ def version(registry_host=None):
     api_version = None
     ctl_version = __version__
     try:
-        r = Registry(registry_host)
-        response = r.version()
+        registry = Registry(registry_host)
+        response = registry.version()
         api_version = response
     except requests.exceptions.RequestException:
         api_version = ".. Connection error"
 
-    return {'api-version': api_version,
-            "client-version": ctl_version}
+    return {'api-version': api_version, "client-version": ctl_version}

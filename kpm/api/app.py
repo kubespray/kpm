@@ -13,7 +13,8 @@ def getvalues():
 
 
 def create_app():
-    app = Flask(__name__, static_folder="ui/src", static_url_path="/dashboard", template_folder="ui/templates")
+    app = Flask(__name__, static_folder="ui/src", static_url_path="/dashboard",
+                template_folder="ui/templates")
     CORS(app)
     setting = os.getenv('APP_ENV', "development")
 
@@ -39,5 +40,5 @@ def create_app():
 
 
 if __name__ == "__main__":
-    app = create_app()
-    app.run(host='0.0.0.0')
+    APP = create_app()
+    APP.run(host='0.0.0.0')

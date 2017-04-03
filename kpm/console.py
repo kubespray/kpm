@@ -3,11 +3,11 @@ import subprocess
 import random
 import logging
 
-
 logger = logging.getLogger(__name__)
 
 
 class KubernetesExec(object):
+
     def __init__(self, rcname, cmd='sh', namespace="default", container=None, kind="rc"):
         self.rcname = rcname
         self.namespace = namespace
@@ -49,7 +49,7 @@ class KubernetesExec(object):
 
     def _getrc(self):
         cmd = ['get', self.kind, self.rcname, '-o', 'json']
-        return (json.loads(self._call(cmd)))
+        return json.loads(self._call(cmd))
 
     def _call(self, cmd, dry=False):
         command = ['kubectl'] + cmd + ["--namespace", self.namespace]

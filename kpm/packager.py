@@ -24,22 +24,12 @@ logger = logging.getLogger(__name__)
 #
 #
 #
-AUTHORIZED_FILES = ["*.libjsonnet",
-                    "*.jsonnet",
-                    "*.yaml",
-                    "README.md",
-                    "LICENSE",
-                    "AUTHORS",
-                    "NOTICE",
-                    "manifests",
-                    "deps/*.kub"]
+AUTHORIZED_FILES = [
+    "*.libjsonnet", "*.jsonnet", "*.yaml", "README.md", "LICENSE", "AUTHORS", "NOTICE", "manifests",
+    "deps/*.kub"
+]
 
-
-AUTHORIZED_TEMPLATES = ["*.yaml",
-                        "*.jsonnet",
-                        "*.libjsonnet",
-                        "*.yml",
-                        "*.j2"]
+AUTHORIZED_TEMPLATES = ["*.yaml", "*.jsonnet", "*.libjsonnet", "*.yml", "*.j2"]
 
 
 def authorized_files():
@@ -91,6 +81,7 @@ def unpack_kub(kub, dest="."):
 
 
 class Package(object):
+
     def __init__(self, blob=None, b64_encoded=True):
         self.files = {}
         self.tar = None

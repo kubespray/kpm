@@ -111,4 +111,13 @@ dockerfile-push: dockerfile
 	docker push quay.io/kubespray/kpm:v$(VERSION)
 
 pylint:
-	pylint --rcfile=~/.pylintrc kpm -E -r y
+	pylint --rcfile=.pylintrc kpm -E -r y
+
+yapf:
+	yapf -r kpm -i
+
+yapf-diff:
+	yapf -r kpm -d
+
+yapf-test: yapf-diff
+	if [ `yapf -r kpm -d | wc -l` -gt 0 ] ; then false ; else true ;fi

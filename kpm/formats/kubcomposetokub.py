@@ -3,6 +3,7 @@ from kpm.formats.kub import Kub
 
 
 class KubComposeToKub(Kub):
+
     def __init__(self, kubcompose):
         k8s_resources = Kompose(kubcompose).convert()
         self.namespace = kubcompose.namespace
@@ -25,6 +26,6 @@ class KubComposeToKub(Kub):
                 "value": resource,
                 "patch": [],
                 "variables": {},
-                "type": kind}
-            )
+                "type": kind
+            })
         return r

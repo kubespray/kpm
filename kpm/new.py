@@ -9,7 +9,6 @@ logger = logging.getLogger(__name__)
 
 DIRECTORIES = ['templates']
 
-
 MANIFEST = """---
 package:
   name: {name}

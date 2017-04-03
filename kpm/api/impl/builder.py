@@ -1,14 +1,9 @@
 from kpm.formats.kub import Kub
 
-
 DEFAULT_ENDPOINT = "http://localhost:5000"
 
 
-def build(package,
-          version_query=None,
-          namespace="default",
-          variables={},
-          shards=None,
+def build(package, version_query=None, namespace="default", variables={}, shards=None,
           endpoint=DEFAULT_ENDPOINT):
     """
     A build is the construction/expansion of a package.
@@ -48,12 +43,8 @@ def build(package,
 
     """
     variables['namespace'] = namespace
-    k = Kub(package,
-            endpoint=endpoint,
-            variables=variables,
-            namespace=namespace,
-            version=version_query,
-            shards=shards)
+    k = Kub(package, endpoint=endpoint, variables=variables, namespace=namespace,
+            version=version_query, shards=shards)
     return k
 
 

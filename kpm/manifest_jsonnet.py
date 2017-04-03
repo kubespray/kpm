@@ -1,17 +1,18 @@
-import logging
 import os.path
+
 import yaml
-from kpm.render_jsonnet import RenderJsonnet, yaml_to_jsonnet
-from kpm.packager import authorized_files
+
 from kpm.manifest import ManifestBase
+from kpm.packager import authorized_files
+from kpm.render_jsonnet import RenderJsonnet, yaml_to_jsonnet
 
 __all__ = ['ManifestJsonnet']
-logger = logging.getLogger(__name__)
 
 MANIFEST_FILES = ["manifest.jsonnet", "manifest.yaml"]
 
 
 class ManifestJsonnet(ManifestBase):
+
     def __init__(self, package=None, tla_codes=None):
         self.tla_codes = tla_codes
         if package is not None:
@@ -28,9 +29,9 @@ class ManifestJsonnet(ManifestBase):
             self._load_yaml(package.manifest, package.files)
 
     def _load_from_path(self):
-        for f in MANIFEST_FILES:
-            if os.path.exists(f):
-                mfile = f
+        for filepath in MANIFEST_FILES:
+            if os.path.exists(filepath):
+                mfile = filepath
                 break
         _, ext = os.path.splitext(mfile)
         with open(mfile) as f:
@@ -54,6 +55,6 @@ class ManifestJsonnet(ManifestBase):
         except yaml.YAMLError, exc:
             print "Error in configuration file:"
             if hasattr(exc, 'problem_mark'):
-                mark = exc.problem_mark
-                print "Error position: (%s:%s)" % (mark.line+1, mark.column+1)
+                mark = exc.problem_mark  # pylint: disable=E1101
+                print "Error position: (%s:%s)" % (mark.line + 1, mark.column + 1)
             raise exc
