@@ -26,3 +26,5 @@ urllib3>=1.16
 watchdog>=0.8.3
 wheel>=0.23.0
 sphinxcontrib-napoleon
+-e git+https://github.com/ant31/pytest-sugar.git#egg=pytest-sugar
+

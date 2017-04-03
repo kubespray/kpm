@@ -1,6 +1,7 @@
-import yaml
-import pytest
 import os.path
+
+import yaml
+
 from kpm.auth import KpmAuth
 
 
