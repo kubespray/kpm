@@ -26,6 +26,6 @@ class ProductionConfig(Config):
 class DevelopmentConfig(Config):
     """ Development configuration """
     DEBUG = True
-#    KPM_URI = 'https://api.kpm.sh'
+    #    KPM_URI = 'https://api.kpm.sh'
     KPM_URI = os.getenv('KPM_URI', "http://localhost:5000")
     CNR_URI = os.getenv('CNR_URI', KPM_URI)

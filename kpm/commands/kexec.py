@@ -19,8 +19,7 @@ class ExecCmd(CommandBase):
     @classmethod
     def _add_arguments(cls, parser):
         parser.add_argument('cmd', nargs='+', help="command to execute")
-        parser.add_argument("--namespace",
-                            help="kubernetes namespace", default='default')
+        parser.add_argument("--namespace", help="kubernetes namespace", default='default')
 
         parser.add_argument('-k', '--kind', choices=['deployment', 'rs', 'rc'],
                             help="deployment, rc or rs", default='rc')
@@ -28,11 +27,8 @@ class ExecCmd(CommandBase):
         parser.add_argument('-c', '--container', nargs='?', help="container name", default=None)
 
     def _call(self):
-        c = KubernetesExec(self.resource,
-                           cmd=" ".join(self.cmd),
-                           namespace=self.namespace,
-                           container=self.container,
-                           kind=self.kind)
+        c = KubernetesExec(self.resource, cmd=" ".join(self.cmd), namespace=self.namespace,
+                           container=self.container, kind=self.kind)
         self.result = c.call()
 
     def _render_dict(self):

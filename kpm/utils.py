@@ -13,29 +13,26 @@ from termcolor import colored
 
 def parse_version(version):
     if str.startswith(version, "@sha256:"):
-        return {'key': 'digest',
-                'value': version.split("@sha256:")[1]}
+        return {'key': 'digest', 'value': version.split("@sha256:")[1]}
     elif version[0] == "@":
-        return {'key': 'version',
-                'value': version[1:]}
+        return {'key': 'version', 'value': version[1:]}
     elif version[0] == ":":
-        return {'key': 'channel',
-                'value': version[1:]}
+        return {'key': 'channel', 'value': version[1:]}
 
 
 def parse_package_name(name):
     package_regexp = r"^(.*?)?\/?([a-z0-9_-]+\/[a-z0-9_-]+?)([:@].*)?$"
     match = re.match(package_regexp, name)
     if match is None:
-        raise ValueError("Package '%s' does not match format '[registry/]namespace/name[@version|:channel]'" % (name))
+        raise ValueError(
+            "Package '%s' does not match format '[registry/]namespace/name[@version|:channel]'" %
+            (name))
     host, package, version = match.groups()
     if not version:
         version = 'default'
     if not host:
         host = None
-    return {'host': host,
-            'package': package,
-            'version': version}
+    return {'host': host, 'package': package, 'version': version}
 
 
 def check_package_name(name, force_check=False):
@@ -69,13 +66,15 @@ def mkdir_p(path):
 
 
 def colorize(status):
-    msg = {'ok': 'green',
-           'created': 'yellow',
-           'updated': 'cyan',
-           'replaced': 'yellow',
-           'absent': 'green',
-           'deleted': 'red',
-           'protected': 'magenta'}
+    msg = {
+        'ok': 'green',
+        'created': 'yellow',
+        'updated': 'cyan',
+        'replaced': 'yellow',
+        'absent': 'green',
+        'deleted': 'red',
+        'protected': 'magenta'
+    }
     return colored(status, msg[status])
 
 
@@ -99,8 +98,7 @@ def custom_import(name):
 
 
 # from celery/kombu https://github.com/celery/celery (BSD license)
-def symbol_by_name(name, aliases={}, imp=None, package=None,
-                   sep='.', default=None, **kwargs):
+def symbol_by_name(name, aliases={}, imp=None, package=None, sep='.', default=None, **kwargs):
     """Get symbol by qualified name.
 
     The name should be the full dot-separated path to the class::
@@ -134,6 +132,7 @@ def symbol_by_name(name, aliases={}, imp=None, package=None,
         True
 
     """
+
     def _reraise(tp, value, tb=None):
         if value.__traceback__ is not tb:
             raise value.with_traceback(tb)
@@ -155,8 +154,7 @@ def symbol_by_name(name, aliases={}, imp=None, package=None,
             module = imp(module_name, package=package, **kwargs)
         except ValueError as exc:
             _reraise(ValueError,
-                     ValueError("Couldn't import {0!r}: {1}".format(name, exc)),
-                     sys.exc_info()[2])
+                     ValueError("Couldn't import {0!r}: {1}".format(name, exc)), sys.exc_info()[2])
         return getattr(module, cls_name) if cls_name else module
     except (ImportError, AttributeError):
         if default is None:

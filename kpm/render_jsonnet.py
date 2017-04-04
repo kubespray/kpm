@@ -11,7 +11,6 @@ import kpm.template_filters as filters
 
 logger = logging.getLogger(__name__)
 
-
 with open(os.path.join(os.path.dirname(__file__), "jsonnet/manifest.jsonnet.j2")) as f:
     JSONNET_TEMPLATE = f.read()
 
@@ -42,6 +41,7 @@ def yaml_to_jsonnet(manifestyaml, tla_codes=None):
 
 
 class RenderJsonnet(object):
+
     def __init__(self, files=None):
         self.files = files
 
@@ -78,14 +78,15 @@ class RenderJsonnet(object):
 
     def render_jsonnet(self, manifeststr, tla_codes=None):
         try:
-            json_str = _jsonnet.evaluate_snippet("snippet", manifeststr,
-                                                 import_callback=self.import_callback,
-                                                 native_callbacks=filters.jsonnet_callbacks(),
-                                                 tla_codes=tla_codes)
+            json_str = _jsonnet.evaluate_snippet(
+                "snippet", manifeststr, import_callback=self.import_callback,
+                native_callbacks=filters.jsonnet_callbacks(), tla_codes=tla_codes)
 
         except RuntimeError as e:
             print "tla_codes: %s" % (str(tla_codes))
-            print "\n".join(["%s %s" % (i, line) for i, line in
-                             enumerate([l for l in manifeststr.split("\n") if re.match(r"^ *#", l) is None])])
+            print "\n".join([
+                "%s %s" % (i, line) for i, line in enumerate(
+                    [l for l in manifeststr.split("\n") if re.match(r"^ *#", l) is None])
+            ])
             raise e
         return json.loads(json_str)

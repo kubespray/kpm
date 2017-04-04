@@ -8,43 +8,59 @@ from urlparse import urlparse
 
 __all__ = ['Kubernetes', "get_endpoint"]
 
-
 logger = logging.getLogger(__name__)
 
-
 resource_endpoints = {
-    "daemonsets": "apis/extensions/v1beta1/namespaces/{namespace}/daemonsets",
-    "deployments": "apis/extensions/v1beta1/namespaces/{namespace}/deployments",
-    "horizontalpodautoscalers": "apis/extensions/v1beta1/namespaces/{namespace}/horizontalpodautoscalers",
-    "ingresses": "apis/extensions/v1beta1/namespaces/{namespace}/ingresses",
-    "jobs": "apis/extensions/v1beta1/namespaces/{namespace}/jobs",
-    "namespaces": "api/v1/namespaces",
-    "replicasets": "apis/extensions/v1beta1/namespaces/{namespace}/replicasets",
-    "persistentvolumes": "api/v1/namespaces/{namespace}/persistentvolumes",
-    "persistentvolumeclaims": "api/v1/namespaces/{namespace}/persistentvolumeclaims",
-    "services": "api/v1/namespaces/{namespace}/services",
-    "serviceaccounts": "api/v1/namespaces/{namespace}/serviceaccounts",
-    "secrets": "api/v1/namespaces/{namespace}/secrets",
-    "configmaps": "api/v1/namespaces/{namespace}/configmaps",
-    "replicationcontrollers": "api/v1/namespaces/{namespace}/replicationcontrollers",
-    "pods": "api/v1/namespaces/{namespace}/pods",
-    "statefulset": "apis/apps/v1beta1/namespaces/{namespace}/statefulsets",
-    "storageclass": "apis/storage.k8s.io/v1beta1/statefulsets",
+    "daemonsets":
+        "apis/extensions/v1beta1/namespaces/{namespace}/daemonsets",
+    "deployments":
+        "apis/extensions/v1beta1/namespaces/{namespace}/deployments",
+    "horizontalpodautoscalers":
+        "apis/extensions/v1beta1/namespaces/{namespace}/horizontalpodautoscalers",
+    "ingresses":
+        "apis/extensions/v1beta1/namespaces/{namespace}/ingresses",
+    "jobs":
+        "apis/extensions/v1beta1/namespaces/{namespace}/jobs",
+    "namespaces":
+        "api/v1/namespaces",
+    "replicasets":
+        "apis/extensions/v1beta1/namespaces/{namespace}/replicasets",
+    "persistentvolumes":
+        "api/v1/namespaces/{namespace}/persistentvolumes",
+    "persistentvolumeclaims":
+        "api/v1/namespaces/{namespace}/persistentvolumeclaims",
+    "services":
+        "api/v1/namespaces/{namespace}/services",
+    "serviceaccounts":
+        "api/v1/namespaces/{namespace}/serviceaccounts",
+    "secrets":
+        "api/v1/namespaces/{namespace}/secrets",
+    "configmaps":
+        "api/v1/namespaces/{namespace}/configmaps",
+    "replicationcontrollers":
+        "api/v1/namespaces/{namespace}/replicationcontrollers",
+    "pods":
+        "api/v1/namespaces/{namespace}/pods",
+    "statefulset":
+        "apis/apps/v1beta1/namespaces/{namespace}/statefulsets",
+    "storageclass":
+        "apis/storage.k8s.io/v1beta1/statefulsets",
 }
 
-
-resources_alias = {"ds": "daemonsets",
-                   "hpa": "horizontalpodautoscalers",
-                   "ing": "ingresses",
-                   "ingress": "ingresses",
-                   "ns": "namespaces",
-                   "sc": "storageclasses",
-                   "sfs": "statefulsets",
-                   "po": "pods",
-                   "pv": "persistentvolumes",
-                   "pvc": "persistentvolumeclaims",
-                   "rc": "replicationcontrollers",
-                   "svc": "services"}
+resources_alias = {
+    "ds": "daemonsets",
+    "hpa": "horizontalpodautoscalers",
+    "ing": "ingresses",
+    "ingress": "ingresses",
+    "ns": "namespaces",
+    "sc": "storageclasses",
+    "sfs": "statefulsets",
+    "po": "pods",
+    "pv": "persistentvolumes",
+    "pvc": "persistentvolumeclaims",
+    "rc": "replicationcontrollers",
+    "svc": "services"
+}
 
 
 def get_endpoint(kind):
@@ -61,11 +77,8 @@ def get_endpoint(kind):
 
 
 class Kubernetes(object):
-    def __init__(self,
-                 namespace=None,
-                 endpoint=None,
-                 body=None,
-                 proxy=None):
+
+    def __init__(self, namespace=None, endpoint=None, body=None, proxy=None):
 
         self.proxy = None
         if endpoint is not None and endpoint[0] == "/":
@@ -89,7 +102,7 @@ class Kubernetes(object):
 
         if 'annotations' in self.obj['metadata']:
             if ('kpm.protected' in self.obj['metadata']['annotations'] and
-               self.obj['metadata']['annotations']['kpm.protected'] == 'true'):
+                    self.obj['metadata']['annotations']['kpm.protected'] == 'true'):
                 self.protected = True
 
     def _namespace(self, namespace=None):

@@ -2,11 +2,11 @@ import json
 import logging
 import subprocess
 
-
 logger = logging.getLogger(__name__)
 
 
 class Kompose(object):
+
     def __init__(self, kubcompose):
         self.kubcompose = kubcompose
 

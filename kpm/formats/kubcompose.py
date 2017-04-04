@@ -9,7 +9,6 @@ from kpm.platforms.dockercompose import DockerCompose
 
 logger = logging.getLogger(__name__)
 
-
 _mapping_tag = yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG
 
 

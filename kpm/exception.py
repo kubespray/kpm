@@ -8,9 +8,7 @@ class KpmException(Exception):
         self.message = message
 
     def to_dict(self):
-        r = {"code": self.errorcode,
-             "message": self.message,
-             "details": self.payload}
+        r = {"code": self.errorcode, "message": self.message, "details": self.payload}
         return r
 
     def __str__(self):

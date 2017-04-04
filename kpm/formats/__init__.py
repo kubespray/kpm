@@ -2,7 +2,6 @@ from kpm.formats.kubcompose import KubCompose
 from kpm.formats.kub import Kub
 from kpm.formats.chart import Chart
 
-
 kub_formats = [Kub, KubCompose, Chart]
 kub_by_name = {k.media_type: k for k in kub_formats}
 kub_by_platforms = {k.platform: k for k in kub_formats}
