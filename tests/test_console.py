@@ -1,4 +1,3 @@
-import pytest
 from kpm.console import KubernetesExec
 
 

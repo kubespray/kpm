@@ -42,22 +42,31 @@ def yaml_to_jsonnet(manifestyaml, tla_codes=None):
 
 class RenderJsonnet(object):
 
-    def __init__(self, files=None):
+    def __init__(self, files=None, manifestpath=None):
+        self.manifestdir = None
+        if manifestpath:
+            self.manifestdir = os.path.dirname(manifestpath)
         self.files = files
 
     #  Returns content if worked, None if file not found, or throws an exception
     def try_path(self, path, rel):
         if not rel:
             raise RuntimeError('Got invalid filename (empty string).')
+
+        if rel in ["kpm.libjsonnet", "kpm-utils.libjsonnet"]:
+            with open(os.path.join(os.path.dirname(__file__), "jsonnet/lib/%s" % rel)) as f:
+                return rel, f.read()
+
         if self.files is not None and rel in self.files:
             if self.files[rel] is None:
                 with open(rel) as f:
                     self.files[rel] = f.read()
             return rel, self.files[rel]
-
-        if rel in ["kpm.libjsonnet", "kpm-utils.libjsonnet"]:
-            with open(os.path.join(os.path.dirname(__file__), "jsonnet/lib/%s" % rel)) as f:
-                return rel, f.read()
+        elif self.manifestdir:
+            filepath = os.path.join(self.manifestdir, rel)
+            if os.path.isfile(filepath):
+                with open(filepath) as f:
+                    return rel, f.read()
 
         if rel[0] == '/':
             full_path = rel
@@ -83,10 +92,10 @@ class RenderJsonnet(object):
                 native_callbacks=filters.jsonnet_callbacks(), tla_codes=tla_codes)
 
         except RuntimeError as e:
-            print "tla_codes: %s" % (str(tla_codes))
-            print "\n".join([
+            print("tla_codes: %s" % (str(tla_codes)))
+            print("\n".join([
                 "%s %s" % (i, line) for i, line in enumerate(
                     [l for l in manifeststr.split("\n") if re.match(r"^ *#", l) is None])
-            ])
+            ]))
             raise e
         return json.loads(json_str)

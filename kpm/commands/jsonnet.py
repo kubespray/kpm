@@ -27,7 +27,7 @@ class JsonnetCmd(CommandBase):
         parser.add_argument('filepath', nargs=1, help="Fetch package from the registry")
 
     def _call(self):
-        r = RenderJsonnet()
+        r = RenderJsonnet(manifestpath=self.filepath)
         namespace = self.namespace
         self.variables['namespace'] = namespace
         tla_codes = {"variables": self.variables}
@@ -38,4 +38,4 @@ class JsonnetCmd(CommandBase):
         return self.result
 
     def _render_console(self):
-        self._render_json()
+        return json.dumps(self._render_dict(), indent=2, separators=(',', ': '))
