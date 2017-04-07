@@ -36,6 +36,7 @@ local genPrivateKey(keytype, key="") =
   },
   a: initSeed,
   b: initSeed,
+  c: randInt(8),
   jinja2: jinja2("yo: {{cookie}}", self.env),
   jsonnet: jsonnet("function(cookie='titi')({cookieT: cookie})", self.env),
   json: jsonLoads('{"a": "b"}'),
