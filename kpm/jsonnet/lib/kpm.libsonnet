@@ -1,4 +1,4 @@
-local kpmstd = import "kpm-utils.libjsonnet";
+local kpmstd = import "kpm-utils.libsonnet";
 kpmstd {
 
    local kpm = self,
@@ -92,7 +92,9 @@ kpmstd {
    ),
 
    template(resource):: (
-      local r = if std.objectHas(resource, "expander") == false ||
+      local r = if std.objectHas(resource, "value") == true then
+            resource
+       else if std.objectHas(resource, "expander") == false ||
                    resource.expander == 'none' || resource.expander == null then
          resource { value: kpm.loadObject(resource.template) }
       else if resource.expander == "fmt" then
