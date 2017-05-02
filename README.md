@@ -1,3 +1,6 @@
+## <img src="Documentation/achtung.png" alt="WARNING" width="30" height="30"><img src="Documentation/achtung.png" alt="WARNING" width="30" height="30"><img src="Documentation/achtung.png" alt="WARNING" width="30" height="30"> Deprecation warning <img src="Documentation/achtung.png" alt="WARNING" width="30" height="30"><img src="Documentation/achtung.png" alt="WARNING" width="30" height="30"><img src="Documentation/achtung.png" alt="WARNING" width="30" height="30"><a name="deprecation-warning"></a>
+kpm is no longer developed or maintained by CoreOS.
+
 [![Build Status](https://travis-ci.org/coreos/kpm.svg?branch=master)](https://travis-ci.org/coreos/kpm)
 
 if you have any question you can **chat** with us  [![SlackStatus](https://slack.kubespray.io/badge.svg)](https://kubespray.slack.com)
