@@ -1,3 +1,4 @@
+import os
 import json
 from kpm.render_jsonnet import RenderJsonnet
 from kpm.commands.command_base import CommandBase, LoadVariables
@@ -28,11 +29,14 @@ class JsonnetCmd(CommandBase):
 
     def _call(self):
         r = RenderJsonnet(manifestpath=self.filepath)
-        namespace = self.namespace
-        self.variables['namespace'] = namespace
-        tla_codes = {"variables": self.variables}
+        if os.path.basename(self.filepath) == "manifest.jsonnet":
+            namespace = self.namespace
+            self.variables['namespace'] = namespace
+            tla_codes = {"params": json.dumps({"variables": self.variables})}
+        else:
+            tla_codes = self.variables
         p = open(self.filepath).read()
-        self.result = r.render_jsonnet(p, tla_codes={"params": json.dumps(tla_codes)})
+        self.result = r.render_jsonnet(p, tla_codes=tla_codes)
 
     def _render_dict(self):
         return self.result
