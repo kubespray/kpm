@@ -1,4 +1,6 @@
-local kubeapi = import "kubeapi.libsonnet";
+local kubecfg = import "kubecfg.libsonnet";
+local opencompose = kubecfg.opencompose;
+
 
 function(
   params={},
@@ -11,9 +13,10 @@ kubeapi.render({
     // default parametrized values
     variables: (import "values.jsonnet")(params.variables),
     // resources to deploy
-    resources: {
-      "logstash-svc.json": kubeapi.k8s.service.Create(name="logstash", ports=[5044]),
-      "logstash-configmap.json": (import "templates/logstash-configmap.jsonnet")(application.variables),
+    resources: opencompose.createServices()
+
+    } + {'deployment.json'+: addSideCar())
+
     }
 }, params)
 
