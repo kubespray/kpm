@@ -297,7 +297,7 @@ local meta = import "internal/meta.libsonnet";
     },
 
     configMap:: {
-      Default(namespace, configMapName, data):
+      Default(namespace, configMapName, data)::
         bases.ConfigMap +
         $.v1.ApiVersion +
         common.Kind("ConfigMap") +
@@ -415,7 +415,7 @@ local meta = import "internal/meta.libsonnet";
       // Claim.
       //
       claim:: {
-        DefaultPersistent(claimName, accessModes, size, namespace=null):
+        DefaultPersistent(claimName, accessModes, size, namespace=null)::
           local defaultMetadata = common.Metadata(
             $.v1.metadata.Default(namespace=namespace, name=claimName));
           bases.PersistentVolumeClaim +
