@@ -1,0 +1,4 @@
+KUBERNETES_POD_ID ([0-9a-z]{5})
+KUBERNETES_NAME (?:[0-9a-z\-\.]{1,255}?)
+KUBERNETES_DEPLOY_ID [0-9]{10}
+KUBERNETES_SOURCE %{KUBERNETES_NAME:[kubernetes][controller_name]}(-%{KUBERNETES_DEPLOY_ID:[kubernetes][deployment_id]})?(-%{KUBERNETES_POD_ID:[kubernetes][pod_id]})?_%{KUBERNETES_NAME:[kubernetes][namespace]}_%{GREEDYDATA:[kubernetes][container_name]}-%{DATA:[kubernetes][container_id]}.log
