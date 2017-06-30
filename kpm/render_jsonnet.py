@@ -1,13 +1,15 @@
-import yaml
 import json
-import _jsonnet
-import re
-import os
 import logging
+import os
 import os.path
+import re
+
+import _jsonnet
 import jinja2
-from kpm.utils import convert_utf8
+import yaml
+
 import kpm.template_filters as filters
+from kpm.utils import convert_utf8
 
 logger = logging.getLogger(__name__)
 
@@ -20,9 +22,9 @@ def yaml_to_jsonnet(manifestyaml, tla_codes=None):
     jinja_env.filters.update(filters.jinja_filters())
     # 1. Resolve old manifest variables
     # Load 'old' manifest.yaml
-    v = {"manifest": convert_utf8(json.loads(json.dumps(yaml.load(manifestyaml))))}
+    tempvars = {"manifest": convert_utf8(json.loads(json.dumps(yaml.load(manifestyaml))))}
     # Get variable from the 'old' manfiest and update  them
-    variables = v['manifest'].get("variables", {})
+    variables = tempvars['manifest'].get("variables", {})
     if tla_codes is not None and 'params' in tla_codes:
         tla = json.loads(tla_codes['params']).get("variables", {})
         variables.update(tla)
@@ -53,20 +55,22 @@ class RenderJsonnet(object):
         if not rel:
             raise RuntimeError('Got invalid filename (empty string).')
 
-        if rel in ["kpm.libjsonnet", "kpm-utils.libjsonnet"]:
-            with open(os.path.join(os.path.dirname(__file__), "jsonnet/lib/%s" % rel)) as f:
-                return rel, f.read()
+        # @TODO(ant31) Search path for both for all files
+        if rel == "kpm.libjsonnet":
+            rel = "kpm.libsonnet"
 
         if self.files is not None and rel in self.files:
             if self.files[rel] is None:
                 with open(rel) as f:
                     self.files[rel] = f.read()
             return rel, self.files[rel]
-        elif self.manifestdir:
+        elif self.manifestdir and os.path.isfile(os.path.join(self.manifestdir, rel)):
             filepath = os.path.join(self.manifestdir, rel)
-            if os.path.isfile(filepath):
-                with open(filepath) as f:
-                    return rel, f.read()
+            with open(filepath) as f:
+                return rel, f.read()
+        elif os.path.isfile(os.path.join(os.path.dirname(__file__), "jsonnet/lib/%s" % rel)):
+            with open(os.path.join(os.path.dirname(__file__), "jsonnet/lib/%s" % rel)) as f:
+                return rel, f.read()
 
         if rel[0] == '/':
             full_path = rel

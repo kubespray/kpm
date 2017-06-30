@@ -71,5 +71,16 @@
      [x for x in array if x != null]
    ),
 
+   objectValues(obj):: (
+     local fields =  std.objectFields(obj);
+      [obj[key] for key in fields]
+   ),
+
+
+   objectMap(func, obj):: (
+    local fields = std.objectFields(obj);
+    {[key]: func(obj[key]) for key in fields}
+    ),
+
    local initSeed = kpmutils.randAlpha(256),
 }
