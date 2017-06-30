@@ -1,6 +1,6 @@
 from flask import (jsonify, request, Blueprint, redirect, render_template, current_app, url_for)
 import kpm
-import cnr
+import appr
 
 info_app = Blueprint('info', __name__)  # pylint: disable=C0103
 
@@ -30,7 +30,7 @@ def index_discovery():
     <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="cnr-package" content="{domain}/{{name}} {host}/api/v1/packages/{{name}}/pull">
+    <meta name="appr-package" content="{domain}/{{name}} {host}/api/v1/packages/{{name}}/pull">
     </head>
     <body>
     </body>
@@ -51,7 +51,7 @@ def configjs(name=None):
 
 @info_app.route("/version")
 def version():
-    return jsonify({"kpm-api": kpm.__version__, "cnr-api": cnr.__version__})
+    return jsonify({"kpm-api": kpm.__version__, "appr-api": appr.__version__})
 
 
 @info_app.route("/routes")

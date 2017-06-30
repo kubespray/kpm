@@ -2,8 +2,8 @@ import json
 import logging
 import requests
 
-from cnrclient.client import CnrClient
-from cnrclient.auth import CnrAuth
+from appr.client import ApprClient
+from appr.auth import ApprAuth
 
 import kpm
 
@@ -15,7 +15,7 @@ API_PREFIX = '/api/v1'
 DEFAULT_PREFIX = "/cnr"
 
 
-class Registry(CnrClient):
+class Registry(ApprClient):
 
     def __init__(self, endpoint=DEFAULT_REGISTRY):
         super(Registry, self).__init__(endpoint)
@@ -24,7 +24,7 @@ class Registry(CnrClient):
             'User-Agent': "kpmpy-cli/%s" % kpm.__version__
         }
         self.host = self.endpoint.geturl()
-        self.auth = CnrAuth(".kpm")
+        self.auth = ApprAuth(".appr")
 
     def generate(self, name, namespace=None, variables={}, version=None, shards=None):
         path = "/api/v1/packages/%s/generate" % name

@@ -35,4 +35,4 @@ class ExecCmd(CommandBase):
         return {'stdout': self.result}
 
     def _render_console(self):
-        print self.result
+        return self.result

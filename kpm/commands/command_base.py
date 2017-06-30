@@ -6,13 +6,13 @@ import json
 
 import yaml
 
-from cnrclient.commands.command_base import CommandBase as CnrCommandBase
+from appr.commands.command_base import CommandBase as ApprCommandBase
 
 from kpm.registry import Registry
 from kpm.render_jsonnet import RenderJsonnet
 
 
-class CommandBase(CnrCommandBase):
+class CommandBase(ApprCommandBase):
     RegistryClient = Registry
     default_media_type = 'kpm'
 

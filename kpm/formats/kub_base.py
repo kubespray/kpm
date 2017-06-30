@@ -9,7 +9,7 @@ import logging
 import os.path
 import yaml
 
-from cnrclient.discovery import ishosted, split_package_name
+from appr.discovery import ishosted, split_package_name
 
 import kpm.registry as registry
 import kpm.packager as packager

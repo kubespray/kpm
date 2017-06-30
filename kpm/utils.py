@@ -7,7 +7,7 @@ import sys
 import errno
 import os
 import collections
-from cnrclient.client import ishosted
+from appr.client import ishosted
 from termcolor import colored
 
 

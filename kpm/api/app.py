@@ -25,7 +25,7 @@ def create_app():
     from kpm.api.builder import builder_app
     from kpm.api.info import info_app
     from kpm.api.deployment import deployment_app
-    from cnr.api.registry import registry_app
+    from appr.api.registry import registry_app
 
     if app.config['KPM_API_BUILDER'] == "true":
         app.register_blueprint(builder_app, url_prefix="/cnr")

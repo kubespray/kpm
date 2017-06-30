@@ -1,7 +1,7 @@
 from flask import jsonify, Blueprint, current_app
 import kpm.api.impl.builder
 from kpm.api.app import getvalues
-from cnr.api.app import repo_name
+from appr.api.app import repo_name
 
 builder_app = Blueprint('builder', __name__)  # pylint: disable=C0103
 

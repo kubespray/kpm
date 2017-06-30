@@ -47,7 +47,7 @@ def authorized_files():
 def all_files():
     files = []
     ignore_files = []
-    for filename in ['.helmignore', '.cnrignore', '.kpmignore']:
+    for filename in ['.helmignore', '.apprignore', '.kpmignore', '.apprignore']:
         if os.path.exists(filename):
             with open(filename, 'r') as f:
                 ignore_files.append(f.read().split("\n"))
