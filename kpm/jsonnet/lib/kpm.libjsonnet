@@ -5,8 +5,8 @@ kpmstd {
    utils:: kpmstd,
 
    variables(package, params):: (
-   local p = package + {variables: package.variables + std.mergePatch(super.variables, params.variables)};
-     p.variables
+      local p = package { variables: package.variables + std.mergePatch(super.variables, params.variables) };
+      p.variables
    ),
 
    deploy(dep):: (
@@ -68,6 +68,7 @@ kpmstd {
       else {}
    ),
 
+
    resource_defaults(resource, package):: (
       local default_expander = if std.objectHas(package, 'expander') then
          package.expander
@@ -104,6 +105,7 @@ kpmstd {
       else
          error "Unknown expander: %s.\n Supported expanders are: [fmt, jinja2, jsonnet, none]" % [resource.expander];
       std.mergePatch(r, kpm.extra_resource_values(resource))
+
    ),
 
    sharded_resource(resource, shards, variables):: (
@@ -125,7 +127,7 @@ kpmstd {
    ),
 
    resources(resources, shards, variables, package):: (
-       std.flattenArrays([
+      std.flattenArrays([
          local r = kpm.resource_defaults(resource, package) + resource;
          local result = if std.objectHas(resource, "sharded") then
             kpm.sharded_resource(r, shards, variables)
@@ -135,14 +137,24 @@ kpmstd {
          result for resource in resources if resource != null])
    ),
 
+   patch(resources):: (
+      { resources: [
+         if std.objectHas(resource, "patch") == true then
+            resource { value: std.mergePatch(resource.value, resource.patch) }
+         else
+            resource
+         for resource in resources.resources
+      ],
+      }
+   ),
 
    ###
    package(pack, env):: (
-    local default_params = {
-       namespace: "default",
-       variables: { namespace: default_params.namespace },
-       shards: null,
-       };
+      local default_params = {
+         namespace: "default",
+         variables: { namespace: default_params.namespace },
+         shards: null,
+      };
 
       local params = std.mergePatch(default_params, env);
 
@@ -162,10 +174,10 @@ kpmstd {
          { resources: kpm.resources(p.resources, shards.shards, variables.variables, p.package) }
       else
          { resources: [] };
-
+      local patched_resources = kpm.patch(resources);
       local package = {
          package: p.package,
-         deploy: kpmstd.compact(p.deploy) } + variables + shards + resources;
+         deploy: kpmstd.compact(p.deploy) } + variables + shards + patched_resources;
 
       package
    ),
