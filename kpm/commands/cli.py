@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import argparse
 
-from cnrclient.commands.cli import all_commands as cnr_commands
-from cnrclient.commands.cli import get_parser
+from appr.commands.cli import all_commands as appr_commands
+from appr.commands.cli import get_parser
 
 from kpm.commands.command_base import CommandBase
 from kpm.commands.push import PushCmd
@@ -16,7 +16,7 @@ from kpm.commands.jsonnet import JsonnetCmd
 
 
 def all_commands():
-    base_cmd = cnr_commands()
+    base_cmd = appr_commands()
     for cmd in base_cmd.values():
         cmd.__bases__ = (CommandBase,)
 

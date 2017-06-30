@@ -9,8 +9,8 @@ class Config(object):
     CNR_URI = os.getenv('CNR_URI', KPM_URI)
     KPM_REGISTRY_HOST = os.getenv('KPM_REGISTRY_HOST', KPM_URI)
     KPM_BUILDER_HOST = os.getenv('KPM_BUILDER_HOST', KPM_URI)
-    CNR_MODELS_MODULE = os.getenv('KPM_MODELS_MODULE', "cnr.models.etcd")
-    CNR_MODELS = os.getenv('KPM_MODELS', '{"Package": "cnr.models.etcd.package:Package"}')
+    CNR_MODELS_MODULE = os.getenv('KPM_MODELS_MODULE', "appr.models.etcd")
+    CNR_MODELS = os.getenv('KPM_MODELS', '{"Package": "appr.models.etcd.package:Package"}')
     KPM_API_BACKEND = 'true'
     KPM_API_BUILDER = 'true'
     KPM_API_REGISTRY = 'true'

@@ -26,10 +26,10 @@ class NewCmd(CommandBase):
         try:
             self.path = kpm.new.new_package(self.package, self.directory, self.with_comments)
         except ValueError as e:
-            argparse.ArgumentTypeError(e.message)
+            argparse.ArgumentTypeError(str(e))
 
     def _render_dict(self):
         return {"new": self.package, "path": self.path}
 
     def _render_console(self):
-        print "New package created in %s" % self.path
+        return "New package created in %s" % self.path

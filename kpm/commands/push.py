@@ -1,9 +1,9 @@
-from cnrclient.commands.push import PushCmd as CnrPushCmd
+from appr.commands.push import PushCmd as ApprPushCmd
 
 from kpm.manifest_jsonnet import ManifestJsonnet
 
 
-class PushCmd(CnrPushCmd):
+class PushCmd(ApprPushCmd):
     default_media_type = 'kpm'
 
     def _kpm(self):
